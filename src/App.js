@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
+import logo from "./logo.svg";
+import "./App.css";
+import { Button } from "@cred/neopop-web/lib/components";
+import Navbar from "./components/navBar";
+import { Outlet } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loadLogin } from "./actions/loginAction";
+import { useEffect } from "react";
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
+	return (
+		<>
+			<Navbar />
+			<Outlet />
+		</>
+	);
 }
 
 export default App;
