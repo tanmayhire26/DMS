@@ -15,21 +15,29 @@ import Fields from "./components/fields";
 import Home from "./components/home";
 import Login from "./components/login";
 import Register from "./components/register";
+import ErrorPage from "./errorPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
-	{ path: "/", element: <Home /> },
-	{ path: "/login", element: <Login /> },
-	{path:"/register",element:<Register/>},
+	{
+		path: "/",
+		element: <Home />,
+		errorElement: <ErrorPage />,
+	},
+	{ path: "login", element: <Login />, errorElement: <ErrorPage /> },
+	{ path: "register", element: <Register />, errorElement: <ErrorPage /> },
+
 	{
 		path: "/adminDashboard",
 		element: <App />,
+		errorElement: <ErrorPage />,
 		children: [
 			{ path: "/adminDashboard/department", element: <Department /> },
 			{ path: "/adminDashboard/user", element: <User /> },
 			{ path: "/adminDashboard/docType", element: <DocType /> },
 			{ path: "/adminDashboard/doctypeFields", element: <DoctypeFields /> },
 			{ path: "/adminDashboard/fields", element: <Fields /> },
+			{ path: "/adminDashboard/register", element: <Register /> },
 		],
 	},
 ]);

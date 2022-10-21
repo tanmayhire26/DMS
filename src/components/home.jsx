@@ -1,6 +1,13 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+import { loadLogin } from "../actions/loginAction";
 
 function Home() {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
 	return (
 		<div
 			className="flex justify-center items-center   h-screen w-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]

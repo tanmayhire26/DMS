@@ -7,7 +7,7 @@ export const loginUser = (data) => (dispatch) => {
 	axios
 		.post(apiEndPoint, data)
 		.then((response) => {
-			console.log("in response", response.data);
+			sessionStorage.setItem("token", response.data);
 			dispatch({ type: actions.LOGIN_USER, payload: { token: response.data } });
 		})
 		.catch((err) => console.log(err.message));

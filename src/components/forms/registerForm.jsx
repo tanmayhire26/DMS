@@ -1,12 +1,15 @@
 import { Form, useNavigate } from "react-router-dom";
 import ListOfDepartments from "./listOfDepartments";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { registerUser } from "../../actions/registerAction";
+import { Alert } from "@mui/material";
+import { loadLogin } from "../../actions/loginAction";
 
+import jwt_decode from "jwt-decode";
 const schema = yup.object().shape({
 	firstName: yup.string().required(),
 	lastName: yup.string().required(),
@@ -24,9 +27,17 @@ const schema = yup.object().shape({
 
 function RegisterForm() {
 	let selectedDP = [];
-	
-	const navigate = useNavigate();
+
 	const dispatch = useDispatch();
+	useEffect(() => {
+		// dispatch(loadLogin());
+	}, []);
+	const token = useSelector((state) => state.loginReducer.token);
+	let decoded = jwt_decode(token);
+
+	console.log("in Register Form Token", decoded._id);
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
@@ -39,11 +50,14 @@ function RegisterForm() {
 	};
 	const onSubmitHandler = (data) => {
 		data["departments"] = selectedDP;
-	
-
-		console.log("Data collected from Form : ", data);
-		dispatch(registerUser(data));
-		navigate("/login");
+		if (decoded._id === "63523988acbce709805ae706") {
+			data["role"] = "Indexer";
+			dispatch(registerUser(data));
+			navigate("/adminDashboard");
+		} else {
+			dispatch(registerUser(data));
+			navigate("/login");
+		}
 	};
 	return (
 		// <>
@@ -58,7 +72,7 @@ function RegisterForm() {
 			{/* onSubmit={handleSubmit(onSubmitHandler)} */}
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className="text-orange-600 font-bold shadow-lg  p-3 backdrop-blur rounded"
+				className="text-orange-600 font-bold shadow-lg   p-3 backdrop-blur rounded"
 			>
 				<div className="flex justify-between">
 					<div className="">
@@ -72,6 +86,9 @@ function RegisterForm() {
 							className="form-control border p-1"
 							placeholder="e.g Cersei"
 						></input>
+						{errors.firstName ? (
+							<Alert severity="error">{errors.firstName?.message}</Alert>
+						) : null}
 					</div>
 					<div className="">
 						<label htmlFor="lname" className="form-label">
@@ -84,6 +101,9 @@ function RegisterForm() {
 							placeholder="e.g Lannister"
 							{...register("lastName")}
 						></input>
+						{errors.lastName ? (
+							<Alert severity="error">{errors.lastName?.message}</Alert>
+						) : null}
 					</div>
 				</div>
 				<div className="flex justify-between">
@@ -98,6 +118,9 @@ function RegisterForm() {
 							placeholder="e.g abc@xyz.com"
 							{...register("email")}
 						></input>
+						{errors.email ? (
+							<Alert severity="error">{errors.email?.message}</Alert>
+						) : null}
 					</div>
 					<div className="">
 						<label htmlFor="phno" className="form-label">
@@ -110,6 +133,9 @@ function RegisterForm() {
 							placeholder="e.g 8888888888"
 							{...register("phone")}
 						></input>
+						{errors.phone ? (
+							<Alert severity="error">{errors.phone?.message}</Alert>
+						) : null}
 					</div>
 				</div>
 
@@ -134,6 +160,9 @@ function RegisterForm() {
 							placeholder="e.g cersei99"
 							{...register("userName")}
 						/>
+						{errors.userName ? (
+							<Alert severity="error">{errors.userName?.message}</Alert>
+						) : null}
 					</div>
 					<div className="">
 						<label htmlFor="upass" className="form-label">
@@ -146,6 +175,9 @@ function RegisterForm() {
 							placeholder="e.g ***********"
 							{...register("password")}
 						/>
+						{errors.password ? (
+							<Alert severity="error">{errors.password?.message}</Alert>
+						) : null}
 					</div>
 				</div>
 				<button
