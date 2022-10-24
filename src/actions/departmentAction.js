@@ -6,10 +6,10 @@ export const getAllDepartments = () => (dispatch, getState) => {
 		.get(apiEndPoint, {
 			headers: { "x-auth-token": getState().loginReducer.token },
 		})
-		.then((reponse) =>
+		.then((response) =>
 			dispatch({
 				type: actions.GET_ALL_DEPARTMENTS,
-				payload: { departments: reponse.data },
+				payload: { departments: response.data },
 			})
 		)
 		.catch((err) => console.log(err.message));

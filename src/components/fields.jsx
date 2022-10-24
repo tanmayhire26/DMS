@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteField, getAllFields } from "../actions/fieldAction";
 import FieldForm from "./forms/fieldForm";
 import Logo from "./logo";
 
 function Fields() {
+	const [fld, setFld] = useState({});
+
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getAllFields());
@@ -11,9 +14,12 @@ function Fields() {
 
 	const fields = useSelector((state) => state.fieldReducer.fields);
 
-
-	const handleDelete=(f)=>{}
-	const handleFieldClick=(f)=>{}
+	const handleDelete = (f) => {
+		dispatch(deleteField(f));
+	};
+	const handleFieldClick = (f) => {
+		setFld(f);
+	};
 
 	return (
 		<>
@@ -26,18 +32,18 @@ function Fields() {
 				</div>
 				<div className="col">
 					<div className="m-5">
-						<FieldForm />
+						<FieldForm selectedField={fld} />
 					</div>
-					<div className="m-5">
+					<div className="mx-4">
 						{fields.map((f) => (
 							<div
 								key={f._id}
-								className="flex w-full border-l-4 border-orange-300 p-3 bg-white mb-3"
+								className="flex  justify-between shadow  w-full border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
 								<div className="col-3">{f.name.name}</div>
 								<div className="col-3">{f.name.label}</div>
-								<div className="col-2">{f.name.input}</div>
-								<div className="flex col-3">
+								<div className="col-3">{f.name.input}</div>
+								<div className="flex">
 									<svg
 										onClick={() => handleFieldClick(f)}
 										xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +55,7 @@ function Fields() {
 									</svg>
 
 									<svg
-										 onClick={() => handleDelete(f)}
+										onClick={() => handleDelete(f)}
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="orange"
