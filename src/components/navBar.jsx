@@ -1,6 +1,10 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { logout } from "../actions/loginAction";
 
 function Navbar() {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	return (
 		<>
 			<div className="row mt-3 border-b">
@@ -15,7 +19,7 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/adminDashboard/department"
+										to="/admin/departments"
 									>
 										DEPARTMENT
 									</NavLink>
@@ -25,7 +29,7 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/adminDashboard/user"
+										to="/admin/users"
 									>
 										USER
 									</NavLink>
@@ -35,7 +39,7 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/adminDashboard/docType"
+										to="/admin/docTypes"
 									>
 										DOC TYPE
 									</NavLink>
@@ -45,7 +49,7 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/adminDashboard/fields"
+										to="/admin/fields"
 									>
 										FIELDS
 									</NavLink>
@@ -55,10 +59,24 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/adminDashboard/doctypeFields"
+										to="/admin/doctypeFields"
 									>
 										DOC TYPE FIELDS
 									</NavLink>
+								</li>
+								<li className="nav-item">
+									<button
+										onClick={() => {
+											console.log("logging out ?");
+											// dispatch(logout());
+											// navigate("/");
+										}}
+										className={
+											" ml-[90%] nav-link focus:border-b-2 bg-red-500 w-full focus:border-orange-300"
+										}
+									>
+										LOG OUT
+									</button>
 								</li>
 							</ul>
 						</div>

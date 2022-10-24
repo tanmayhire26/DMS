@@ -2,12 +2,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { loadLogin } from "../actions/loginAction";
+import jwt_decode from "jwt-decode";
 
 function Home() {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(loadLogin());
 	}, []);
+
+	// const token = useSelector((state) => state.loginReducer.token);
+	// const decoded = jwt_decode(token);
 	return (
 		<div
 			className="flex justify-center items-center   h-screen w-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]
@@ -18,6 +22,16 @@ function Home() {
 				style={{ backgroundImage: "url(/homeImage.png)" }}
 			>
 				<div className=" italic font-bold text-xs flex absolute right-[22%] top-[18%] gap-3">
+					<div>
+						<NavLink
+							style={{ textDecoration: "none" }}
+							className={"bg-indigo-400 p-1 text-gray-600"}
+							to=""
+						>
+							Dashboard
+						</NavLink>
+					</div>
+
 					<div>
 						<NavLink
 							style={{ textDecoration: "none" }}

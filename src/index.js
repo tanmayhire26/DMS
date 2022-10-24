@@ -16,6 +16,10 @@ import Home from "./components/home";
 import Login from "./components/login";
 import Register from "./components/register";
 import ErrorPage from "./errorPage";
+import GeneralUser from "./components/generalUser/generalUser";
+import IndexerView from "./components/indexer/indexerView";
+import IndexerAddDoc from "./components/indexer/indexerAddDoc";
+import Navbar from "./components/navBar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -28,16 +32,24 @@ const router = createBrowserRouter([
 	{ path: "register", element: <Register />, errorElement: <ErrorPage /> },
 
 	{
-		path: "/adminDashboard",
+		path: "admin",
 		element: <App />,
-		errorElement: <ErrorPage />,
 		children: [
-			{ path: "/adminDashboard/department", element: <Department /> },
-			{ path: "/adminDashboard/user", element: <User /> },
-			{ path: "/adminDashboard/docType", element: <DocType /> },
-			{ path: "/adminDashboard/doctypeFields", element: <DoctypeFields /> },
-			{ path: "/adminDashboard/fields", element: <Fields /> },
-			{ path: "/adminDashboard/register", element: <Register /> },
+			{ path: "departments", element: <Department /> },
+			{ path: "users", element: <User /> },
+			{ path: "docTypes", element: <DocType /> },
+			{ path: "doctypeFields", element: <DoctypeFields /> },
+			{ path: "fields", element: <Fields /> },
+			{ path: "register", element: <Register /> },
+		],
+	},
+	{ path: "generalUser", element: <GeneralUser /> },
+	{
+		path: "indexer",
+		element: <IndexerView/>,
+		children: [
+			{ path: "indexerView", element: <IndexerView /> },
+			{ path: "indexerAddDoc", element: <IndexerAddDoc /> },
 		],
 	},
 ]);

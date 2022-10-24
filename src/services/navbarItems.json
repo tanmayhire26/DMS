@@ -1,0 +1,40 @@
+{
+	"admin": [
+		{
+			"name": "Departments",
+			"path": "admin/departments"
+		},
+		{
+			"name": "Users",
+			"path": "admin/users"
+		},
+		{
+			"name": "Doc Types",
+			"path": "admin/doctypes"
+		},
+		{
+			"name": "Fields",
+			"path": "admin/fields"
+		},
+		{
+			"name": "Doctype Fields",
+			"path": "admin/doctypeFields"
+		}
+	],
+	"generalUser": [
+		{
+			"name": "Indexed Documents",
+			"path": "generalUser"
+		}
+	],
+	"indexerUser": [
+		{
+			"name": "Index",
+			"path": "indexerUser/indexerView"
+		},
+		{
+			"name": "Add Document",
+			"path": "indexerUser/indexerAddDoc"
+		}
+	]
+}

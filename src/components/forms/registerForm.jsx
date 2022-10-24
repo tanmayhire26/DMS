@@ -10,6 +10,7 @@ import { Alert } from "@mui/material";
 import { loadLogin } from "../../actions/loginAction";
 
 import jwt_decode from "jwt-decode";
+
 const schema = yup.object().shape({
 	firstName: yup.string().required(),
 	lastName: yup.string().required(),
@@ -29,9 +30,9 @@ function RegisterForm() {
 	let selectedDP = [];
 
 	const dispatch = useDispatch();
-	useEffect(() => {
-		// dispatch(loadLogin());
-	}, []);
+	// useEffect(() => {
+	// 	// dispatch(loadLogin());
+	// }, []);
 	const token = useSelector((state) => state.loginReducer.token);
 	let decoded = jwt_decode(token);
 
@@ -50,10 +51,10 @@ function RegisterForm() {
 	};
 	const onSubmitHandler = (data) => {
 		data["departments"] = selectedDP;
-		if (decoded._id === "63523988acbce709805ae706") {
+		if (decoded.role === "Admin") {
 			data["role"] = "Indexer";
 			dispatch(registerUser(data));
-			navigate("/adminDashboard");
+			navigate("/admin/users");
 		} else {
 			dispatch(registerUser(data));
 			navigate("/login");

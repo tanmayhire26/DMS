@@ -1,18 +1,29 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "postcss";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { loginUser } from "../../actions/loginAction";
-
+import jwt_decode from "jwt-decode";
+import { Alert } from "@mui/material";
 const schema = yup.object().shape({
 	userName: yup.string().required(),
 	password: yup.string().min(5).max(35).required(),
 });
-function LoginForm() {
+function LoginForm(getState) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const token = "";
+	let decoded = {};
+
+	// token = useSelector((state) => state.loginReducer.token);
+	// decoded = jwt_decode(token);
+	// console.log(
+	// 	decoded.role,
+	// 	"   in the login form role of logged in poerson is"
+	// );
+
 	const {
 		register,
 		handleSubmit,
@@ -23,7 +34,14 @@ function LoginForm() {
 	const onSubmitHandler = (data) => {
 		console.log("in on submit handler data sent is", data);
 		dispatch(loginUser(data));
-		navigate("/adminDashboard");
+
+		navigate("/");
+
+		// decoded.role === "Admin"
+		// 	? navigate("/admin")
+		// 	: decoded.role === "Indexer"
+		// 	? navigate("/indexer")
+		// 	: navigate("/generalUser");
 	};
 
 	return (

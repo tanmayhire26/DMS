@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loadLogin } from "./actions/loginAction";
 import { useEffect } from "react";
+import NewNavBar from "./components/NewNavBar";
 function App() {
 	const dispatch = useDispatch();
 	useEffect(() => {
@@ -14,6 +15,7 @@ function App() {
 	return (
 		<>
 			<Navbar />
+			{/* <NewNavBar /> */}
 			<Outlet />
 		</>
 	);

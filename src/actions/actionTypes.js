@@ -11,3 +11,14 @@ export const DELETE_DOCTYPE = "DELETE_DOCTYPE";
 export const REGISTER_USER = "REGISTER_USER";
 
 export const LOGIN_USER = "LOGIN_USER";
+export const LOGOUT_USER = "LOGOUT_USER";
+
+export const GET_ALL_USERS = "GET_ALL_USERS";
+export const ADD_USER = "ADD_USER";
+export const UPDATE_USER = "UPDATE_USER";
+export const DELETE_USER = "DELETE_USER";
+
+export const GET_ALL_FIELDS = "GET_ALL_FIELDS";
+export const ADD_FIELD = "ADD_FIELD";
+export const UPDATE_FIELD = "UPDATE_FIELD";
+export const DELETE_FIELD = "DELETE_FIELD";
