@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllDoctypes } from "../actions/doctypeAction";
-import { getAllDoctypefields } from "../actions/doctypefieldAction";
+import {
+	deleteDoctypefield,
+	getAllDoctypefields,
+} from "../actions/doctypefieldAction";
 import { getAllFields } from "../actions/fieldAction";
 import DoctypefieldForm from "./forms/doctypefieldForm";
 import Logo from "./logo";
@@ -23,10 +26,33 @@ function DoctypeFields() {
 	const fields = useSelector((state) => state.fieldReducer.fields);
 
 	const handleDelete = (d) => {
-		//dispatch(deleteField(d));
+		dispatch(deleteDoctypefield(d));
 	};
 	const handleDTFClick = (d) => {
 		setDtf(d);
+	};
+
+	const getDoctypeName = (dtid) => {
+		for (let i = 0; i < doctypes.length; i++) {
+			if (dtid === doctypes[i]._id) {
+				return doctypes[i].name;
+			}
+		}
+	};
+
+	const getDepartmentName = (dtid) => {
+		for (let i = 0; i < doctypes.length; i++) {
+			if (dtid === doctypes[i]._id) {
+				return doctypes[i].department;
+			}
+		}
+	};
+
+	const getFieldName = (fid) => {
+		for (let i = 0; i < fields.length; i++) {
+			//********************************************************************************************************* */
+			if (fid === fields[i]._id) return fields[i].name.name;
+		}
 	};
 
 	return (
@@ -40,7 +66,7 @@ function DoctypeFields() {
 				</div>
 				<div className="col">
 					<div className="m-5">
-						<DoctypefieldForm />
+						<DoctypefieldForm selectedDTF={dtf} />
 					</div>
 					<div className="mx-4">
 						{doctypefields.map((d) => (
@@ -48,11 +74,10 @@ function DoctypeFields() {
 								key={d._id}
 								className="flex  justify-between shadow  w-full border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
-								<div className="col-3">{}</div>
-								<div className="col-3">
-									{fields.filter((f) => f._id === d.field).name}
-								</div>
-								<div className="col-3">
+								<div className="col-3">{getDoctypeName(d.docType)}</div>
+								<div className="col-3">{getDepartmentName(d.docType)}</div>
+								<div className="col-3">{getFieldName(d.field)}</div>
+								<div className="col-2">
 									{d.isRequired === true ? "Required" : "not required"}
 								</div>
 								<div className="flex">

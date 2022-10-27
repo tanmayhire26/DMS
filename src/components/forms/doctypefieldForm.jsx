@@ -1,6 +1,6 @@
 import { useSelect } from "@mui/base";
 import { Autocomplete, TextField } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllDepartments } from "../../actions/departmentAction";
 import { getAllFields } from "../../actions/fieldAction";
@@ -9,15 +9,29 @@ import { Form } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import {
+	addDoctypefield,
+	getAllDoctypefields,
+	updateDoctypefield,
+} from "../../actions/doctypefieldAction";
 
 const schema = yup.object().shape({
 	docType: yup.string().required(),
 	field: yup.string().required(),
+	//department: yup.string().required(),
 	isRequired: yup.boolean().required(),
 });
 
-function DoctypefieldForm() {
+function DoctypefieldForm(props) {
+	const { selectedDTF } = props;
+	const dtfid = selectedDTF._id;
+	const doctypefields = useSelector(
+		(state) => state.doctypefieldReducer.doctypefields
+	);
 	const dispatch = useDispatch();
+	let [filteredDoctypes, setFilteredDoctypes] = useState([]);
+	// const [selectedField, setSelectedField] = useState("");
+	// const [selectedDoctype, setSelectedDoctype] = useState("");
 
 	const {
 		register,
@@ -27,26 +41,51 @@ function DoctypefieldForm() {
 		reset,
 	} = useForm({ resolver: yupResolver(schema) });
 
-	const onSubmitHandler = (data) => {
-		console.log(data, "data in the submit handler");
-		// if (data._id) {
-		// 	dispatch(updateDoctypeField(data));
-		// } else {
-		// 	dispatch(addDoctypeField(data));
-		// }
-	};
-
 	useEffect(() => {
 		dispatch(getAllDepartments());
 		dispatch(getAllDoctypes());
 		dispatch(getAllFields());
 	}, []);
+	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
+	const fields = useSelector((state) => state.fieldReducer.fields);
+
+	useEffect(() => {
+		if (!dtfid) return;
+		const dtfield = doctypefields.find((d) => d._id === dtfid);
+		setFilteredDoctypes(doctypes);
+		setValue("docType", dtfield.docType);
+		setValue("field", dtfield.field);
+		setValue("isRequired", dtfield.isRequired);
+		// setValue(
+		// 	"department",
+		// 	doctypes.find((dt) => dt._id === dtfield.docType).department
+		// );
+	}, [dtfid]);
 
 	const departments = useSelector(
 		(state) => state.departmentReducer.departments
 	);
-	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
-	const fields = useSelector((state) => state.fieldReducer.fields);
+
+	const onSubmitHandler = (data) => {
+		//let data = {};
+		// data["docType"] = selectedDoctype;
+		// data["field"] = selectedField;
+		console.log(data, "in submit handlker of doctype field form");
+		if (data._id) {
+			console.log("updated dtf");
+			dispatch(updateDoctypefield(data));
+		} else {
+			console.log("added dtf");
+			dispatch(addDoctypefield(data));
+		}
+	};
+
+	let handleDepChange = (e) => {
+		filteredDoctypes = doctypes.filter(
+			(dt) => dt.department === e.target.value
+		);
+		setFilteredDoctypes(filteredDoctypes);
+	};
 
 	return (
 		<>
@@ -55,40 +94,45 @@ function DoctypefieldForm() {
 				className="shadow-lg p-3 backdrop-blur rounded flex flex-wrap justify-between"
 			>
 				<div className="flex-row">
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						options={departments}
-						getOptionLabel={(option) => option.name}
-						sx={{ width: 300 }}
-						renderInput={(params) => <TextField {...params} label="Department" />}
-					/>
+					<label htmlFor="dep" className="form-label">
+						Department
+					</label>
+					<select
+						onChange={handleDepChange}
+						className="form-select"
+						//  {...register("department")}
+						id="dep"
+					>
+						{departments.map((d) => (
+							<option key={d._id} value={d.name}>
+								{d.name}
+							</option>
+						))}
+					</select>
 					{/* {errors.department? (
 						<Alert severity="error">{errors.department?.message}</Alert>
 					) : null} */}
 				</div>
 				<div className="flex-row">
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						options={doctypes}
-						getOptionLabel={(option) => option.name}
-						sx={{ width: 300 }}
-						renderInput={(params) => <TextField {...params} label="Doctype" />}
-					/>
+					<select className="form-select" {...register("docType")}>
+						{filteredDoctypes.map((fdt) => (
+							<option key={fdt._id} value={fdt._id}>
+								{fdt.name}
+							</option>
+						))}
+					</select>
 					{/* {errors.doctype ? (
 						<Alert severity="error">{errors.doctype?.message}</Alert>
 					) : null} */}
 				</div>
 				<div className="flex-row">
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						options={fields}
-						getOptionLabel={(option) => option.name.name}
-						sx={{ width: 300 }}
-						renderInput={(params) => <TextField {...params} label="Field" />}
-					/>
+					<select className="form-select" {...register("field")}>
+						{fields.map((f) => (
+							<option key={f._id} value={f._id}>
+								{f.name.name}
+							</option>
+						))}
+					</select>
 					{/* 					
 					{errors.field ? (
 						<Alert severity="error">{errors.field?.message}</Alert>
@@ -96,10 +140,18 @@ function DoctypefieldForm() {
 				</div>
 				<div className="mt-2 w-full flex justify-center">
 					<label className="form-label" htmlFor="req">
-						Required?  
-					</label><input type="checkbox" className="checkbox"/>
+						Required?
+					</label>
+					<input
+						type="checkbox"
+						className="checkbox"
+						{...register("isRequired")}
+					/>
 				</div>
-				<button className="self-center w-full mx-[30%]  p-1 rounded-full bg-orange-300 mt-3">
+				<button
+					type="submit"
+					className="self-center w-full mx-[30%]  p-1 rounded-full bg-orange-300 mt-3"
+				>
 					Add Doc Type Field
 				</button>
 			</Form>

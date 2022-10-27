@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useRouteLoaderData } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Department from "./components/department";
 import User from "./components/user";
@@ -20,6 +20,9 @@ import GeneralUser from "./components/generalUser/generalUser";
 import IndexerView from "./components/indexer/indexerView";
 import IndexerAddDoc from "./components/indexer/indexerAddDoc";
 import Navbar from "./components/navBar";
+import  { UserForm, userLoader } from "./components/forms/userForm";
+import AddDoc from "./components/indexer/indexerAddDoc";
+import IndexerApp from "./components/indexer/indexerApp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -34,23 +37,24 @@ const router = createBrowserRouter([
 	{
 		path: "admin",
 		element: <App />,
-		errorElement:<ErrorPage/>,
+		errorElement: <ErrorPage />,
 		children: [
 			{ path: "departments", element: <Department /> },
 			{ path: "users", element: <User /> },
 			{ path: "docTypes", element: <DocType /> },
 			{ path: "doctypeFields", element: <DoctypeFields /> },
 			{ path: "fields", element: <Fields /> },
-			{ path: "register", element: <Register /> },
+			{ path: "users/userForm", element: <UserForm /> },
+			{path:"users/:id/:role",element:<UserForm/>,loader:userLoader}
 		],
 	},
 	{ path: "generalUser", element: <GeneralUser /> },
 	{
 		path: "indexer",
-		element: <IndexerView/>,
+		element: <IndexerApp />,
 		children: [
 			{ path: "indexerView", element: <IndexerView /> },
-			{ path: "indexerAddDoc", element: <IndexerAddDoc /> },
+			{ path: "addDoc", element: <AddDoc /> },
 		],
 	},
 ]);

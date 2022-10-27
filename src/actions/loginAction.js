@@ -17,6 +17,6 @@ export const loadLogin = () => ({
 	payload: { token: sessionStorage.getItem("token") },
 });
 
-// export const logout = () => {
-// 	sessionStorage.removeItem("token");
-// };
+export const logout = () => {
+	sessionStorage.setItem("token", null);
+};

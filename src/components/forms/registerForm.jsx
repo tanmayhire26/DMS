@@ -26,16 +26,16 @@ const schema = yup.object().shape({
 	// updatedAt: yup.date(),
 });
 
-function RegisterForm() {
+function RegisterForm(props) {
 	let selectedDP = [];
-
+	const { userRole, userId } = props;
 	const dispatch = useDispatch();
 	// useEffect(() => {
 	// 	// dispatch(loadLogin());
 	// }, []);
 	const token = useSelector((state) => state.loginReducer.token);
 	let decoded = jwt_decode(token);
-
+	const users = useSelector((state) => state.userReducer.users);
 	console.log("in Register Form Token", decoded._id);
 	const navigate = useNavigate();
 
@@ -44,7 +44,20 @@ function RegisterForm() {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setValue,
 	} = useForm({ resolver: yupResolver(schema) });
+
+	useEffect(() => {
+		if (!userId) return;
+		const user = users.find((u) => u._id === userId);
+
+		setValue("firstName", user.firstName);
+		setValue("lastName", user.lastName);
+		setValue("email", user.email);
+		setValue("phone", user.phone);
+		setValue("userName", user.userName);
+		setValue("password", user.password);
+	}, [userId]);
 
 	const handleChange = (value) => {
 		selectedDP = value;

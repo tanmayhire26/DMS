@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
-import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { logout } from "../actions/loginAction";
+import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../actions/loginAction";
 
-function Navbar() {
+function IndexerNavbar() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	return (
@@ -19,9 +19,9 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/admin/departments"
+										to="/indexer/indexerView"
 									>
-										DEPARTMENT
+										INDEX
 									</NavLink>
 								</li>
 								<li className="nav-item">
@@ -29,47 +29,18 @@ function Navbar() {
 										className={
 											"nav-link focus:border-b-2 focus:border-orange-300"
 										}
-										to="/admin/users"
+										to="/indexer/addDoc"
 									>
-										USER
+										ADD DOC
 									</NavLink>
 								</li>
-								<li className="nav-item">
-									<NavLink
-										className={
-											"nav-link focus:border-b-2 focus:border-orange-300"
-										}
-										to="/admin/docTypes"
-									>
-										DOC TYPE
-									</NavLink>
-								</li>
-								<li className="nav-item">
-									<NavLink
-										className={
-											"nav-link focus:border-b-2 focus:border-orange-300"
-										}
-										to="/admin/fields"
-									>
-										FIELDS
-									</NavLink>
-								</li>
-								<li className="nav-item">
-									<NavLink
-										className={
-											"nav-link focus:border-b-2 focus:border-orange-300"
-										}
-										to="/admin/doctypeFields"
-									>
-										DOC TYPE FIELDS
-									</NavLink>
-								</li>
+
 								<li className="nav-item">
 									<button
 										onClick={() => {
 											console.log("logging out ?");
-											 dispatch(logout());
-											 navigate("/");
+											dispatch(logout());
+											navigate("/");
 										}}
 										className={
 											" ml-[90%] nav-link focus:border-b-2 bg-red-500 w-full focus:border-orange-300"
@@ -87,4 +58,4 @@ function Navbar() {
 	);
 }
 
-export default Navbar;
+export default IndexerNavbar;
