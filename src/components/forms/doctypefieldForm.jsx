@@ -103,6 +103,7 @@ function DoctypefieldForm(props) {
 						//  {...register("department")}
 						id="dep"
 					>
+						<option>Select Department</option>
 						{departments.map((d) => (
 							<option key={d._id} value={d.name}>
 								{d.name}
@@ -114,7 +115,11 @@ function DoctypefieldForm(props) {
 					) : null} */}
 				</div>
 				<div className="flex-row">
-					<select className="form-select" {...register("docType")}>
+					<label className="form-label" htmlFor="doct">
+						Document type
+					</label>
+					<select id="doct" className="form-select" {...register("docType")}>
+						<option>Select Doctype</option>
 						{filteredDoctypes.map((fdt) => (
 							<option key={fdt._id} value={fdt._id}>
 								{fdt.name}
@@ -126,7 +131,11 @@ function DoctypefieldForm(props) {
 					) : null} */}
 				</div>
 				<div className="flex-row">
-					<select className="form-select" {...register("field")}>
+					<label className="form-label" htmlFor="fld">
+						Field
+					</label>
+					<select id="fld" className="form-select" {...register("field")}>
+						<option>Select Field</option>
 						{fields.map((f) => (
 							<option key={f._id} value={f._id}>
 								{f.name.name}

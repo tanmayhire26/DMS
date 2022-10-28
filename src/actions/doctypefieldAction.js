@@ -44,7 +44,7 @@ export const addDoctypefield = (data) => (dispatch, getState) => {
 //........................................................update doctypefield--------------------------------------------------
 export const updateDoctypefield = (data) => (dispatch, getState) => {
 	axios
-		.post(
+		.put(
 			apiEndPoint + "/" + data._id,
 			{
 				docType: data.docType,

@@ -5,7 +5,7 @@ import { getAllDepartments } from "../../actions/departmentAction";
 import { getAllDoctypes } from "../../actions/doctypeAction";
 
 function IndexerOpenForm(props) {
-	const { onDoctypeChange } = props;
+	const { onDoctypeChange, getSelectedDep } = props;
 
 	const [dep, setDep] = useState("");
 	const dispatch = useDispatch();
@@ -21,6 +21,7 @@ function IndexerOpenForm(props) {
 	);
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	let handleDepChange = (e) => {
+		getSelectedDep(e);
 		filteredDoctypes = doctypes.filter(
 			(dt) => dt.department === e.target.value
 		);

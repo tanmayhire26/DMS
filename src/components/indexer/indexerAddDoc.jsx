@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDepartments } from "../../actions/departmentAction";
 import Logo from "../logo";
 import IndexerOpenForm from "./indexerOpenForm";
 import IndexingForm from "./indexingForm";
 
 function AddDoc() {
 	const [selectedDoctype, setSelectedDoctype] = useState("");
-
+	const [selectedDepartment, setSelectedDepartment] = useState();
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(getAllDepartments());
+	}, []);
+	const departments = useSelector(
+		(state) => state.departmentReducer.departments
+	);
+	const getSelectedDep = (e) => {
+		const dep = departments.find((d) => d.name === e.target.value);
+		setSelectedDepartment(dep);
+	};
 	const handleDoctypeChange = (e) => {
-	
 		setSelectedDoctype(e.target.value);
 	};
 	return (
@@ -20,10 +32,16 @@ function AddDoc() {
 				</div>
 				<div className="col flex-row">
 					<div className="shadow w-4/6 mt-4">
-						<IndexerOpenForm onDoctypeChange={handleDoctypeChange} />
+						<IndexerOpenForm
+							getSelectedDep={getSelectedDep}
+							onDoctypeChange={handleDoctypeChange}
+						/>
 					</div>
 					<div className="mt-5">
-						<IndexingForm selectedDoctype={selectedDoctype} />
+						<IndexingForm
+							selectedDepartment={selectedDepartment}
+							selectedDoctype={selectedDoctype}
+						/>
 					</div>
 				</div>
 			</div>
