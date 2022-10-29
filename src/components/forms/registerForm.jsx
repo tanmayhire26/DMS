@@ -30,11 +30,15 @@ function RegisterForm(props) {
 	let selectedDP = [];
 	const { userRole, userId } = props;
 	const dispatch = useDispatch();
-	// useEffect(() => {
-	// 	// dispatch(loadLogin());
-	// }, []);
-	const token = useSelector((state) => state.loginReducer.token);
-	let decoded = jwt_decode(token);
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
+	let token = useSelector((state) => state.loginReducer.token);
+	let decoded = {};
+	if (token) {
+		decoded = jwt_decode(token);
+	}
+
 	const users = useSelector((state) => state.userReducer.users);
 	console.log("in Register Form Token", decoded._id);
 	const navigate = useNavigate();

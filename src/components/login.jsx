@@ -8,7 +8,7 @@ import LoginForm from "./forms/loginForm";
 function Login() {
 	return (
 		<>
-			<div className="my-2 mx-[10%]">
+			
 				<div
 					className="flex justify-center   h-full bg-cover bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]
 				from-yellow-100 via-yellow-200 to-yellow-300"
@@ -47,7 +47,7 @@ function Login() {
 						</div>
 					</div>
 				</div>
-			</div>
+			
 		</>
 	);
 }
