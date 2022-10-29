@@ -2,23 +2,28 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
+import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
 import { addDocument } from "../../actions/documentAction";
 import { getAllFields } from "../../actions/fieldAction";
 
 function IndexingForm(props) {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const { selectedDoctype, selectedDepartment } = props;
 	const { handleSubmit, register } = useForm();
 	let [imageName, setImageName] = useState();
-	let reqDoctypefields = [];
-	let reqFieldsIds = [];
-	let reqFields = [];
+	let reqDoctypefields = []; //array of doctypefield objects
+	let reqDoctypefieldIds = []; //array of doctypefield ids
+	let reqFieldsIds = []; //array of fieldIds
+	let reqFields = []; //array of field names
 	useEffect(() => {
 		dispatch(getAllDoctypefields());
 		dispatch(getAllFields());
+		dispatch(getAllDoctypes());
 	}, []);
+	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	const doctypefields = useSelector(
 		(state) => state.doctypefieldReducer.doctypefields
 	);
@@ -37,27 +42,48 @@ function IndexingForm(props) {
 	for (let j = 0; j < reqFieldsIds.length; j++) {
 		reqFields.push(fields.find((f) => f._id === reqFieldsIds[j]));
 	}
+
+	for (let k = 0; k < reqDoctypefields.length; k++) {
+		reqDoctypefieldIds.push(reqDoctypefields[k]._id);
+	}
 	//console.log("Aray of req field objects : ", reqFields);
 	const onSubmitHandler = (data) => {
 		const depcodeToDispatch = selectedDepartment.departmentCode;
 
 		let indexingInfo = data;
 		delete indexingInfo["newPath"];
-		// let uploadPathToDispatch = data.path;
-		// delete indexingInfo["path"];
-		// const fileName = uploadPathToDispatch[0].name;
+		let newIndexingInfo = {};
+		let valuesArr = Object.values(indexingInfo);
+		const selectedDoctypeObject = doctypes.find(
+			(d) => d._id === selectedDoctype
+		);
+
+		for (let i = 0; i < valuesArr.length; i++) {
+			newIndexingInfo[`${reqDoctypefieldIds[i]}`] = valuesArr[i];
+		}
+
 		const pathToDispatch = "D://../public/" + imageName;
-		const name = imageName.slice(0, imageName.length - 4);
+		const name =
+			imageName.slice(0, imageName.length - 4) +
+			"_" +
+			doctypes.find((dt) => dt._id === selectedDoctype).name;
 		console.log(
 			"indexing info: ",
-			indexingInfo,
+			newIndexingInfo,
 			pathToDispatch,
 			depcodeToDispatch,
 			name
 		);
 		dispatch(
-			addDocument(indexingInfo, pathToDispatch, depcodeToDispatch,name)
+			addDocument(
+				newIndexingInfo,
+				pathToDispatch,
+				depcodeToDispatch,
+				name,
+				selectedDoctypeObject
+			)
 		);
+		navigate("/indexer/indexerView");
 	};
 	const onFileSubmitHandler = (data) => {
 		const newImgSrc = data.newPath[0].name;

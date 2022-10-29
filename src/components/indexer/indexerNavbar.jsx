@@ -40,7 +40,7 @@ function IndexerNavbar() {
 										onClick={() => {
 											console.log("logging out ?");
 											dispatch(logout());
-											navigate("/");
+											navigate("/login");
 										}}
 										className={
 											" ml-[90%] nav-link focus:border-b-2 bg-red-500 w-full focus:border-orange-300"

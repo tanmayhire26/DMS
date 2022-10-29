@@ -6,6 +6,7 @@ import { loginReducer } from "./loginReducer";
 import { userReducer } from "./userReducer";
 import { fieldReducer } from "./fieldReducer";
 import { doctypefieldReducer } from "./doctypefieldReducer";
+import { documentReducer } from "./documentReducer";
 
 export default combineReducers({
 	departmentReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
 	userReducer,
 	fieldReducer,
 	doctypefieldReducer,
+	documentReducer,
 });

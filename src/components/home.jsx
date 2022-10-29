@@ -5,13 +5,27 @@ import { loadLogin } from "../actions/loginAction";
 import jwt_decode from "jwt-decode";
 
 function Home() {
+	let token = useSelector((state) => state.loginReducer.token);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		dispatch(loadLogin());
 	}, []);
+	let dash = "/";
 
-	// const token = useSelector((state) => state.loginReducer.token);
-	// const decoded = jwt_decode(token);
+	if (token) {
+		const decoded = jwt_decode(token);
+		let role = decoded.role;
+		dash =
+			role === "Admin"
+				? "/admin"
+				: role === "Indexer"
+				? "/indexer"
+				: role === "General User"
+				? "/generalUser"
+				: "/login";
+	}
+
 	return (
 		<div
 			className="flex justify-center items-center   h-screen w-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]
@@ -26,7 +40,7 @@ function Home() {
 						<NavLink
 							style={{ textDecoration: "none" }}
 							className={"bg-indigo-400 p-1 text-gray-600"}
-							to=""
+							to={`${dash}`}
 						>
 							Dashboard
 						</NavLink>

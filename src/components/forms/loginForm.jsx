@@ -11,7 +11,7 @@ const schema = yup.object().shape({
 	userName: yup.string().required(),
 	password: yup.string().min(5).max(35).required(),
 });
-function LoginForm(getState) {
+function LoginForm() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const token = "";

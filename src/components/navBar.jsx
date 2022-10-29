@@ -5,6 +5,11 @@ import { logout } from "../actions/loginAction";
 function Navbar() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const handleLogout = () => {
+		dispatch(logout());
+		navigate("/login");
+	};
 	return (
 		<>
 			<div className="row mt-3 border-b">
@@ -66,11 +71,7 @@ function Navbar() {
 								</li>
 								<li className="nav-item">
 									<button
-										onClick={() => {
-											console.log("logging out ?");
-											 dispatch(logout());
-											 navigate("/");
-										}}
+										onClick={handleLogout}
 										className={
 											" ml-[90%] nav-link focus:border-b-2 bg-red-500 w-full focus:border-orange-300"
 										}
