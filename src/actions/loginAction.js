@@ -17,7 +17,7 @@ export const loadLogin = () => ({
 	payload: { token: sessionStorage.getItem("token") },
 });
 
-export const logout = () =>({
-	type:actions.LOGOUT_USER,
-	payload:{token:sessionStorage.setItem("token",null)}
+export const logout = () => ({
+	type: actions.LOGOUT_USER,
+	payload: { token: sessionStorage.setItem("token", "") },
 });

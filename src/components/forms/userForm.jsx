@@ -16,7 +16,7 @@ export function UserForm() {
 			{userRole === "Indexer" ? (
 				<RegisterForm userId={userId} userRole={userRole} />
 			) : (
-				<h2>Genreal User Form</h2>
+				<h2>ADMIN CANNOT EDIT GENERAL USER</h2>
 			)}
 		</>
 	);

@@ -4,17 +4,23 @@ import { getAllDepartments } from "../../actions/departmentAction";
 import Logo from "../logo";
 import IndexerOpenForm from "./indexerOpenForm";
 import IndexingForm from "./indexingForm";
+import { useSelect } from "@mui/base";
+import { loadLogin } from "../../actions/loginAction";
 
 function AddDoc() {
-	const [selectedDoctype, setSelectedDoctype] = useState("");
-	const [selectedDepartment, setSelectedDepartment] = useState();
 	const dispatch = useDispatch();
 	useEffect(() => {
+		// dispatch(loadLogin());
 		dispatch(getAllDepartments());
 	}, []);
+
+	const [selectedDoctype, setSelectedDoctype] = useState("");
+	const [selectedDepartment, setSelectedDepartment] = useState();
+
 	const departments = useSelector(
 		(state) => state.departmentReducer.departments
 	);
+
 	const getSelectedDep = (e) => {
 		const dep = departments.find((d) => d.name === e.target.value);
 		setSelectedDepartment(dep);

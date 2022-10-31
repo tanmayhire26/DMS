@@ -5,6 +5,8 @@ import RegisterForm from "./forms/registerForm";
 
 function Register() {
 	const dispatch = useDispatch();
+
+
 	useEffect(() => {
 		dispatch(loadLogin());
 	}, []);

@@ -16,3 +16,18 @@ export const getAllUsers = () => (dispatch, getState) => {
 		)
 		.catch((err) => console.log(err.message));
 };
+
+
+
+export const deleteUser = (data) => (dispatch, getState) => {
+	axios
+		.patch(
+			apiEndPoint + "/" + data._id,
+			{},
+			{ headers: { "x-auth-token": getState().loginReducer.token } }
+		)
+		.then((response) =>
+			dispatch({ type: actions.DELETE_USER, payload: { userD: response.data } })
+		)
+		.catch((err) => console.log(err.message));
+};

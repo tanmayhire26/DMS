@@ -7,6 +7,7 @@ import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
 import { addDocument } from "../../actions/documentAction";
 import { getAllFields } from "../../actions/fieldAction";
+import { loadLogin } from "../../actions/loginAction";
 
 function IndexingForm(props) {
 	const dispatch = useDispatch();
@@ -17,8 +18,9 @@ function IndexingForm(props) {
 	let reqDoctypefields = []; //array of doctypefield objects
 	let reqDoctypefieldIds = []; //array of doctypefield ids
 	let reqFieldsIds = []; //array of fieldIds
-	let reqFields = []; //array of field names
+	let reqFields = []; //array of field name objects
 	useEffect(() => {
+		// dispatch(loadLogin());
 		dispatch(getAllDoctypefields());
 		dispatch(getAllFields());
 		dispatch(getAllDoctypes());
@@ -46,7 +48,11 @@ function IndexingForm(props) {
 	for (let k = 0; k < reqDoctypefields.length; k++) {
 		reqDoctypefieldIds.push(reqDoctypefields[k]._id);
 	}
-	//console.log("Aray of req field objects : ", reqFields);
+
+	for (let m = 0; m < reqFields.length; m++) {
+		reqFields[m]["isRequired"] = reqDoctypefields[m].isRequired;
+	}
+
 	const onSubmitHandler = (data) => {
 		const depcodeToDispatch = selectedDepartment.departmentCode;
 
@@ -104,12 +110,14 @@ function IndexingForm(props) {
 							<div key={rf._id} className="">
 								<label className="form-label" htmlFor={rf.name.name}>
 									{rf.name.label}
+									{rf.isRequired === true ? "*" : ""}
 								</label>
 								<input
 									{...register(`${rf.name.name}`)}
 									type={rf.name.input}
 									className="form-control"
 									id={rf.name.name}
+									required={rf.isRequired}
 								/>
 							</div>
 						))}
@@ -122,7 +130,7 @@ function IndexingForm(props) {
 							{...register("path")}
 						/> */}
 						<button
-							className="p-2 bg-orange-300 text-white rounded-full"
+							className="p-2 bg-orange-500 text-white rounded-xl"
 							type="submit"
 						>
 							Submit Document
@@ -131,17 +139,23 @@ function IndexingForm(props) {
 				</div>
 				<div className="w-3/6 shadow">
 					<Form
-						className="w-full form"
+						className="w-full form m-3"
 						onSubmit={handleSubmit(onFileSubmitHandler)}
 					>
-						<label htmlFor="upload">Select document</label>
+						<label htmlFor="upload" className="form-label">
+							Select document
+						</label>
 						<input
 							type={"file"}
 							id="upload"
 							name="image"
+							className="form-control"
 							{...register("newPath")}
 						/>
-						<button type="submit" className="bg-orange-600 text-white">
+						<button
+							type="submit"
+							className=" p-1 rounded mt-3 bg-orange-600 text-white"
+						>
 							Open document
 						</button>
 					</Form>

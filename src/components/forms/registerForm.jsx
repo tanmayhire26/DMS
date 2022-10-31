@@ -33,7 +33,8 @@ function RegisterForm(props) {
 	useEffect(() => {
 		dispatch(loadLogin());
 	}, []);
-	let token = useSelector((state) => state.loginReducer.token);
+	let token;
+	token = useSelector((state) => state.loginReducer.token);
 	let decoded = {};
 	if (token) {
 		decoded = jwt_decode(token);

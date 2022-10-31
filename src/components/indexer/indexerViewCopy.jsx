@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,40 +8,24 @@ import {
 import { loadLogin } from "../../actions/loginAction";
 import Logo from "../logo";
 import jwt_decode from "jwt-decode";
-import { Popover, Typography } from "@mui/material";
 
 function IndexerView() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [imageSrc, setImageSrc] = useState("");
-	const [anchorEl, setAnchorEl] = useState(null);
-
-	const open = Boolean(anchorEl);
-	const id = open ? "simple-popover" : undefined;
 	let token = useSelector((state) => state.loginReducer.token);
-
 	let decoded = jwt_decode(token);
-
 	let userDepartments = decoded.departments;
-
 	useEffect(() => {
-		//dispatch(getAllDocuments());
+		// dispatch(loadLogin());
 		dispatch(getUserDocuments(userDepartments));
+		//dispatch(getAllDocuments());
 	}, []);
-	let documents = useSelector((state) => state.documentReducer.documents);
-	const handleDelete = (d) => {
-		dispatch(deleteDocument(d));
-	};
 
-	const handleClick = (event, d) => {
-		console.log(d.path.slice(14));
-		setAnchorEl(event.currentTarget);
-		setImageSrc(d.path.slice(14));
-	};
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-	const handleDocClick = (d) => {};
+	let documents = useSelector((state) => state.documentReducer.documents);
+	// console.log("I am in documents.jsx");
+
+	const handleDelete = (d) => {};
+	const handleClick = (d) => {};
 	return (
 		<>
 			<div className="row">
@@ -52,40 +36,18 @@ function IndexerView() {
 				</div>
 				<div className="col">
 					<div className="mt-4 mx-4">
-						<Popover
-							id={id}
-							open={open}
-							anchorEl={anchorEl}
-							onClose={handleClose}
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "left",
-							}}
-						>
-							<Typography sx={{ p: 2 }}>
-								<img alt="Document Preview" src={`/${imageSrc}`} />
-								This is an image preview pop over
-							</Typography>
-						</Popover>
 						{documents.map((d) => (
 							<div
 								key={d._id}
-								className="border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center justify-between"
+								className="border-l-4 border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center justify-between"
 							>
-								<div
-									onClick={(e) => handleClick(e, d)}
-									style={{ cursor: "pointer" }}
-									className="rounded p-1 mx-2 bg-gradient-to-r from-indigo-400 to-purple-400"
-								>
-									View
-								</div>
 								<div className="col">{d.name}</div>
 								<div className="col">{d.dcn}</div>
 								<div className="col">{d.doctype}</div>
 								<div className="col">{d.department}</div>
 								<div className="col-1">
 									<svg
-										onClick={() => handleDocClick(d)}
+										onClick={() => handleClick(d)}
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="orange"

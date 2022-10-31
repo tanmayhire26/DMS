@@ -1,9 +1,13 @@
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../../actions/loginAction";
+import { loadLogin, logout } from "../../actions/loginAction";
 
 function IndexerNavbar() {
 	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
 	const navigate = useNavigate();
 	return (
 		<>

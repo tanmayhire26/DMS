@@ -3,10 +3,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form, useNavigate } from "react-router-dom";
 import { getAllDepartments } from "../../actions/departmentAction";
 import { getAllDoctypes } from "../../actions/doctypeAction";
+import jwt_decode from "jwt-decode";
+import { loadLogin } from "../../actions/loginAction";
 
 function IndexerOpenForm(props) {
-	const { onDoctypeChange, getSelectedDep } = props;
+	let token = "";
+	let decoded ;
 
+	// token = useSelector((state) => state.loginReducer.token);
+
+	// useEffect(() => {
+	// 	dispatch(loadLogin());
+	// }, []);
+
+	// if (token) {
+	// 	decoded = jwt_decode(token);
+	// }
+	// const userDepartmentIds = decoded.departments;
+
+	// const token = useSelector((state) => state.loginReducer.token);
+	// let decoded = jwt_decode(token);
+	const { onDoctypeChange, getSelectedDep } = props;
+	let userDepartments = [];
 	const [dep, setDep] = useState("");
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -19,6 +37,7 @@ function IndexerOpenForm(props) {
 	const departments = useSelector(
 		(state) => state.departmentReducer.departments
 	);
+
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	let handleDepChange = (e) => {
 		getSelectedDep(e);
@@ -27,6 +46,15 @@ function IndexerOpenForm(props) {
 		);
 		setFilteredDoctypes(filteredDoctypes);
 	};
+
+	//to get the logged in users department only to select from  :
+
+	// for (let i = 0; i < userDepartmentIds.length; i++) {
+	// 	userDepartments.push(
+	// 		departments.find((d) => d._id === userDepartmentIds[i])
+	// 	);
+	// }
+	
 
 	return (
 		<>
@@ -65,7 +93,7 @@ function IndexerOpenForm(props) {
 					</div>
 				</div>
 				<button
-					className="mt-4 p-2 w-3/6  rounded-full w-full bg-orange-300 text-white"
+					className="mt-4 p-2 w-3/6  rounded-full w-full bg-orange-500 text-white"
 					type="submit"
 				>
 					Open Form

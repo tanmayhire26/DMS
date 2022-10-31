@@ -16,6 +16,24 @@ export const getAllDocuments = () => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//-----------------------------GET USER Filtered documents-----------------------------------------------
+
+export const getUserDocuments = (data) => (dispatch, getState) => {
+	axios
+		.post(
+			apiEndPoint + "/filteredForUser",
+			{ departments: data },
+			{ headers: { "x-auth-token": getState().loginReducer.token } }
+		)
+		.then((response) =>
+			dispatch({
+				type: actions.GET_USER_DOCUMENTS,
+				payload: { userDocumentsG: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+//--------------------------------------------ADD Document---------------------------------------------------------------------
 export const addDocument =
 	(indexingInfo, pathToDispatch, depcodeToDispatch, name, doctypeObject) =>
 	(dispatch, getState) => {
@@ -40,3 +58,19 @@ export const addDocument =
 			)
 			.catch((err) => console.log(err.message));
 	};
+
+//--------------------------------------------------DELETE DOCUMENT----------------------------------------------
+
+export const deleteDocument = (data) => (getState, dispatch) => {
+	axios
+		.delete(apiEndPoint + "/" + data._id, {
+			headers: { "x-auth-token": getState().loginReducer.token },
+		})
+		.then((response) =>
+			dispatch({
+				type: actions.DELETE_DOCUMENT,
+				payload: { documentD: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};

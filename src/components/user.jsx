@@ -4,17 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { legacy_createStore } from "redux";
 import { getAllDepartments } from "../actions/departmentAction";
-import { getAllUsers } from "../actions/userAction";
+import { deleteUser, getAllUsers } from "../actions/userAction";
 import RegisterForm from "./forms/registerForm";
 import Logo from "./logo";
 
 function User() {
 	const dispatch = useDispatch();
 	const [anchorEl, setAnchorEl] = useState(null);
-
+	let [userDepartmentCodes, setUserDepartmentCodes] = useState();
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
-
+	let departNamesOfUser = [];
 	useEffect(() => {
 		dispatch(getAllUsers());
 		dispatch(getAllDepartments());
@@ -24,34 +24,15 @@ function User() {
 		(state) => state.departmentReducer.departments
 	);
 
-	// for (let i = 0; i < users.length; i++) {
-	// 	let userI=users[i];
-	// 	let useriD=userI.departments;
-	// 	for (let ud = 0; ud < useriD.length; ud++) {
-	// 		for (let d = 0; d < departments.length; d++) {
-	// 			let depD=departments[d];
-	// 			let depdId=depD._id;
-	// 			if (useriD[ud] === departments[d]._id) {
-	// 				useriD[ud] = d.name;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// console.log(
-	// 	"############################################# Users with their departments : $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
-	// 	users
-	// );
-
 	const [user, setUser] = useState({});
 
 	const handleUserClick = (u) => {
 		setUser(u);
 	};
 
-	// const handleDelete = (u) => {
-	// 	dispatch(deleteUser(u));
-	// };
+	const handleDelete = (u) => {
+		dispatch(deleteUser(u));
+	};
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -59,6 +40,23 @@ function User() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	// const viewDepartments = (u) => {
+	// 	const departmentIds = u.departments;
+	// 	for (let i = 0; i < departmentIds.length; i++) {
+	// 		const temp = departments.find((d) => d._id === departmentIds[i]);
+	// 		departNamesOfUser[i] = temp.departmentCode;
+	// 	}
+
+	// 	let user = users.find((e) => e._id === u._id);
+	// 	setUserDepartmentCodes(departNamesOfUser);
+	// 	user["departments"] = userDepartmentCodes;
+	// 	const index = users.findIndex((t) => t._id === user._id);
+	// 	users[index] = user;
+
+	// 	console.log(users);
+
+	// };
 
 	return (
 		<>
@@ -97,10 +95,15 @@ function User() {
 								key={u._id}
 								className="flex w-full border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
-								<div className="col-3">{u.userName}</div>
-								<div className="col-3">
-									{u.firstName} {u.lastName}
+								<div
+									className={`${
+										u.isActive ? "bg-green-500" : "bg-red-500"
+									} text-white mx-2`}
+								>
+									{u.isActive ? "Active" : "Inactive"}
 								</div>
+								<div className="col-3">{u.userName}</div>
+								<div className="col-3">departments</div>
 								<div className="col-2">{u.role}</div>
 								<div className="flex col-3">
 									<Link to={`${u._id}/${u.role}`}>
@@ -116,7 +119,7 @@ function User() {
 									</Link>
 
 									<svg
-										// onClick={() => handleDelete(u)}
+										onClick={() => handleDelete(u)}
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="orange"
