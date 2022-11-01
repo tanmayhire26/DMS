@@ -159,7 +159,7 @@ function IndexingForm(props) {
 							Open document
 						</button>
 					</Form>
-					<img src={`/${imageName}`} alt="document preview" />
+					<img src={`/documents/${imageName}`} alt="document preview" />
 				</div>
 			</div>
 		</>

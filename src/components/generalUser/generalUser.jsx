@@ -11,20 +11,44 @@ import Logo from "../logo";
 
 import jwt_decode from "jwt-decode";
 
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { forwardRef } from "react";
+
+const Alert = forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 function GeneralUser() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	useEffect(() => {
 		dispatch(loadLogin());
 		//dispatch(getAllDocuments());
 		dispatch(getUserDocuments(userDepartments));
 	}, []);
+
 	let token = "";
 	let decoded = {};
 	token = useSelector((state) => state.loginReducer.token);
 	if (token !== "") {
 		decoded = jwt_decode(token);
 	}
+	const [open1, setOpen1] = useState(false);
+
+	const handleClick1 = () => {
+		setOpen1(true);
+	};
+
+	const handleClose1 = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setOpen1(false);
+	};
+	const profileImageName = decoded.userName;
+	const profileImageSrc = decoded.userName + ".jpg";
 	let userDepartments = decoded.departments;
 	const [imageSrc, setImageSrc] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -35,8 +59,11 @@ function GeneralUser() {
 	const documents = useSelector((state) => state.documentReducer.documents);
 
 	const handleLogout = () => {
-		dispatch(logout());
-		navigate("/login");
+		handleClick1();
+		return setTimeout(() => {
+			navigate("/login");
+			dispatch(logout());
+		}, 1500);
 	};
 
 	const handleClick = (event, d) => {
@@ -49,6 +76,11 @@ function GeneralUser() {
 
 	return (
 		<>
+			<Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
+				<Alert onClose={handleClose1} severity="warning" sx={{ width: "100%" }}>
+					Logged Out!
+				</Alert>
+			</Snackbar>
 			<div className="row">
 				<div className="col-3 border-r h-screen flex justify-center">
 					<div className="mt-5">
@@ -57,14 +89,29 @@ function GeneralUser() {
 					<div className=""></div>
 				</div>
 				<div className="col">
-					<div
-						style={{ cursor: "pointer" }}
-						onClick={handleLogout}
-						className="w-[10%] items-center flex justify-center mt-2 bg-red-500 text-white"
-					>
-						LOG OUT
+					<div className="flex position-absolute right-[10%]">
+						<div>
+							<img
+								className="h-[50px] w-[50px] rounded-full"
+								alt="Profile Photo"
+								src={`/profile-images/${profileImageSrc}`}
+							/>
+						</div>
+						<div className="flex-row ml-2">
+							<div className="text-xs text-orange-600">{`Hi ${profileImageName}`}</div>
+							<div className="text-xs text-purple-600">{`${decoded.role}`}</div>
+
+							<div
+								style={{ cursor: "pointer" }}
+								onClick={handleLogout}
+								className="w-[60px] p-1 text-xs h-[15px] items-center flex justify-center ml-2 bg-red-500 text-white"
+							>
+								LOG OUT
+							</div>
+						</div>
 					</div>
-					<div className="m-5">
+
+					<div className="mt-[10%]">
 						<Popover
 							id={id}
 							open={open}
@@ -76,7 +123,7 @@ function GeneralUser() {
 							}}
 						>
 							<Typography sx={{ p: 2 }}>
-								<img alt="Document Preview" src={`${imageSrc}`} />
+								<img alt="Document Preview" src={`/documents/${imageSrc}`} />
 								This is an image preview pop over
 							</Typography>
 						</Popover>

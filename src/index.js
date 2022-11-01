@@ -5,7 +5,11 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
-import { createBrowserRouter, RouterProvider, useRouteLoaderData } from "react-router-dom";
+import {
+	createBrowserRouter,
+	RouterProvider,
+	useRouteLoaderData,
+} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Department from "./components/department";
 import User from "./components/user";
@@ -20,9 +24,12 @@ import GeneralUser from "./components/generalUser/generalUser";
 import IndexerView from "./components/indexer/indexerView";
 import IndexerAddDoc from "./components/indexer/indexerAddDoc";
 import Navbar from "./components/navBar";
-import  { UserForm, userLoader } from "./components/forms/userForm";
+import { UserForm, userLoader } from "./components/forms/userForm";
 import AddDoc from "./components/indexer/indexerAddDoc";
 import IndexerApp from "./components/indexer/indexerApp";
+import AdminProtectedRouter from "./components/adminProtectedRouter";
+import GeneralUserProtectedRouter from "./components/generalUser/generalUserProtectedRoute";
+import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -36,23 +43,42 @@ const router = createBrowserRouter([
 
 	{
 		path: "admin",
-		element: <App />,
+
+		element: (
+			<AdminProtectedRouter>
+				<App />
+			</AdminProtectedRouter>
+		),
+
 		errorElement: <ErrorPage />,
 		children: [
+			{ index: true, element: <img className="w-4/6" src="welcome.jpg" /> },
 			{ path: "departments", element: <Department /> },
 			{ path: "users", element: <User /> },
 			{ path: "docTypes", element: <DocType /> },
 			{ path: "doctypeFields", element: <DoctypeFields /> },
 			{ path: "fields", element: <Fields /> },
 			{ path: "users/userForm", element: <UserForm /> },
-			{path:"users/:id/:role",element:<UserForm/>,loader:userLoader}
+			{ path: "users/:id/:role", element: <UserForm />, loader: userLoader },
 		],
 	},
-	{ path: "generalUser", element: <GeneralUser /> },
+	{
+		path: "generalUser",
+		element: (
+			<GeneralUserProtectedRouter>
+				<GeneralUser />
+			</GeneralUserProtectedRouter>
+		),
+	},
 	{
 		path: "indexer",
-		element: <IndexerApp />,
+		element: (
+			<IndexerProtectedRouter>
+				<IndexerApp />
+			</IndexerProtectedRouter>
+		),
 		children: [
+			{ index: true, element: <img className="w-4/6" src="welcome.jpg" /> },
 			{ path: "indexerView", element: <IndexerView /> },
 			{ path: "addDoc", element: <AddDoc /> },
 		],

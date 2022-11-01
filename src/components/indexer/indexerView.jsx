@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
+	deleteDocument,
 	getAllDocuments,
 	getUserDocuments,
 } from "../../actions/documentAction";
@@ -12,6 +13,10 @@ import { Popover, Typography } from "@mui/material";
 
 function IndexerView() {
 	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
+
 	const navigate = useNavigate();
 	const [imageSrc, setImageSrc] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -19,10 +24,13 @@ function IndexerView() {
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
 	let token = useSelector((state) => state.loginReducer.token);
+	let decoded = {};
+	let userDepartments = [];
+	if (token) {
+		decoded = jwt_decode(token);
 
-	let decoded = jwt_decode(token);
-
-	let userDepartments = decoded.departments;
+		userDepartments = decoded.departments;
+	}
 
 	useEffect(() => {
 		//dispatch(getAllDocuments());
@@ -42,6 +50,7 @@ function IndexerView() {
 		setAnchorEl(null);
 	};
 	const handleDocClick = (d) => {};
+
 	return (
 		<>
 			<div className="row">
@@ -63,7 +72,7 @@ function IndexerView() {
 							}}
 						>
 							<Typography sx={{ p: 2 }}>
-								<img alt="Document Preview" src={`/${imageSrc}`} />
+								<img alt="Document Preview" src={`/documents/${imageSrc}`} />
 								This is an image preview pop over
 							</Typography>
 						</Popover>

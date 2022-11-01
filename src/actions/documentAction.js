@@ -61,16 +61,20 @@ export const addDocument =
 
 //--------------------------------------------------DELETE DOCUMENT----------------------------------------------
 
-export const deleteDocument = (data) => (getState, dispatch) => {
+export const deleteDocument = (data) => (dispatch, getState) => {
+	// {
+	// 		headers: { "x-auth-token": getState().loginReducer.token },
+	// 	}
 	axios
-		.delete(apiEndPoint + "/" + data._id, {
-			headers: { "x-auth-token": getState().loginReducer.token },
+		.delete(apiEndPoint + "/" + data._id)
+		.then((response) => {
+			{
+				console.log("in response of del deoc action", response.data);
+				dispatch({
+					type: actions.DELETE_DOCUMENT,
+					payload: { documentD: response.data },
+				});
+			}
 		})
-		.then((response) =>
-			dispatch({
-				type: actions.DELETE_DOCUMENT,
-				payload: { documentD: response.data },
-			})
-		)
 		.catch((err) => console.log(err.message));
 };

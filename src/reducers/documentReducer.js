@@ -14,8 +14,9 @@ export const documentReducer = (state = { documents: [] }, action) => {
 				documents: [...state.documents, action.payload.documentA],
 			};
 		case actions.DELETE_DOCUMENT:
-			const documentsAftDel = [...state.documents].filter(
-				(d) => d._id !== action.payload.documentsD._id
+			console.log("delete department reducer : ", action.payload.documentD);
+			const documentsAftDel = state.documents.filter(
+				(d) => d._id !== action.payload.documentD._id
 			);
 			return { ...state, documents: documentsAftDel };
 		default:

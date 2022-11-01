@@ -11,11 +11,12 @@ const schema = yup.object().shape({
 	userName: yup.string().required(),
 	password: yup.string().min(5).max(35).required(),
 });
-function LoginForm() {
+function LoginForm(props) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const token = "";
-	let decoded = {};
+	const { handleClick } = props;
+	// const token = "";
+	// let decoded = {};
 
 	// token = useSelector((state) => state.loginReducer.token);
 	// decoded = jwt_decode(token);
@@ -34,8 +35,8 @@ function LoginForm() {
 	const onSubmitHandler = (data) => {
 		console.log("in on submit handler data sent is", data);
 		dispatch(loginUser(data));
-
-		navigate("/");
+		handleClick();
+		return setTimeout(() => navigate("/") ,1500);
 
 		// decoded.role === "Admin"
 		// 	? navigate("/admin")
