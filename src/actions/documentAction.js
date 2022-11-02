@@ -18,21 +18,29 @@ export const getAllDocuments = () => (dispatch, getState) => {
 
 //-----------------------------GET USER Filtered documents-----------------------------------------------
 
-export const getUserDocuments = (data) => (dispatch, getState) => {
-	axios
-		.post(
-			apiEndPoint + "/filteredForUser",
-			{ departments: data },
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
-		)
-		.then((response) =>
-			dispatch({
-				type: actions.GET_USER_DOCUMENTS,
-				payload: { userDocumentsG: response.data },
-			})
-		)
-		.catch((err) => console.log(err.message));
-};
+export const getUserDocuments =
+	(data, departmentFilter, doctypeFilter, searchQuery, dtf) =>
+	(dispatch, getState) => {
+		axios
+			.post(
+				apiEndPoint + "/filteredForUser",
+				{
+					departments: data,
+					departmentFilter: departmentFilter,
+					doctypeFilter: doctypeFilter,
+					searchQuery: searchQuery,
+					doctypefieldReq: dtf,
+				},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			)
+			.then((response) =>
+				dispatch({
+					type: actions.GET_USER_DOCUMENTS,
+					payload: { userDocumentsG: response.data },
+				})
+			)
+			.catch((err) => console.log(err.message));
+	};
 //--------------------------------------------ADD Document---------------------------------------------------------------------
 export const addDocument =
 	(indexingInfo, pathToDispatch, depcodeToDispatch, name, doctypeObject) =>

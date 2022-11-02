@@ -14,6 +14,10 @@ import jwt_decode from "jwt-decode";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { forwardRef } from "react";
+import FilterList from "../common/filterList";
+import { getAllDoctypes } from "../../actions/doctypeAction";
+import { getAllDoctypefields } from "../../actions/doctypefieldAction";
+import { getAllFields } from "../../actions/fieldAction";
 
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -21,11 +25,25 @@ const Alert = forwardRef(function Alert(props, ref) {
 function GeneralUser() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	let dtfieldsForSearchObjects = [];
+	const [doctypefieldsReq, setDoctypefieldsReq] = useState([]);
+	let fieldsForSearchObjects = [];
+	let [doctypes, setDoctypes] = useState([]);
+	let [selectedDepartment, setSelectedDepartment] = useState("");
+	let [selectedDoctype, setSelectedDoctype] = useState("");
+	const doctypefieldObjects = useSelector(
+		(state) => state.doctypefieldReducer.doctypefields
+	); //arrays of all doctypefield objects from db
 
+	const fieldObjects = useSelector((state) => state.fieldReducer.fields); //array of all field objects from db
+	const doctypeObjects = useSelector((state) => state.doctypeReducer.doctypes);
 	useEffect(() => {
 		dispatch(loadLogin());
+		dispatch(getAllDoctypes());
+		dispatch(getAllDoctypefields());
+		dispatch(getAllFields());
 		//dispatch(getAllDocuments());
-		dispatch(getUserDocuments(userDepartments));
+		dispatch(getUserDocuments(userDepartments, ""));
 	}, []);
 
 	let token = "";
@@ -74,6 +92,60 @@ function GeneralUser() {
 		setAnchorEl(null);
 	};
 
+	//let's handle department filter click
+	const handleDepClick = (d) => {
+		let tempDoctypes = doctypeObjects.filter((dt) => dt.department === d);
+		setDoctypes(tempDoctypes);
+		setSelectedDepartment(d);
+
+		dispatch(getUserDocuments(userDepartments, d));
+	};
+
+	//let's handle the doctype filter click
+	const handleDTClick = (d) => {
+		setSelectedDoctype(d);
+		dispatch(getUserDocuments(userDepartments, selectedDepartment, d.name));
+		//----------------------------------get fields for search-------------------------------
+		dtfieldsForSearchObjects = doctypefieldObjects?.filter(
+			(dtf) => dtf.docType === d._id
+		);
+
+		//let's create a fields objects arr which has fields from the required doctype field object array
+		for (let i = 0; i < dtfieldsForSearchObjects.length; i++) {
+			let tempFieldObj = fieldObjects.find(
+				(f) => f._id === dtfieldsForSearchObjects[i].field
+			);
+			if (tempFieldObj.length !== 0) {
+				fieldsForSearchObjects.push(tempFieldObj);
+			}
+		}
+
+		//we will append fieldObj property to doctypeFields
+
+		for (let j = 0; j < dtfieldsForSearchObjects.length; j++) {
+			dtfieldsForSearchObjects[j]["fieldObj"] = fieldsForSearchObjects[j];
+		}
+
+		console.log(dtfieldsForSearchObjects);
+		setDoctypefieldsReq(dtfieldsForSearchObjects);
+	};
+
+	//---------------------------------------------Search by doctypeFieldId--------------------------------------------
+	const handleSearch = (e, dtf) => {
+		//console.log("handling search", dtf.fieldObj.name.name);
+		let searchQuery = e.target.value;
+		console.log(searchQuery);
+		dispatch(
+			getUserDocuments(
+				userDepartments,
+				selectedDepartment,
+				selectedDoctype,
+				searchQuery,
+				dtf
+			)
+		);
+	};
+
 	return (
 		<>
 			<Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
@@ -82,11 +154,20 @@ function GeneralUser() {
 				</Alert>
 			</Snackbar>
 			<div className="row">
-				<div className="col-3 border-r h-screen flex justify-center">
-					<div className="mt-5">
+				<div className="col-3 border-r h-screen flex-row">
+					<div className="mt-5  flex justify-center ">
 						<Logo />
 					</div>
-					<div className=""></div>
+					<div className="mt-5 flex-row justify-center">
+						<FilterList
+							departments={userDepartments}
+							handleDepClick={handleDepClick}
+							handleDTClick={handleDTClick}
+							doctypes={doctypes}
+							doctypefieldsReq={doctypefieldsReq}
+							handleSearch={handleSearch}
+						/>
+					</div>
 				</div>
 				<div className="col">
 					<div className="flex position-absolute right-[10%]">
