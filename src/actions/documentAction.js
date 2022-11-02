@@ -27,7 +27,7 @@ export const getUserDocuments =
 				{
 					departments: data,
 					departmentFilter: departmentFilter,
-					doctypeFilter: doctypeFilter,
+					doctypeFilter: doctypeFilter?.name,
 					searchQuery: searchQuery,
 					doctypefieldReq: dtf,
 				},

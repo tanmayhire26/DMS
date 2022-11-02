@@ -104,7 +104,7 @@ function GeneralUser() {
 	//let's handle the doctype filter click
 	const handleDTClick = (d) => {
 		setSelectedDoctype(d);
-		dispatch(getUserDocuments(userDepartments, selectedDepartment, d.name));
+		dispatch(getUserDocuments(userDepartments, selectedDepartment, d));
 		//----------------------------------get fields for search-------------------------------
 		dtfieldsForSearchObjects = doctypefieldObjects?.filter(
 			(dtf) => dtf.docType === d._id
