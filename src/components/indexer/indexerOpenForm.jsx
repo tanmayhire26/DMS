@@ -8,18 +8,18 @@ import { loadLogin } from "../../actions/loginAction";
 
 function IndexerOpenForm(props) {
 	let token = "";
-	let decoded ;
+	let decoded;
 
-	// token = useSelector((state) => state.loginReducer.token);
+	token = useSelector((state) => state.loginReducer.token);
 
 	// useEffect(() => {
 	// 	dispatch(loadLogin());
 	// }, []);
 
-	// if (token) {
-	// 	decoded = jwt_decode(token);
-	// }
-	// const userDepartmentIds = decoded.departments;
+	if (token) {
+		decoded = jwt_decode(token);
+	}
+	const userDepartmentIds = decoded.departments;
 
 	// const token = useSelector((state) => state.loginReducer.token);
 	// let decoded = jwt_decode(token);
@@ -27,7 +27,6 @@ function IndexerOpenForm(props) {
 	let userDepartments = [];
 	const [dep, setDep] = useState("");
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	let [filteredDoctypes, setFilteredDoctypes] = useState([]);
 
 	useEffect(() => {
@@ -49,12 +48,13 @@ function IndexerOpenForm(props) {
 
 	//to get the logged in users department only to select from  :
 
-	// for (let i = 0; i < userDepartmentIds.length; i++) {
-	// 	userDepartments.push(
-	// 		departments.find((d) => d._id === userDepartmentIds[i])
-	// 	);
-	// }
-	
+	for (let i = 0; i < userDepartmentIds.length; i++) {
+		let tempUserDepartment = departments.find(
+			(d) => d._id === userDepartmentIds[i]
+		);
+		userDepartments.push(tempUserDepartment);
+	}
+	console.log(userDepartments);
 
 	return (
 		<>
@@ -66,7 +66,7 @@ function IndexerOpenForm(props) {
 						</label>
 						<select onChange={handleDepChange} id="dep" className="form-select">
 							<option>Select a department</option>
-							{departments.map((d) => (
+							{userDepartments?.map((d) => (
 								<option value={d.name} key={d._id}>
 									{d.name}
 								</option>

@@ -69,6 +69,9 @@ const router = createBrowserRouter([
 				<GeneralUser />
 			</GeneralUserProtectedRouter>
 		),
+		children: [
+			{ path: "profile/:id/:role", element: <UserForm />, loader: userLoader },
+		],
 	},
 	{
 		path: "indexer",

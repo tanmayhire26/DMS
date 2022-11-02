@@ -41,23 +41,6 @@ function User() {
 		setAnchorEl(null);
 	};
 
-	// const viewDepartments = (u) => {
-	// 	const departmentIds = u.departments;
-	// 	for (let i = 0; i < departmentIds.length; i++) {
-	// 		const temp = departments.find((d) => d._id === departmentIds[i]);
-	// 		departNamesOfUser[i] = temp.departmentCode;
-	// 	}
-
-	// 	let user = users.find((e) => e._id === u._id);
-	// 	setUserDepartmentCodes(departNamesOfUser);
-	// 	user["departments"] = userDepartmentCodes;
-	// 	const index = users.findIndex((t) => t._id === user._id);
-	// 	users[index] = user;
-
-	// 	console.log(users);
-
-	// };
-
 	return (
 		<>
 			<div className="row flex divide-x">

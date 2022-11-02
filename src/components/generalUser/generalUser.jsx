@@ -70,6 +70,7 @@ function GeneralUser() {
 	let userDepartments = decoded.departments;
 	const [imageSrc, setImageSrc] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [isImageClicked, setIsImageClicked] = useState(false);
 
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
@@ -146,6 +147,14 @@ function GeneralUser() {
 		);
 	};
 
+	//---------------------------------------handleImageClick for edit Profile---------------------------------------------------
+
+	const handleImageClick = () => {
+		isImageClicked === false
+			? setIsImageClicked(true)
+			: setIsImageClicked(false);
+	};
+
 	return (
 		<>
 			<Snackbar open={open1} autoHideDuration={6000} onClose={handleClose1}>
@@ -171,12 +180,21 @@ function GeneralUser() {
 				</div>
 				<div className="col">
 					<div className="flex position-absolute right-[10%]">
-						<div>
-							<img
-								className="h-[50px] w-[50px] rounded-full"
-								alt="Profile Photo"
-								src={`/profile-images/${profileImageSrc}`}
-							/>
+						<div className="flex">
+							{isImageClicked === true ? (
+								<div className="text-xs bg-slate-100 shadow mr-3 mt-1 flex justify-center items-center">
+									Click to edit profile
+								</div>
+							) : null}
+							<Link to={`profile/${decoded?._id}/${decoded?.role}`}>
+								<img
+									onMouseEnter={handleImageClick}
+									onMouseLeave={handleImageClick}
+									className="h-[50px] w-[50px] rounded-full"
+									alt="Profile Photo"
+									src={`/profile-images/${profileImageSrc}`}
+								/>
+							</Link>
 						</div>
 						<div className="flex-row ml-2">
 							<div className="text-xs text-orange-600">{`Hi ${profileImageName}`}</div>

@@ -10,6 +10,7 @@ import { Alert } from "@mui/material";
 import { loadLogin } from "../../actions/loginAction";
 
 import jwt_decode from "jwt-decode";
+import { getAllUsers, updateUser } from "../../actions/userAction";
 
 const schema = yup.object().shape({
 	firstName: yup.string().required(),
@@ -32,6 +33,7 @@ function RegisterForm(props) {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(loadLogin());
+		dispatch(getAllUsers());
 	}, []);
 	let token;
 	token = useSelector((state) => state.loginReducer.token);
@@ -62,6 +64,7 @@ function RegisterForm(props) {
 		setValue("phone", user.phone);
 		setValue("userName", user.userName);
 		setValue("password", user.password);
+		setValue("_id", user._id);
 	}, [userId]);
 
 	const handleChange = (value) => {
@@ -71,29 +74,34 @@ function RegisterForm(props) {
 		data["departments"] = selectedDP;
 		if (decoded.role === "Admin") {
 			data["role"] = "Indexer";
-			dispatch(registerUser(data));
-			navigate("/admin/users");
+			if (data._id) {
+				data["updatedBy"] = decoded._id;
+				dispatch(updateUser(data));
+				navigate("/admin/users");
+			} else {
+				dispatch(registerUser(data));
+				navigate("/admin/users");
+			}
 		} else {
-			dispatch(registerUser(data));
-			navigate("/login");
+			if (data._id) {
+				data["updatedBy"] = decoded._id;
+				dispatch(updateUser(data));
+				navigate("/generalUser");
+			} else {
+				dispatch(registerUser(data));
+				navigate("/login");
+			}
 		}
+		navigate("/admin");
+		navigate("/admin/users");
 	};
 	return (
-		// <>
-		// 	<Form onSubmit={handleSubmit(onSubmitHandler)}>
-		// 		<input type={"text"} {...register("name")} />
-		// 		<button type="submit" onClick={() => console.log("demo")}>
-		// 			Demo
-		// 		</button>
-		// 	</Form>
-		// </>
 		<>
-			{/* onSubmit={handleSubmit(onSubmitHandler)} */}
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className="text-orange-600 font-bold shadow-lg   p-3 backdrop-blur rounded"
+				className="flex-row justify-center text-orange-600 font-bold shadow-lg p-3 backdrop-blur rounded"
 			>
-				<div className="flex justify-between">
+				<div className="flex justify-around">
 					<div className="">
 						<label htmlFor="fname" className="form-label">
 							First Name*
@@ -125,7 +133,7 @@ function RegisterForm(props) {
 						) : null}
 					</div>
 				</div>
-				<div className="flex justify-between">
+				<div className="flex justify-around">
 					<div className="">
 						<label htmlFor="em" className="form-label">
 							email*
@@ -158,7 +166,7 @@ function RegisterForm(props) {
 					</div>
 				</div>
 
-				<div className="justify-center">
+				<div className="">
 					<label htmlFor="dep" className="form-label">
 						Department(s)
 					</label>
@@ -167,7 +175,7 @@ function RegisterForm(props) {
 						<ListOfDepartments onHandleChange={handleChange} />
 					</div>
 				</div>
-				<div className="flex gap-2">
+				<div className="flex justify-around">
 					<div className="">
 						<label htmlFor="uname" className="form-label">
 							Username*
