@@ -58,13 +58,13 @@ function RegisterForm(props) {
 		if (!userId) return;
 		const user = users.find((u) => u._id === userId);
 
-		setValue("firstName", user.firstName);
-		setValue("lastName", user.lastName);
-		setValue("email", user.email);
-		setValue("phone", user.phone);
-		setValue("userName", user.userName);
-		setValue("password", user.password);
-		setValue("_id", user._id);
+		setValue("firstName", user?.firstName);
+		setValue("lastName", user?.lastName);
+		setValue("email", user?.email);
+		setValue("phone", user?.phone);
+		setValue("userName", user?.userName);
+		setValue("password", user?.password);
+		setValue("_id", user?._id);
 	}, [userId]);
 
 	const handleChange = (value) => {

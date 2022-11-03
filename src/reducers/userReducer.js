@@ -5,6 +5,9 @@ export const userReducer = (state = { users: [] }, action) => {
 		case actions.GET_ALL_USERS:
 			return { ...state, users: action.payload.usersG };
 
+		case actions.GET_FILTERED_USERS:
+			return { ...state, users: action.payload.usersF };
+
 		case actions.UPDATE_USER:
 			let newUsersArr = state.users;
 			const indexUserU = newUsersArr.findIndex(

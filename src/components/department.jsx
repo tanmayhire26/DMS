@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
 	deleteDepartment,
 	getAllDepartments,
+	getFilteredDepartments,
 } from "../actions/departmentAction";
 import DepartmentForm from "./forms/departmentForm";
 import Logo from "./logo";
@@ -12,6 +13,7 @@ function Department() {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getAllDepartments());
+		//dispatch(getFilteredDepartments());
 	}, []);
 
 	const departments = useSelector(
@@ -27,24 +29,32 @@ function Department() {
 		dispatch(deleteDepartment(d));
 	};
 
+	//-------------------------------------------Search on department-------------------------------------------------
+
+	const handleDepSearch = (e) => {
+		dispatch(getFilteredDepartments(e.target.value));
+	};
+
 	return (
 		<>
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-rowjustify-center h-screen">
 					<div className="mt-3 flex justify-center  pb-3">
-						<Logo/>
+						<Logo />
 					</div>
 					<div></div>
 				</div>
 				<div className="col divide-y">
-					<div className="mt-3 mb-4">Search box</div>
-					<div className="flex-row bg-slate-100 p-4 h-screen">
-						<div className="w-full">
-							<DepartmentForm selectedDepartment={dept} />
+					<div className="flex-row p-4 h-screen">
+						<div className="w-4/6 shadow">
+							<DepartmentForm
+								selectedDepartment={dept}
+								handleDepSearch={handleDepSearch}
+							/>
 						</div>
 						<div className="mt-5">
 							{departments.map((d) => (
-								<div className="flex w-full border-l-4 border-orange-300 p-3 bg-white mb-3">
+								<div className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3">
 									<div>{d.name}</div>
 									<div className="absolute left-[60%]">{d.departmentCode}</div>
 									<div className="flex absolute right-[70px]">

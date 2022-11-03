@@ -4,6 +4,9 @@ export const departmentReducer = (state = { departments: [] }, action) => {
 	switch (action.type) {
 		case actions.GET_ALL_DEPARTMENTS:
 			return { ...state, departments: action.payload.departments };
+
+		case actions.GET_FILTERED_DEPARTMENTS:
+			return { ...state, departments: action.payload.departmentsF };
 		case actions.ADD_DEPARTMENT:
 			return {
 				...state,

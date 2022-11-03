@@ -18,6 +18,24 @@ export const getAllUsers = () => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//-----------------------------------------------------GET FILTERED USERS----------------------------------------------------------
+export const getFilteredUsers =
+	(role, username, departmentsArr) => (dispatch) => {
+		axios
+			.post(apiEndPoint + "/filtered", {
+				role: role,
+				searchQuery: username,
+				departmentsArr: departmentsArr,
+			})
+			.then((response) =>
+				dispatch({
+					type: actions.GET_FILTERED_USERS,
+					payload: { usersF: response.data },
+				})
+			)
+			.catch((err) => console.log(err.message));
+	};
+
 //----------------------------------------------------UPDATE USER-----------------------------------------------------------
 export const updateUser = (data) => (dispatch, getState) => {
 	console.log("in updateUser before put action", data);

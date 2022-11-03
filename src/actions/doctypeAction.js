@@ -13,6 +13,8 @@ export const getAllDoctypes = () => (dispatch) => {
 		.catch((err) => err.message);
 };
 
+
+
 export const addDoctype = (data) => (dispatch) => {
 	axios
 		.post(apiEndPoint, data)

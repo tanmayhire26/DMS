@@ -67,8 +67,8 @@ function IndexerOpenForm(props) {
 						<select onChange={handleDepChange} id="dep" className="form-select">
 							<option>Select a department</option>
 							{userDepartments?.map((d) => (
-								<option value={d.name} key={d._id}>
-									{d.name}
+								<option value={d?.name} key={d?._id}>
+									{d?.name}
 								</option>
 							))}
 						</select>

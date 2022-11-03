@@ -175,6 +175,8 @@ function GeneralUser() {
 							doctypes={doctypes}
 							doctypefieldsReq={doctypefieldsReq}
 							handleSearch={handleSearch}
+							selectedDepartment={selectedDepartment}
+							selectedDoctype={selectedDoctype}
 						/>
 					</div>
 				</div>
@@ -186,7 +188,7 @@ function GeneralUser() {
 									Click to edit profile
 								</div>
 							) : null}
-							<Link to={`profile/${decoded?._id}/${decoded?.role}`}>
+							<Link to={`profile/${decoded?._id}/General User`}>
 								<img
 									onMouseEnter={handleImageClick}
 									onMouseLeave={handleImageClick}

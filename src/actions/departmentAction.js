@@ -15,6 +15,21 @@ export const getAllDepartments = () => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//--------------------------------------------------GET FILTERED DEPARTMENTS----------------------------------------------------------
+
+export const getFilteredDepartments = (departmentFilter) => (dispatch) => {
+	axios
+		.post(apiEndPoint + "/filtered", { searchQuery: departmentFilter })
+		.then((response) =>
+			dispatch({
+				type: actions.GET_FILTERED_DEPARTMENTS,
+				payload: { departmentsF: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 export const addDepartment = (data) => (dispatch) => {
 	axios
 		.post(apiEndPoint, data)

@@ -10,11 +10,33 @@ import { loadLogin } from "../../actions/loginAction";
 import Logo from "../logo";
 import jwt_decode from "jwt-decode";
 import { Popover, Typography } from "@mui/material";
+import { getAllDoctypes } from "../../actions/doctypeAction";
+import { getAllDoctypefields } from "../../actions/doctypefieldAction";
+import { getAllFields } from "../../actions/fieldAction";
+import FilterList from "../common/filterList";
 
 function IndexerView() {
 	const dispatch = useDispatch();
+
+	let dtfieldsForSearchObjects = [];
+	const [doctypefieldsReq, setDoctypefieldsReq] = useState([]);
+	let fieldsForSearchObjects = [];
+	let [doctypes, setDoctypes] = useState([]);
+	let [selectedDepartment, setSelectedDepartment] = useState("");
+	let [selectedDoctype, setSelectedDoctype] = useState("");
+	const doctypefieldObjects = useSelector(
+		(state) => state.doctypefieldReducer.doctypefields
+	); //arrays of all doctypefield objects from db
+
+	const fieldObjects = useSelector((state) => state.fieldReducer.fields); //array of all field objects from db
+	const doctypeObjects = useSelector((state) => state.doctypeReducer.doctypes);
 	useEffect(() => {
 		dispatch(loadLogin());
+		dispatch(getAllDoctypes());
+		dispatch(getAllDoctypefields());
+		dispatch(getAllFields());
+		//dispatch(getAllDocuments());
+		dispatch(getUserDocuments(userDepartments, ""));
 	}, []);
 
 	const navigate = useNavigate();
@@ -32,10 +54,10 @@ function IndexerView() {
 		userDepartments = decoded.departments;
 	}
 
-	useEffect(() => {
-		//dispatch(getAllDocuments());
-		dispatch(getUserDocuments(userDepartments));
-	}, []);
+	// useEffect(() => {
+	// 	//dispatch(getAllDocuments());
+	// 	dispatch(getUserDocuments(userDepartments));
+	// }, []);
 	let documents = useSelector((state) => state.documentReducer.documents);
 	const handleDelete = (d) => {
 		dispatch(deleteDocument(d));
@@ -51,12 +73,76 @@ function IndexerView() {
 	};
 	const handleDocClick = (d) => {};
 
+	//let's handle department filter click
+	const handleDepClick = (d) => {
+		let tempDoctypes = doctypeObjects.filter((dt) => dt.department === d);
+		setDoctypes(tempDoctypes);
+		setSelectedDepartment(d);
+
+		dispatch(getUserDocuments(userDepartments, d));
+	};
+
+	//let's handle the doctype filter click
+	const handleDTClick = (d) => {
+		setSelectedDoctype(d);
+		dispatch(getUserDocuments(userDepartments, selectedDepartment, d));
+		//----------------------------------get fields for search-------------------------------
+		dtfieldsForSearchObjects = doctypefieldObjects?.filter(
+			(dtf) => dtf.docType === d._id
+		);
+
+		//let's create a fields objects arr which has fields from the required doctype field object array
+		for (let i = 0; i < dtfieldsForSearchObjects.length; i++) {
+			let tempFieldObj = fieldObjects.find(
+				(f) => f._id === dtfieldsForSearchObjects[i].field
+			);
+			if (tempFieldObj.length !== 0) {
+				fieldsForSearchObjects.push(tempFieldObj);
+			}
+		}
+
+		//we will append fieldObj property to doctypeFields
+
+		for (let j = 0; j < dtfieldsForSearchObjects.length; j++) {
+			dtfieldsForSearchObjects[j]["fieldObj"] = fieldsForSearchObjects[j];
+		}
+
+		console.log(dtfieldsForSearchObjects);
+		setDoctypefieldsReq(dtfieldsForSearchObjects);
+	};
+
+	//---------------------------------------------Search by doctypeFieldId--------------------------------------------
+	const handleSearch = (e, dtf) => {
+		//console.log("handling search", dtf.fieldObj.name.name);
+		let searchQuery = e.target.value;
+		console.log(searchQuery);
+		dispatch(
+			getUserDocuments(
+				userDepartments,
+				selectedDepartment,
+				selectedDoctype,
+				searchQuery,
+				dtf
+			)
+		);
+	};
+
 	return (
 		<>
 			<div className="row">
 				<div className="col-3 h-screen border-r">
 					<div className="w-full p-3 flex justify-center border-b">
 						<Logo />
+					</div>
+					<div className="mt-5 flex-row justify-center">
+						<FilterList
+							departments={userDepartments}
+							handleDepClick={handleDepClick}
+							handleDTClick={handleDTClick}
+							doctypes={doctypes}
+							doctypefieldsReq={doctypefieldsReq}
+							handleSearch={handleSearch}
+						/>
 					</div>
 				</div>
 				<div className="col">

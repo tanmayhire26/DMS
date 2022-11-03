@@ -30,6 +30,7 @@ import IndexerApp from "./components/indexer/indexerApp";
 import AdminProtectedRouter from "./components/adminProtectedRouter";
 import GeneralUserProtectedRouter from "./components/generalUser/generalUserProtectedRoute";
 import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
+import GeneralUserForm from "./components/generalUser/generalUserForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -69,10 +70,13 @@ const router = createBrowserRouter([
 				<GeneralUser />
 			</GeneralUserProtectedRouter>
 		),
-		children: [
-			{ path: "profile/:id/:role", element: <UserForm />, loader: userLoader },
-		],
 	},
+	{
+		path: "generalUser/profile/:id/:role",
+		element: <UserForm />,
+		loader: userLoader,
+	},
+
 	{
 		path: "indexer",
 		element: (

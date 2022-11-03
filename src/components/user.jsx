@@ -4,12 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { legacy_createStore } from "redux";
 import { getAllDepartments } from "../actions/departmentAction";
-import { deleteUser, getAllUsers } from "../actions/userAction";
+import {
+	deleteUser,
+	getAllUsers,
+	getFilteredUsers,
+} from "../actions/userAction";
+import UserFilterList from "./common/userFilterList";
 import RegisterForm from "./forms/registerForm";
 import Logo from "./logo";
 
 function User() {
 	const dispatch = useDispatch();
+
+	//search state variable as string - username
+	const [selectedRole, setSelectedRole] = useState("");
+	const [searchQuery, setSearchQuery] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
 	let [userDepartmentCodes, setUserDepartmentCodes] = useState();
 	const open = Boolean(anchorEl);
@@ -17,6 +26,7 @@ function User() {
 	let departNamesOfUser = [];
 	useEffect(() => {
 		dispatch(getAllUsers());
+		//dispatch(getFilteredUsers());
 		dispatch(getAllDepartments());
 	}, []);
 	let users = useSelector((state) => state.userReducer.users);
@@ -41,6 +51,37 @@ function User() {
 		setAnchorEl(null);
 	};
 
+	//let's append departmentNamesArr to users object
+
+	for (let i = 0; i < users.length; i++) {
+		let userDepartmentObjects = [];
+		let tempUserDepartmentsIds = users[i].departments;
+		for (let j = 0; j < tempUserDepartmentsIds.length; j++) {
+			let tempDepartmentObj = departments.find(
+				(d) => d._id === tempUserDepartmentsIds[j]
+			);
+			if (tempDepartmentObj) {
+				userDepartmentObjects.push(tempDepartmentObj.name);
+			}
+		}
+		users[i]["departmentNames"] = userDepartmentObjects;
+	}
+
+	const handleRoleClick = (r) => {
+		dispatch(getFilteredUsers(r, ""));
+		setSelectedRole(r);
+	};
+
+	const handleUsernameSearch = (e) => {
+		dispatch(getFilteredUsers(selectedRole, e.target.value));
+		setSearchQuery(e.target.value);
+	};
+
+	//Filter users according to their departments array
+	const handleDepartmentsFilter = (departmentsArr) => {
+		getFilteredUsers(selectedRole, searchQuery, departmentsArr);
+	};
+
 	return (
 		<>
 			<div className="row flex divide-x">
@@ -48,11 +89,27 @@ function User() {
 					<div className="mt-3 flex justify-center pb-3">
 						<Logo />
 					</div>
-					<div></div>
+					<div className="ml-5">
+						<UserFilterList
+							handleRoleClick={handleRoleClick}
+							onDepartmentsChange={handleDepartmentsFilter}
+						/>
+					</div>
 				</div>
 				<div className="col">
-					<div>
-						<div className="flex justify-center mt-5">
+					<div className="flex justify-center w-3/6">
+						<div className="mt-5 mr-5 shadow p-1">
+							<label className="form-label" htmlFor="username">
+								Search by username
+							</label>
+							<input
+								type="text"
+								className="form-control"
+								id="username"
+								onChange={handleUsernameSearch}
+							/>
+						</div>
+						<div className="flex h-1/6 justify-center mt-5">
 							<button onClick={handleClick} className="btn  btn-success">
 								Add User
 							</button>
@@ -76,17 +133,24 @@ function User() {
 						{users.map((u) => (
 							<div
 								key={u._id}
-								className="flex w-full border-l-4 border-orange-300 p-3 bg-white mb-3"
+								className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
 								<div
 									className={`${
-										u.isActive ? "bg-green-500" : "bg-red-500"
-									} text-white mx-2`}
+										u.isActive ? "text-green-500" : "text-red-500"
+									} font-bold mx-2`}
 								>
-									{u.isActive ? "Active" : "Inactive"}
+									O
 								</div>
-								<div className="col-3">{u.userName}</div>
-								<div className="col-3">departments</div>
+								{/* <div>
+									<img className="h-[50px] w-[50px] rounded-full" src={`/profile-images/${u.userName}.jpg`} />
+								</div> */}
+								<div className="col-2">{u.userName}</div>
+								<div className="col-5 w-full text-sm flex gap-3 flex-wrap">
+									{u.departmentNames.map((ud) => (
+										<div>{ud}</div>
+									))}
+								</div>
 								<div className="col-2">{u.role}</div>
 								<div className="flex col-3">
 									<Link to={`${u._id}/${u.role}`}>
