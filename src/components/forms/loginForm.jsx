@@ -6,7 +6,8 @@ import { Form, Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { loginUser } from "../../actions/loginAction";
 import jwt_decode from "jwt-decode";
-import { Alert } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
+import { useState } from "react";
 const schema = yup.object().shape({
 	userName: yup.string().required(),
 	password: yup.string().min(5).max(35).required(),
@@ -15,6 +16,7 @@ function LoginForm(props) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { handleClick } = props;
+	let [progress, setProgress] = useState(false);
 	// const token = "";
 	// let decoded = {};
 
@@ -36,13 +38,18 @@ function LoginForm(props) {
 		console.log("in on submit handler data sent is", data);
 		dispatch(loginUser(data));
 		handleClick();
-		return setTimeout(() => navigate("/") ,1500);
+		handleClickProgress();
+
+		return setTimeout(() => navigate("/"), 1500);
 
 		// decoded.role === "Admin"
 		// 	? navigate("/admin")
 		// 	: decoded.role === "Indexer"
 		// 	? navigate("/indexer")
 		// 	: navigate("/generalUser");
+	};
+	const handleClickProgress = () => {
+		setProgress(true);
 	};
 
 	return (
@@ -68,6 +75,9 @@ function LoginForm(props) {
 						type="submit"
 						className=" p-2 mt-2  w-full rounded-full bg-orange-300"
 					>
+						<div className="absolute left-[40%] z-2">
+							{progress === true ? <CircularProgress /> : null}
+						</div>
 						LOGIN
 					</button>
 				</Form>

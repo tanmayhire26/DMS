@@ -64,13 +64,14 @@ function DoctypeForm(props) {
 	const handleDTSearch = (e) => {
 		let searchValue = e.target.value;
 		setDoctypeSearch(searchValue);
-		dispatch(getFilteredDoctypes(searchValue));
+		dispatch(getFilteredDoctypes(searchValue, ""));
 	};
 
 	//let's search on department----------------------------
 
 	const handleDepFilter = (e) => {
-		console.log("dEpartment changed");
+		console.log(e.target.value);
+		dispatch(getFilteredDoctypes("", e.target.value));
 	};
 
 	//-------------------------------------------------RETURN------------------------------------------------------------

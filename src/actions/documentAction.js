@@ -86,3 +86,12 @@ export const deleteDocument = (data) => (dispatch, getState) => {
 		})
 		.catch((err) => console.log(err.message));
 };
+
+//---------------------------------------------GET_PREVIEW of image in add doc form----------------------------------
+
+export const getPreview = (data) => (dispatch) => {
+	axios
+		.post(apiEndPoint + "/preview", { imageName: data })
+		.then((response) => dispatch({ type: actions.GET_PREVIEW }))
+		.catch((err) => console.log(err.message));
+};

@@ -158,7 +158,10 @@ function IndexerView() {
 							}}
 						>
 							<Typography sx={{ p: 2 }}>
-								<img alt="Document Preview" src={`/documents/${imageSrc}`} />
+								<img
+									alt="Document Preview"
+									src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667557911/${imageSrc}`}
+								/>
 								This is an image preview pop over
 							</Typography>
 						</Popover>

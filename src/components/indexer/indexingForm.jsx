@@ -7,7 +7,7 @@ import { Form, useNavigate } from "react-router-dom";
 import { Image } from "semantic-ui-react";
 import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
-import { addDocument } from "../../actions/documentAction";
+import { addDocument, getPreview } from "../../actions/documentAction";
 import { getAllFields } from "../../actions/fieldAction";
 import { loadLogin } from "../../actions/loginAction";
 
@@ -16,7 +16,7 @@ function IndexingForm(props) {
 	const navigate = useNavigate();
 	const { selectedDoctype, selectedDepartment } = props;
 	const { handleSubmit, register } = useForm();
-	let [imageName, setImageName] = useState();
+	let [imageName, setImageName] = useState("");
 	let reqDoctypefields = []; //array of doctypefield objects
 	let reqDoctypefieldIds = []; //array of doctypefield ids
 	let reqFieldsIds = []; //array of fieldIds
@@ -71,6 +71,7 @@ function IndexingForm(props) {
 		}
 
 		const pathToDispatch = "D://../public/" + imageName;
+		console.log(imageName);
 		const name =
 			imageName.slice(0, imageName.length - 4) +
 			"_" +
@@ -95,6 +96,7 @@ function IndexingForm(props) {
 	};
 	const onFileSubmitHandler = (data) => {
 		const newImgSrc = data.newPath[0].name;
+		dispatch(getPreview(newImgSrc));
 		console.log("in file submit handler", newImgSrc);
 		setImageName(newImgSrc);
 	};
@@ -161,7 +163,10 @@ function IndexingForm(props) {
 							Open document
 						</button>
 					</Form>
-					<img src={`/documents/${imageName}`} alt="document preview" />
+					<img
+						src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667567709/${imageName}`}
+						alt={imageName}
+					/>
 				</div>
 			</div>
 		</>

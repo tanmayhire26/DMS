@@ -15,17 +15,21 @@ export const getAllDoctypes = () => (dispatch) => {
 
 //----------------------------------------------------GET FILTERED DOCTYPES------------------------------------------------------
 
-export const getFilteredDoctypes = (nameSearch) => (dispatch) => {
-	axios
-		.post(apiEndPoint + "/filtered", { nameSearchQuery: nameSearch })
-		.then((response) =>
-			dispatch({
-				type: actions.GET_FILTERED_DOCTYPES,
-				payload: { doctypesF: response.data },
+export const getFilteredDoctypes =
+	(nameSearch, departmentFilter) => (dispatch) => {
+		axios
+			.post(apiEndPoint + "/filtered", {
+				nameSearchQuery: nameSearch,
+				departmentFilter: departmentFilter,
 			})
-		)
-		.catch((err) => console.log(err.message));
-};
+			.then((response) =>
+				dispatch({
+					type: actions.GET_FILTERED_DOCTYPES,
+					payload: { doctypesF: response.data },
+				})
+			)
+			.catch((err) => console.log(err.message));
+	};
 
 //----------------------------------------------ADD DOC TYPE------------------------------------------------------------------------
 export const addDoctype = (data) => (dispatch) => {
