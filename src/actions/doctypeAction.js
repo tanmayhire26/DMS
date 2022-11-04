@@ -10,11 +10,24 @@ export const getAllDoctypes = () => (dispatch) => {
 				payload: { doctypes: response.data },
 			})
 		)
-		.catch((err) => err.message);
+		.catch((err) => console.log(err.message));
 };
 
+//----------------------------------------------------GET FILTERED DOCTYPES------------------------------------------------------
 
+export const getFilteredDoctypes = (nameSearch) => (dispatch) => {
+	axios
+		.post(apiEndPoint + "/filtered", { nameSearchQuery: nameSearch })
+		.then((response) =>
+			dispatch({
+				type: actions.GET_FILTERED_DOCTYPES,
+				payload: { doctypesF: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
 
+//----------------------------------------------ADD DOC TYPE------------------------------------------------------------------------
 export const addDoctype = (data) => (dispatch) => {
 	axios
 		.post(apiEndPoint, data)

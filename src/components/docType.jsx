@@ -32,23 +32,15 @@ function DocType() {
 					<div></div>
 				</div>
 				<div className="col divide-y">
-					<div className="h-[10%]">
-						<div className="h-[5%] pt-3 w-2/6">
-							<input
-								className="form-control"
-								type="text"
-								placeholder="search"
-							/>
-						</div>
-					</div>
+					
 					{/* form and table of DocType */}
-					<div className="bg-slate-100 h-screen">
-						<div className="p-4">
+					<div className="h-screen mt-3">
+						<div className="p-4 shadow w-5/6">
 							<DoctypeForm selectedDoctype={doc} />
 						</div>
 						<div className="mt-5 mr-[4%]">
 							{doctypes.map((d) => (
-								<div className="flex w-full border-l-4 border-orange-300 p-3 bg-white mb-3 ml-6">
+								<div className="flex shadow w-full border-l-4 border-orange-300 p-3 bg-white mb-3 ml-6">
 									<div className="col-4">{d.name}</div>
 									<div className="col-3">{d.department}</div>
 									<div className="col-3">{d.docTypeCode}</div>

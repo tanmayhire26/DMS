@@ -4,6 +4,9 @@ export const doctypeReducer = (state = { doctypes: [] }, action) => {
 	switch (action.type) {
 		case actions.GET_ALL_DOCTYPES:
 			return { ...state, doctypes: action.payload.doctypes };
+
+		case actions.GET_FILTERED_DOCTYPES:
+			return { ...state, doctypes: action.payload.doctypesF };
 		case actions.ADD_DOCTYPE:
 			return {
 				...state,

@@ -1,11 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
+import { Alert } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-router-dom";
 import * as yup from "yup";
 import { getAllDepartments } from "../../actions/departmentAction";
-import { addDoctype, updateDoctype } from "../../actions/doctypeAction";
+import {
+	addDoctype,
+	getFilteredDoctypes,
+	updateDoctype,
+} from "../../actions/doctypeAction";
 
 const schema = yup.object().shape({
 	docTypeCode: yup.string().required(),
@@ -21,6 +26,9 @@ function DoctypeForm(props) {
 		(state) => state.departmentReducer.departments
 	);
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
+
+	//state variables for filter and search-------------
+	const [doctypeSearch, setDoctypeSearch] = useState("");
 
 	useEffect(() => dispatch(getAllDepartments()), []);
 
@@ -51,11 +59,28 @@ function DoctypeForm(props) {
 		setValue,
 	} = useForm({ resolver: yupResolver(schema) });
 
+	//------------Let's search on doctype-----------------
+
+	const handleDTSearch = (e) => {
+		let searchValue = e.target.value;
+		setDoctypeSearch(searchValue);
+		dispatch(getFilteredDoctypes(searchValue));
+	};
+
+	//let's search on department----------------------------
+
+	const handleDepFilter = (e) => {
+		console.log("dEpartment changed");
+	};
+
+	//-------------------------------------------------RETURN------------------------------------------------------------
 	return (
 		<body className="w-full">
 			<div className="pb-4 pt-4 pl-6">
 				<Form onSubmit={handleSubmit(onSubmitHandler)}>
-					<h5>Add Document type</h5>
+					<h5 className="flex justify-center outline outline-2 outline-offset-2 outline-purple-400 rounded-full w-[35%]">
+						Add (or Search) Document type
+					</h5>
 					<div className="flex flex-wrap gap-3">
 						<div>
 							<label htmlFor="doc" className="form-label">
@@ -63,28 +88,38 @@ function DoctypeForm(props) {
 							</label>
 							<input
 								type="text"
-								className="form-control"
+								className="form-control outline outline-2 outline-orange-400"
 								id="doc"
-								placeholder="Enter Doc type"
+								placeholder="Enter or Search Doc type"
 								{...register("name")}
+								onChange={handleDTSearch}
 							/>
+							{errors.name ? (
+								<Alert severity="error">{errors.name?.message}</Alert>
+							) : null}
 						</div>
 						<div>
 							<label htmlFor="dep" className="form-label">
 								Department*
 							</label>
+
 							<select
-								className="w-full form-select"
+								{...register("department")}
+								onChange={(e) => handleDepFilter(e)}
+								className="w-full form-select outline outline-2 outline-orange-400"
 								id="dep"
 								placeholder="Select a department"
-								{...register("department")}
 							>
+								<option> </option>
 								{departments.map((d) => (
 									<option key={d._id} value={d.name}>
 										{d.name}
 									</option>
 								))}
 							</select>
+							{errors.department ? (
+								<Alert severity="error">{errors.department?.message}</Alert>
+							) : null}
 						</div>
 						<div>
 							<label htmlFor="code" className="form-label">
@@ -92,15 +127,18 @@ function DoctypeForm(props) {
 							</label>
 							<input
 								type="text"
-								className="form-control"
+								className="form-control outline outline-2 outline-orange-400"
 								{...register("docTypeCode")}
 								placeholder="Enter Doc Type code"
 							/>
+							{errors.docTypeCode ? (
+								<Alert severity="error">{errors.docTypeCode?.message}</Alert>
+							) : null}
 						</div>
 						<div className="mt-[3%]">
 							<button
 								type="submit"
-								className="bg-orange-300 rounded p-1 w-[150%]"
+								className="outline outline-4 outline-offset-2 outline-green-500 rounded-full p-1 w-[150%]"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"

@@ -16,11 +16,13 @@ import Logo from "./logo";
 function User() {
 	const dispatch = useDispatch();
 
-	//search state variable as string - username
+	//state vriables for filter
 	const [selectedRole, setSelectedRole] = useState("");
 	const [searchQuery, setSearchQuery] = useState("");
+	const [departmentsFilter, setDepartmentsFilter] = useState([]);
+
 	const [anchorEl, setAnchorEl] = useState(null);
-	let [userDepartmentCodes, setUserDepartmentCodes] = useState();
+
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
 	let departNamesOfUser = [];
@@ -73,13 +75,16 @@ function User() {
 	};
 
 	const handleUsernameSearch = (e) => {
-		dispatch(getFilteredUsers(selectedRole, e.target.value));
-		setSearchQuery(e.target.value);
+		let searchValue = e.target.value;
+		searchValue.trim();
+		dispatch(getFilteredUsers(selectedRole,searchValue));
+		setSearchQuery(searchValue);
 	};
 
 	//Filter users according to their departments array
 	const handleDepartmentsFilter = (departmentsArr) => {
-		getFilteredUsers(selectedRole, searchQuery, departmentsArr);
+		dispatch(getFilteredUsers(selectedRole, searchQuery, departmentsArr));
+		setDepartmentsFilter(departmentsArr);
 	};
 
 	return (
@@ -98,19 +103,22 @@ function User() {
 				</div>
 				<div className="col">
 					<div className="flex justify-center w-3/6">
-						<div className="mt-5 mr-5 shadow p-1">
+						<div className="mt-5 mr-5 shadow p-4">
 							<label className="form-label" htmlFor="username">
 								Search by username
 							</label>
 							<input
 								type="text"
-								className="form-control"
+								className="form-control outline outline-2 outline-offset-2 outline-orange-400"
 								id="username"
 								onChange={handleUsernameSearch}
 							/>
 						</div>
 						<div className="flex h-1/6 justify-center mt-5">
-							<button onClick={handleClick} className="btn  btn-success">
+							<button
+								onClick={handleClick}
+								className="outline outline-3 outline-offset-2 outline-green-500 rounded-full font-bold p-1"
+							>
 								Add User
 							</button>
 						</div>

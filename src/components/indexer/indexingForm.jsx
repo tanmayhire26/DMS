@@ -1,8 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { CloudinaryContext } from "cloudinary-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, useNavigate } from "react-router-dom";
+import { Image } from "semantic-ui-react";
 import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
 import { addDocument } from "../../actions/documentAction";
