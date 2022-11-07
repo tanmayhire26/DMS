@@ -9,6 +9,12 @@ import * as React from "react";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useEffect } from "react";
+import {
+	clearNotification,
+	getAllNotifications,
+} from "../actions/notifyAction";
+import { changeClearance, getAllUsers } from "../actions/userAction";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -16,6 +22,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 function Navbar() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	//----------State variable to open and close notification panel-----------
+
+	const [notify, setNotify] = useState("false");
+	const notifications = useSelector(
+		(state) => state.notifyReducer.notifications
+	);
+	const users = useSelector((state) => state.userReducer.users);
+	useEffect(() => {
+		dispatch(getAllNotifications());
+		dispatch(getAllUsers());
+	}, []);
+	useEffect(() => {
+		dispatch(getAllNotifications());
+	}, [notifications]);
 
 	const handleLogout = () => {
 		handleClick();
@@ -38,6 +58,24 @@ function Navbar() {
 		}
 
 		setOpen(false);
+	};
+
+	//------------------Handle notififcation click ---------------------------
+
+	const handleNotify = () => {
+		notify === false ? setNotify(true) : setNotify(false);
+	};
+	//---------------------------Handle if notification request is accepted aby admin----------------------------------------------
+	const handleAccept = (e, n) => {
+		const user = users.find((u) => u.userName === n.userName);
+		dispatch(changeClearance(user));
+		dispatch(clearNotification(n));
+	};
+
+	//----------------------Handle notification request rejected----------------------------
+
+	const handleReject = (n) => {
+		dispatch(clearNotification(n));
 	};
 
 	const token = useSelector((state) => state.loginReducer.token);
@@ -116,19 +154,66 @@ function Navbar() {
 								</ul>
 							</div>
 							<div className="mx-4 text-xs flex">
+								{notify === true ? (
+									<div className="z-10 flex-row absolute right-[10%] top-[80px]">
+										{notifications.map((n) =>
+											n.isActive === true ? (
+												<div
+													key={n._id}
+													className="p-3 backdrop-blur-xl shadow my-2 border-l-4 border-purple-400"
+												>
+													{/* <div>{n.userName}</div>
+												<div>{n.documentNo}</div> */}
+													<div>{n.description}</div>
+													<div className="mt-2">
+														<button
+															onClick={(e) => handleAccept(e, n)}
+															className="p-1 mr-3 rounded-full outline outline-2 outline-green-300"
+														>
+															Accept
+														</button>
+														<button
+															onClick={() => handleReject(n)}
+															className="p-1 mr-3 rounded-full outline outline-2 outline-red-300"
+														>
+															Reject
+														</button>
+													</div>
+												</div>
+											) : null
+										)}
+									</div>
+								) : null}
+								<div onClick={handleNotify}>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="orange"
+										viewBox="0 0 24 24"
+										strokeWidth="1.5"
+										stroke="currentColor"
+										className="w-8 h-8 mr-5"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+										/>
+									</svg>
+								</div>
+
 								<img
 									className="h-[50px] w-[50px] rounded-full"
 									src={`/profile-images/${profileImageSrc}`}
 									alt="Profile Photo"
 								/>
 								<div className="flex-row ml-2">
-									<div className=" text-orange-500">{`Hi ${decoded.firstName}`}</div>
+									<div className=" text-orange-500 font-bold">{`Hi ${decoded.firstName}`}</div>
 									<div className=" text-purple-400">{decoded.role}</div>
 									<div
 										style={{ cursor: "pointer" }}
 										onClick={handleLogout}
 										className={
-											"h-[15px] w-[50px] text-white focus:border-b-2 bg-red-500 w-full focus:border-orange-300"
+											"h-[10px] w-[60px] text-red-500 font-bold focus:border-b-2  w-full"
 										}
 									>
 										LOG OUT

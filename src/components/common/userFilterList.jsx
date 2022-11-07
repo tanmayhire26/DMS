@@ -10,7 +10,7 @@ function UserFilterList(props) {
 	const departments = useSelector(
 		(state) => state.departmentReducer.departments
 	);
-	console.log(departments);
+	
 	useEffect(() => {
 		dispatch(getAllDepartments());
 	}, []);

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import {
 	getAllDocuments,
 	getUserDocuments,
-} from "../../actions/documentAction";
-import { loadLogin } from "../../actions/loginAction";
-import Logo from "../logo";
+} from "../src/actions/documentAction";
+import { loadLogin } from "../src/actions/loginAction";
+import Logo from "../src/components/logo";
 import jwt_decode from "jwt-decode";
 
 function IndexerView() {

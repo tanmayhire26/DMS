@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loadLogin } from "../actions/loginAction";
+import { getAllUsers } from "../actions/userAction";
 import RegisterForm from "./forms/registerForm";
 
-function Register() {
+function Register(props) {
 	const dispatch = useDispatch();
-
+	const { userId, userRole } = props;
 
 	useEffect(() => {
 		dispatch(loadLogin());
+		dispatch(getAllUsers());
 	}, []);
 	return (
 		<>
@@ -20,7 +22,7 @@ function Register() {
 					className="flex justify-center items-center w-screen h-screen bg-center bg-contain bg-no-repeat"
 					style={{ backgroundImage: "url(/homeImage.png)" }}
 				>
-					<RegisterForm />
+					<RegisterForm userId={userId} userRole={userRole} />
 				</div>
 			</div>
 		</>

@@ -19,6 +19,26 @@ export const getAllDoctypefields = () => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//-------------------------------------------------------Get Filtered Doctypefields------------------------------------------------
+
+export const getFilteredDoctypefields =
+	(department, doctype, field) => (dispatch) => {
+		console.log(department, doctype, field);
+		axios
+			.post(apiEndPoint + "/filtered", {
+				departmentFilter: department,
+				doctypeFilter: doctype,
+				fieldFilter: field,
+			})
+			.then((response) =>
+				dispatch({
+					type: actions.GET_FILTERED_DOCTYPEFIELDS,
+					payload: { doctypefieldsF: response.data },
+				})
+			)
+			.catch((err) => console.log(err.message));
+	};
+
 //------------------------------------------------------------Add Doctypefield-------------------------------------------------------
 
 export const addDoctypefield = (data) => (dispatch, getState) => {

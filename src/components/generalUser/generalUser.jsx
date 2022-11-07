@@ -18,6 +18,12 @@ import FilterList from "../common/filterList";
 import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
 import { getAllFields } from "../../actions/fieldAction";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage } from "@cloudinary/react";
+import { focusOn } from "@cloudinary/transformation-builder-sdk/qualifiers/gravity";
+import { thumbnail } from "@cloudinary/transformation-builder-sdk/actions/resize";
+import { FocusOn } from "@cloudinary/transformation-builder-sdk/qualifiers/focusOn";
+import { sendNotification } from "../../actions/notifyAction";
 
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -45,6 +51,9 @@ function GeneralUser() {
 		//dispatch(getAllDocuments());
 		dispatch(getUserDocuments(userDepartments, ""));
 	}, []);
+
+	//state variable to know if document to view is sensitive and user doesn't have clearance
+	let [clear, setClear] = useState(true);
 
 	let token = "";
 	let decoded = {};
@@ -77,6 +86,21 @@ function GeneralUser() {
 
 	const documents = useSelector((state) => state.documentReducer.documents);
 
+	
+
+	//--------------------------CLOUDINARY-----------------------------------------------
+	const cld = new Cloudinary({
+		cloud: {
+			cloudName: "dc4ioiozw",
+		},
+	});
+	const myImage = cld.image(imageSrc.slice(0, -4));
+
+	console.log(imageSrc.slice(0, -4));
+	myImage.resize(thumbnail().width(1000).height(1000)).format("jpg"); // Deliver as JPEG. */
+
+	//--------------------------------------------------------------------------------------
+
 	const handleLogout = () => {
 		handleClick1();
 		return setTimeout(() => {
@@ -86,8 +110,16 @@ function GeneralUser() {
 	};
 
 	const handleClick = (event, d) => {
-		setAnchorEl(event.currentTarget);
-		setImageSrc(d.path.slice(14));
+		if (d.sensitive === true && decoded?.clearance === false) {
+			setClear(false);
+			setAnchorEl(event.currentTarget);
+			setImageSrc(d.path.slice(14));
+			dispatch(sendNotification(d, decoded?.userName));
+		} else {
+			setClear(true);
+			setAnchorEl(event.currentTarget);
+			setImageSrc(d.path.slice(14));
+		}
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -181,7 +213,7 @@ function GeneralUser() {
 					</div>
 				</div>
 				<div className="col">
-					<div className="flex position-absolute right-[10%]">
+					<div className="flex position-absolute right-[3%] mt-2">
 						<div className="flex">
 							{isImageClicked === true ? (
 								<div className="text-xs bg-slate-100 shadow mr-3 mt-1 flex justify-center items-center">
@@ -199,13 +231,13 @@ function GeneralUser() {
 							</Link>
 						</div>
 						<div className="flex-row ml-2">
-							<div className="text-xs text-orange-600">{`Hi ${profileImageName}`}</div>
+							<div className="text-xs text-orange-600 font-bold">{`Hi ${profileImageName}`}</div>
 							<div className="text-xs text-purple-600">{`${decoded.role}`}</div>
 
 							<div
 								style={{ cursor: "pointer" }}
 								onClick={handleLogout}
-								className="w-[60px] p-1 text-xs h-[15px] items-center flex justify-center ml-2 bg-red-500 text-white"
+								className="w-[60px] text-xs h-[15px] items-center flex justify-center font-bold text-red-500"
 							>
 								LOG OUT
 							</div>
@@ -219,26 +251,56 @@ function GeneralUser() {
 							anchorEl={anchorEl}
 							onClose={handleClose}
 							anchorOrigin={{
-								vertical: "top",
-								horizontal: "left",
+								vertical: "center",
+								horizontal: "center",
+							}}
+							transformOrigin={{
+								vertical: "bottom",
+								horizontal: "top",
+							}}
+							PaperProps={{
+								style: { width: "60%", height: "auto" },
 							}}
 						>
 							<Typography sx={{ p: 2 }}>
-								<img alt="Document Preview" src={`/documents/${imageSrc}`} />
-								This is an image preview pop over
+								{/* <img alt="Document Preview" src={`/documents/${imageSrc}`} /> */}
+								{clear === false ? (
+									<div className="  p-3 bg-black text-orange-500">
+										You are not allowed to view this document. Admin has been
+										notified!
+									</div>
+								) : (
+									<AdvancedImage cldImg={myImage} />
+								)}
 							</Typography>
 						</Popover>
 						{documents.map((d) => (
 							<div
-								className="flex my-4 h-[50px] shadow px-4 justify-center items-center justify-between border-l-4 border-orange-400"
+								className={
+									d.sensitive === false
+										? "text-xs border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center"
+										: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
+								}
 								key={d._id}
 							>
 								<div
 									onClick={(e) => handleClick(e, d)}
 									style={{ cursor: "pointer" }}
-									className="bg-gradient-to-r from-indigo-300 to-purple-400 p-1 rounded mr-2"
+									className="mr-2"
 								>
-									View
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24"
+										fill="orange"
+										class="w-5 h-5"
+									>
+										<path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+										<path
+											fill-rule="evenodd"
+											d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
+											clip-rule="evenodd"
+										/>
+									</svg>
 								</div>
 								<div className="col">{d.name}</div>
 								<div className="col">{d.dcn}</div>

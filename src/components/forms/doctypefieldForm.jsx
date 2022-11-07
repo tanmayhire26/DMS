@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import {
 	addDoctypefield,
 	getAllDoctypefields,
+	getFilteredDoctypefields,
 	updateDoctypefield,
 } from "../../actions/doctypefieldAction";
 
@@ -32,6 +33,11 @@ function DoctypefieldForm(props) {
 	let [filteredDoctypes, setFilteredDoctypes] = useState([]);
 	// const [selectedField, setSelectedField] = useState("");
 	// const [selectedDoctype, setSelectedDoctype] = useState("");
+
+	//------------------state variables for filter by department,doc type and field names-------------------
+	const [depFilter, setDepFilter] = useState("");
+	const [dtypeFilter, setDtypefilter] = useState("");
+	const [fieldFilter, setFieldFilter] = useState("");
 
 	const {
 		register,
@@ -80,18 +86,43 @@ function DoctypefieldForm(props) {
 		}
 	};
 
+	//For getting doctypes with the selected department in the next select field in form
 	let handleDepChange = (e) => {
 		filteredDoctypes = doctypes.filter(
 			(dt) => dt.department === e.target.value
 		);
+		let depValue = e.target.value;
+		//set the selected departmentvalue (string) to filter on
+		setDepFilter(depValue);
+		//dispatch function to get filtered values from backend
+
+		dispatch(getFilteredDoctypefields(depValue, ""));
 		setFilteredDoctypes(filteredDoctypes);
+	};
+
+	//for getting the selected doctype (id) and sending it as doctype field to the backend /filter
+
+	const handleDoctypechange = (e) => {
+		let dtypeValue = e.target.value;
+		console.log(dtypeValue);
+		setDtypefilter(dtypeValue);
+		dispatch(getFilteredDoctypefields("", dtypeValue));
+	};
+
+	//for getting the selected field (id) and sending it as  field to the backend /filter
+	const handleFieldChange = (e) => {
+		let fieldValue = e.target.value;
+		console.log("fieldValue");
+		setFieldFilter(fieldValue);
+		dispatch(getFilteredDoctypefields("", dtypeFilter, fieldValue));
 	};
 
 	return (
 		<>
+			<h6>Add or Search Document type Fields</h6>
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className="shadow-lg p-3 backdrop-blur rounded flex flex-wrap justify-between"
+				className="shadow p-3 backdrop-blur rounded flex flex-wrap justify-between"
 			>
 				<div className="flex-row">
 					<label htmlFor="dep" className="form-label">
@@ -99,11 +130,11 @@ function DoctypefieldForm(props) {
 					</label>
 					<select
 						onChange={handleDepChange}
-						className="form-select"
+						className="form-select outline outline-2 outline-orange-400"
 						//  {...register("department")}
 						id="dep"
 					>
-						<option>Select Department</option>
+						<option value={null}>Select Department</option>
 						{departments.map((d) => (
 							<option key={d._id} value={d.name}>
 								{d.name}
@@ -118,8 +149,13 @@ function DoctypefieldForm(props) {
 					<label className="form-label" htmlFor="doct">
 						Document type
 					</label>
-					<select id="doct" className="form-select" {...register("docType")}>
-						<option>Select Doctype</option>
+					<select
+						id="doct"
+						className="form-select outline outline-2 outline-orange-400"
+						{...register("docType")}
+						onChange={handleDoctypechange}
+					>
+						<option value={null}>Select Doctype</option>
 						{filteredDoctypes.map((fdt) => (
 							<option key={fdt._id} value={fdt._id}>
 								{fdt.name}
@@ -134,8 +170,13 @@ function DoctypefieldForm(props) {
 					<label className="form-label" htmlFor="fld">
 						Field
 					</label>
-					<select id="fld" className="form-select" {...register("field")}>
-						<option>Select Field</option>
+					<select
+						{...register("field")}
+						id="fld"
+						className="form-select outline outline-2 outline-orange-400"
+						onChange={handleFieldChange}
+					>
+						<option value={null}>Select Field</option>
 						{fields.map((f) => (
 							<option key={f._id} value={f._id}>
 								{f.name.name}

@@ -57,6 +57,24 @@ export const updateUser = (data) => (dispatch, getState) => {
 		.catch((err) => err.messsage);
 };
 
+//--------------------------------------------CHANGE CLEARANCE of USER-------------------------------------------------------
+
+export const changeClearance = (u) => (dispatch, getState) => {
+	axios
+		.patch(
+			apiEndPoint + "/clear/" + u._id,
+			{},
+			{ headers: { "x-auth-token": getState().loginReducer.token } }
+		)
+		.then((response) =>
+			dispatch({
+				type: actions.CHANGE_CLEARANCE,
+				payload: { userC: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+
 //------------------------------------------------Soft Delete User-------------------------------------------------------------
 
 export const deleteUser = (data) => (dispatch, getState) => {

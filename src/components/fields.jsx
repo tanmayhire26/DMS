@@ -31,7 +31,7 @@ function Fields() {
 					<div></div>
 				</div>
 				<div className="col">
-					<div className="m-5">
+					<div className="mx-4 my-5">
 						<FieldForm selectedField={fld} />
 					</div>
 					<div className="mx-4">

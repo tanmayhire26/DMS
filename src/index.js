@@ -22,18 +22,20 @@ import Register from "./components/register";
 import ErrorPage from "./errorPage";
 import GeneralUser from "./components/generalUser/generalUser";
 import IndexerView from "./components/indexer/indexerView";
-import IndexerAddDoc from "./components/indexer/indexerAddDoc";
-import Navbar from "./components/navBar";
+
 import { UserForm, userLoader } from "./components/forms/userForm";
 import AddDoc from "./components/indexer/indexerAddDoc";
 import IndexerApp from "./components/indexer/indexerApp";
 import AdminProtectedRouter from "./components/adminProtectedRouter";
 import GeneralUserProtectedRouter from "./components/generalUser/generalUserProtectedRoute";
 import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
-import GeneralUserForm from "./components/generalUser/generalUserForm";
+import { EditDoc } from "./components/indexer/editDoc";
+import MulterTrial from "./components/indexer/multerTrial";
+import IndexingForm from "./components/indexer/indexingForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
+	{ path: "demo", element: <MulterTrial /> },
 	{
 		path: "/",
 		element: <Home />,
@@ -53,7 +55,7 @@ const router = createBrowserRouter([
 
 		errorElement: <ErrorPage />,
 		children: [
-			{ index: true, element: <img className="w-4/6" src="welcome.jpg" /> },
+			{ index: true, element: <Department /> },
 			{ path: "departments", element: <Department /> },
 			{ path: "users", element: <User /> },
 			{ path: "docTypes", element: <DocType /> },
@@ -85,11 +87,12 @@ const router = createBrowserRouter([
 			</IndexerProtectedRouter>
 		),
 		children: [
-			{ index: true, element: <img className="w-4/6" src="welcome.jpg" /> },
+			{ index: true, element: <IndexerView /> },
 			{ path: "indexerView", element: <IndexerView /> },
 			{ path: "addDoc", element: <AddDoc /> },
 		],
 	},
+	{ path: "indexer/:id", element: <EditDoc /> },
 ]);
 
 root.render(

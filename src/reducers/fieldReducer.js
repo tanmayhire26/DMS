@@ -4,6 +4,9 @@ export const fieldReducer = (state = { fields: [] }, action) => {
 	switch (action.type) {
 		case actions.GET_ALL_FIELDS:
 			return { ...state, fields: action.payload.fieldsG };
+
+			case actions.GET_FILTERED_FIELDS:
+				return{...state,fields:action.payload.fieldsF}
 		case actions.ADD_FIELD:
 			return { ...state, fields: [...state.fields, action.payload.fieldA] };
 

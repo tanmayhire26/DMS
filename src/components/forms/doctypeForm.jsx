@@ -77,11 +77,11 @@ function DoctypeForm(props) {
 	//-------------------------------------------------RETURN------------------------------------------------------------
 	return (
 		<body className="w-full">
-			<div className="pb-4 pt-4 pl-6">
-				<Form onSubmit={handleSubmit(onSubmitHandler)}>
-					<h5 className="flex justify-center outline outline-2 outline-offset-2 outline-purple-400 rounded-full w-[35%]">
-						Add (or Search) Document type
-					</h5>
+			<h6 className="">
+				Add or Search Document type
+			</h6>
+			
+				<Form onSubmit={handleSubmit(onSubmitHandler)} className="shadow p-3">
 					<div className="flex flex-wrap gap-3">
 						<div>
 							<label htmlFor="doc" className="form-label">
@@ -136,16 +136,16 @@ function DoctypeForm(props) {
 								<Alert severity="error">{errors.docTypeCode?.message}</Alert>
 							) : null}
 						</div>
-						<div className="mt-[3%]">
+						<div className="mt-[4%] ml-[3%]">
 							<button
 								type="submit"
-								className="outline outline-4 outline-offset-2 outline-green-500 rounded-full p-1 w-[150%]"
+								className="bg-orange-300 rounded-full p-1 w-[150%]"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
 									viewBox="0 0 24 24"
-									stroke-width="1.5"
+									stroke-width="1.0"
 									stroke="currentColor"
 									className="w-6 absolute"
 								>
@@ -160,7 +160,7 @@ function DoctypeForm(props) {
 						</div>
 					</div>
 				</Form>
-			</div>
+		
 		</body>
 	);
 }

@@ -17,6 +17,20 @@ export const getAllFields = () => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//------------------------------------------------GET FILTERED FIELDS-------------------------------------
+
+export const getFilteredFields = (name) => (dispatch) => {
+	axios
+		.post(apiEndPoint + "/filtered", { nameSearchQuery: name })
+		.then((response) =>
+			dispatch({
+				type: actions.GET_FILTERED_FIELDS,
+				payload: { fieldsF: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+
 //-----------------------------------------------ADD FIELD---------------------------------------------------
 
 export const addField = (data) => (dispatch, getState) => {

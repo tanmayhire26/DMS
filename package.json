@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cloudinary/react": "^1.5.0",
+    "@cloudinary/transformation-builder-sdk": "^1.1.0",
+    "@cloudinary/url-gen": "^1.8.6",
     "@cred/neopop-web": "^1.0.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",

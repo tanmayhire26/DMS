@@ -1,11 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-router-dom";
 import * as yup from "yup";
-import { addField, updateField } from "../../actions/fieldAction";
+import { addField, getFilteredFields, updateField } from "../../actions/fieldAction";
 
 const schema = yup.object().shape({
 	name: yup.string().required(),
@@ -17,6 +17,10 @@ function FieldForm(props) {
 	const fields = useSelector((state) => state.fieldReducer.fields);
 	const fieldId = selectedField._id;
 	const dispatch = useDispatch();
+
+	//----------State variables for search queries----------------
+	const [nameSearch, setNameSearch] = useState("");
+	const [labelSearch, setLabelSearch] = useState("");
 
 	const {
 		register,
@@ -44,11 +48,26 @@ function FieldForm(props) {
 		setValue("_id", field._id);
 	}, [fieldId]);
 
+	const handleNameSearch = (e) => {
+		let nameValue = e.target.value;
+		setNameSearch(nameValue);
+		 dispatch(getFilteredFields(nameValue));
+	};
+
+	const handleLabelSearch = (e) => {
+		let labelValue = e.target.value;
+		setLabelSearch(labelValue);
+		//dispatch(getFilteredFields(nameSearch, labelValue));
+	};
+
+	
+
 	return (
 		<>
+			<h6>Add or Search Field</h6>
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className="shadow-lg p-3 backdrop-blur rounded flex flex-wrap justify-between"
+				className="shadow-lg p-3 backdrop-blur rounded flex flex-wrap gap-3"
 			>
 				<div className="flex-row">
 					<label className="form-label" htmlFor="fname">
@@ -56,9 +75,11 @@ function FieldForm(props) {
 					</label>
 					<input
 						id="fname"
-						className="form-control"
+						className="form-control outline outline-2 outline-orange-400"
 						type="text"
+						placeholder="Search with fieldName"
 						{...register("name")}
+						onChange={handleNameSearch}
 					/>
 					{errors.name ? (
 						<Alert severity="error">{errors.name?.message}</Alert>
@@ -70,8 +91,9 @@ function FieldForm(props) {
 					</label>
 					<input
 						id="flabel"
-						className="form-control"
+						className="form-control outline outline-2 outline-orange-400"
 						type="text"
+						
 						{...register("label")}
 					/>
 					{errors.label ? (
@@ -84,15 +106,16 @@ function FieldForm(props) {
 					</label>
 					<input
 						id="finput"
-						className="form-control"
+						className="form-control outline outline-2 outline-orange-400"
 						type="text"
+						
 						{...register("input")}
 					/>
 					{errors.input ? (
 						<Alert severity="error">{errors.input?.message}</Alert>
 					) : null}
 				</div>
-				<button className="self-center w-full mx-[30%]  p-1 rounded-full bg-orange-300 mt-3">
+				<button className="w-[25%] rounded-full bg-orange-300 mt-4">
 					Add Field
 				</button>
 			</Form>

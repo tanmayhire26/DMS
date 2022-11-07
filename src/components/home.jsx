@@ -85,19 +85,19 @@ function Home() {
 					</div>
 					{token ? (
 						<div className="flex">
-							<div className="mx-2">
+							<div className="mr-2">
 								<NavLink
 									style={{ textDecoration: "none" }}
-									className={"bg-indigo-400 p-1 text-gray-600"}
+									className={"text-gray-600"}
 									to={`${dash}`}
 								>
-									Dashboard
+									DASHBOARD
 								</NavLink>
 							</div>
 							<div
 								style={{ cursor: "pointer" }}
 								onClick={handleClick}
-								className="bg-red-500 text-white h-[15px] "
+								className="text-red-500"
 							>
 								LOG OUT
 							</div>

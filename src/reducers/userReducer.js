@@ -15,6 +15,15 @@ export const userReducer = (state = { users: [] }, action) => {
 			);
 			newUsersArr[indexUserU] = action.payload.userU;
 			return { ...state, users: newUsersArr };
+
+		case actions.CHANGE_CLEARANCE:
+			const userClearArr = [...state.users];
+			const indexClear = userClearArr.findIndex(
+				(u) => u._id === action.payload.userC._id
+			);
+			userClearArr[indexClear] = action.payload.userC;
+			return { ...state, users: userClearArr };
+
 		case actions.DELETE_USER:
 			const userArr = [...state.users];
 			const indexDel = userArr.findIndex(

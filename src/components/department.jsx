@@ -46,7 +46,7 @@ function Department() {
 				</div>
 				<div className="col divide-y">
 					<div className="flex-row p-4 h-screen">
-						<div className="w-4/6 shadow">
+						<div className="w-4/6">
 							<DepartmentForm
 								selectedDepartment={dept}
 								handleDepSearch={handleDepSearch}

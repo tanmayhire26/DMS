@@ -81,7 +81,7 @@ function IndexerNavbar() {
 									src={`/profile-images/${profileImageSrc}`}
 								/>
 								<div className="flex-row ml-2">
-									<div className="text-orange-600">{`Hi! ${profileImageName}`}</div>
+									<div className="text-orange-600 font-bold">{`Hi! ${profileImageName}`}</div>
 									<div className="text-purple-400">{`${decoded.role}`}</div>
 									<div
 										onClick={() => {
@@ -94,7 +94,7 @@ function IndexerNavbar() {
 										}}
 										style={{ cursor: "pointer" }}
 										className={
-											" w-[50px] h-[15px] text-white nav-link focus:border-b-2 bg-red-500 w-full focus:border-orange-300"
+											"text-red-500 font-bold"
 										}
 									>
 										LOG OUT

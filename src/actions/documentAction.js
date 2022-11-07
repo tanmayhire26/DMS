@@ -43,7 +43,14 @@ export const getUserDocuments =
 	};
 //--------------------------------------------ADD Document---------------------------------------------------------------------
 export const addDocument =
-	(indexingInfo, pathToDispatch, depcodeToDispatch, name, doctypeObject) =>
+	(
+		indexingInfo,
+		pathToDispatch,
+		depcodeToDispatch,
+		name,
+		doctypeObject,
+		sensitive
+	) =>
 	(dispatch, getState) => {
 		axios
 			.post(
@@ -55,6 +62,7 @@ export const addDocument =
 					depcode: depcodeToDispatch,
 					doctype: doctypeObject.name,
 					department: doctypeObject.department,
+					sensitive: sensitive,
 				},
 				{ headers: { "x-auth-token": getState().loginReducer.token } }
 			)
@@ -92,6 +100,8 @@ export const deleteDocument = (data) => (dispatch, getState) => {
 export const getPreview = (data) => (dispatch) => {
 	axios
 		.post(apiEndPoint + "/preview", { imageName: data })
-		.then((response) => dispatch({ type: actions.GET_PREVIEW }))
+		.then((response) =>
+			dispatch({ type: actions.GET_PREVIEW, payload: response.data })
+		)
 		.catch((err) => console.log(err.message));
 };

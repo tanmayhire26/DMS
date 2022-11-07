@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useLoaderData } from "react-router-dom";
 import RegisterForm from "./registerForm";
 import jwt_decode from "jwt-decode";
+import Register from "../register";
 
 export function userLoader({ params }) {
 	const userId = params.id;
@@ -16,14 +17,21 @@ export function UserForm() {
 	const token = useSelector((state) => state.loginReducer.token);
 	const decoded = jwt_decode(token);
 
+	// if (userRole === "Indexer") {
+	// 	return <RegisterForm userId={userId} userRole={userRole} />;
+	// } else if (userRole === "General User" && decoded?.role === "General User") {
+	// 	return <RegisterForm userId={userId} userRole={userRole} />;
+	// } else {
+	// 	return <h2>Admin cannot edit general user</h2>;
+	// }
+
 	if (userRole === "Indexer") {
-		return <RegisterForm userId={userId} userRole={userRole} />;
+		return <Register userId={userId} userRole={userRole} />;
 	} else if (userRole === "General User" && decoded?.role === "General User") {
-		return <RegisterForm userId={userId} userRole={userRole} />;
+		return <Register userId={userId} userRole={userRole} />;
 	} else {
 		return <h2>Admin cannot edit general user</h2>;
 	}
-
 	/* {userRole === "Indexer" ? (
 				<RegisterForm userId={userId} userRole={userRole} />
 			) : (userRole==="General User"&& decoded?.role==="General User"?<RegisterForm userId={userId} userRole={userRole} />):(

@@ -35,7 +35,7 @@ function DocType() {
 					
 					{/* form and table of DocType */}
 					<div className="h-screen mt-3">
-						<div className="p-4 shadow w-5/6">
+						<div className="p-4 w-5/6">
 							<DoctypeForm selectedDoctype={doc} />
 						</div>
 						<div className="mt-5 mr-[4%]">

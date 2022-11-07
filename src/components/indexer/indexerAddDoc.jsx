@@ -37,7 +37,7 @@ function AddDoc() {
 					</div>
 				</div>
 				<div className="col flex-row">
-					<div className="shadow w-4/6 mt-4">
+					<div className="w-3/6 mt-4">
 						<IndexerOpenForm
 							getSelectedDep={getSelectedDep}
 							onDoctypeChange={handleDoctypeChange}

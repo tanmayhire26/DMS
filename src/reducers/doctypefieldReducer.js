@@ -5,6 +5,9 @@ export const doctypefieldReducer = (state = { doctypefields: [] }, action) => {
 		case actions.GET_ALL_DOCTYPEFIELDS:
 			return { ...state, doctypefields: action.payload.doctypefieldsG };
 
+		case actions.GET_FILTERED_DOCTYPEFIELDS:
+			return { ...state, doctypefields: action.payload.doctypefieldsF };
+
 		case actions.ADD_DOCTYPEFIELD:
 			return {
 				...state,

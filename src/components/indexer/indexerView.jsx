@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
 	deleteDocument,
 	getAllDocuments,
@@ -14,7 +14,17 @@ import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
 import { getAllFields } from "../../actions/fieldAction";
 import FilterList from "../common/filterList";
+import { AdvancedImage } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { thumbnail } from "@cloudinary/transformation-builder-sdk/actions/resize";
 
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { forwardRef } from "react";
+
+const Alert = forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 function IndexerView() {
 	const dispatch = useDispatch();
 
@@ -59,8 +69,22 @@ function IndexerView() {
 	// 	dispatch(getUserDocuments(userDepartments));
 	// }, []);
 	let documents = useSelector((state) => state.documentReducer.documents);
+
+	//--------------------------CLOUDINARY-----------------------------------------------
+	const cld = new Cloudinary({
+		cloud: {
+			cloudName: "dc4ioiozw",
+		},
+	});
+	const myImage = cld.image(imageSrc.slice(0, -4));
+
+	console.log(imageSrc.slice(0, -4));
+	myImage.resize(thumbnail().width(1000).height(1000)).format("jpg"); // Deliver as JPEG. */
+
+	//--------------------------------------------------------------------------------------
 	const handleDelete = (d) => {
 		dispatch(deleteDocument(d));
+		handleClickA();
 	};
 
 	const handleClick = (event, d) => {
@@ -71,7 +95,9 @@ function IndexerView() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	const handleDocClick = (d) => {};
+	const handleDocClick = (d) => {
+		console.log("handling edit of document", d);
+	};
 
 	//let's handle department filter click
 	const handleDepClick = (d) => {
@@ -127,8 +153,29 @@ function IndexerView() {
 		);
 	};
 
+	//-------------------------------------on Delete alrt box----------------------------------------------------
+	const [openA, setOpenA] = useState(false);
+
+	const handleClickA = () => {
+		setOpenA(true);
+	};
+
+	const handleCloseA = (event, reason) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setOpenA(false);
+	};
+
 	return (
 		<>
+			<Snackbar open={openA} autoHideDuration={2000} onClose={handleCloseA}>
+				<Alert onClose={handleCloseA} severity="warning" sx={{ width: "100%" }}>
+					Document Deleted !
+				</Alert>
+			</Snackbar>
+
 			<div className="row">
 				<div className="col-3 h-screen border-r">
 					<div className="w-full p-3 flex justify-center border-b">
@@ -154,42 +201,71 @@ function IndexerView() {
 							onClose={handleClose}
 							anchorOrigin={{
 								vertical: "top",
-								horizontal: "left",
+								horizontal: "right",
+							}}
+							transformOrigin={{
+								vertical: "top",
+								horizontal: "center",
+							}}
+							PaperProps={{
+								style: { width: "60%", height: "auto" },
 							}}
 						>
 							<Typography sx={{ p: 2 }}>
-								<img
+								{/* <img
+									className="w-full h-full backdrop-blur"
 									alt="Document Preview"
 									src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667557911/${imageSrc}`}
-								/>
-								This is an image preview pop over
+								/> */}
+
+								<AdvancedImage cldImg={myImage} />
 							</Typography>
 						</Popover>
+
 						{documents.map((d) => (
 							<div
 								key={d._id}
-								className="border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center justify-between"
+								className={
+									d.sensitive === false
+										? "text-xs border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center"
+										: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
+								}
 							>
+								<div className="col">{d.name}</div>
+								<div className="col">{d.dcn}</div>
+								<div className="col-3">{d.date.toString()}</div>
+								<div className="col">{d.doctype}</div>
+
+								<div className="col">{d.department}</div>
+								<div className="">
+									<Link to={`${d._id}`}>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 24 24"
+											fill="orange"
+											className="w-8 h-8  p-1 bg-slate-100 border rounded-full"
+										>
+											<path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+										</svg>
+									</Link>
+								</div>
 								<div
 									onClick={(e) => handleClick(e, d)}
 									style={{ cursor: "pointer" }}
-									className="rounded p-1 mx-2 bg-gradient-to-r from-indigo-400 to-purple-400"
+									className="mx-2 border p-1 rounded-full bg-slate-100"
 								>
-									View
-								</div>
-								<div className="col">{d.name}</div>
-								<div className="col">{d.dcn}</div>
-								<div className="col">{d.doctype}</div>
-								<div className="col">{d.department}</div>
-								<div className="col-1">
 									<svg
-										onClick={() => handleDocClick(d)}
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
 										fill="orange"
-										className="w-8 h-8 mr-7 p-1 bg-slate-100 border rounded-full"
+										class="w-5 h-5"
 									>
-										<path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+										<path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+										<path
+											fill-rule="evenodd"
+											d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
+											clip-rule="evenodd"
+										/>
 									</svg>
 								</div>
 								<div className="col-1">

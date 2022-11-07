@@ -57,8 +57,8 @@ function IndexerOpenForm(props) {
 	console.log(userDepartments);
 
 	return (
-		<>
-			<Form className="form flex-row items-center p-5 justify-center">
+		<><h6>Open Form</h6>
+			<Form className="form flex-row items-center p-3 shadow justify-center">
 				<div className="flex gap-[15%]">
 					<div className="">
 						<label className="form-label" htmlFor="dep">
@@ -92,12 +92,12 @@ function IndexerOpenForm(props) {
 						</select>
 					</div>
 				</div>
-				<button
+				{/* <button
 					className="mt-4 p-2 w-3/6  rounded-full w-full bg-orange-500 text-white"
 					type="submit"
 				>
 					Open Form
-				</button>
+				</button> */}
 			</Form>
 		</>
 	);

@@ -5,6 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { legacy_createStore } from "redux";
 import { getAllDepartments } from "../actions/departmentAction";
 import {
+	changeClearance,
 	deleteUser,
 	getAllUsers,
 	getFilteredUsers,
@@ -77,7 +78,7 @@ function User() {
 	const handleUsernameSearch = (e) => {
 		let searchValue = e.target.value;
 		searchValue.trim();
-		dispatch(getFilteredUsers(selectedRole,searchValue));
+		dispatch(getFilteredUsers(selectedRole, searchValue));
 		setSearchQuery(searchValue);
 	};
 
@@ -85,6 +86,11 @@ function User() {
 	const handleDepartmentsFilter = (departmentsArr) => {
 		dispatch(getFilteredUsers(selectedRole, searchQuery, departmentsArr));
 		setDepartmentsFilter(departmentsArr);
+	};
+
+	//-----------------Security clearance to view sensitive documents----------------------------
+	const handleClearance = (e, u) => {
+		dispatch(changeClearance(u));
 	};
 
 	return (
@@ -102,26 +108,24 @@ function User() {
 					</div>
 				</div>
 				<div className="col">
-					<div className="flex justify-center w-3/6">
-						<div className="mt-5 mr-5 shadow p-4">
+					<div className="flex mt-3 justify-center p-3 shadow w-3/6">
+						<div className="">
 							<label className="form-label" htmlFor="username">
 								Search by username
 							</label>
 							<input
 								type="text"
-								className="form-control outline outline-2 outline-offset-2 outline-orange-400"
+								className="form-control outline outline-2 outline-orange-400"
 								id="username"
 								onChange={handleUsernameSearch}
 							/>
 						</div>
-						<div className="flex h-1/6 justify-center mt-5">
-							<button
-								onClick={handleClick}
-								className="outline outline-3 outline-offset-2 outline-green-500 rounded-full font-bold p-1"
-							>
-								Add User
-							</button>
-						</div>
+						<button
+							onClick={handleClick}
+							className="rounded-full mt-[6%] ml-[10%] w-2/6 h-1/6 bg-orange-300 p-1"
+						>
+							Add User
+						</button>
 					</div>
 					<Popover
 						id={id}
@@ -153,7 +157,43 @@ function User() {
 								{/* <div>
 									<img className="h-[50px] w-[50px] rounded-full" src={`/profile-images/${u.userName}.jpg`} />
 								</div> */}
-								<div className="col-2">{u.userName}</div>
+								<div className="col-2 flex">
+									{u.userName}
+									<div onClick={(e) => handleClearance(e, u)}>
+										{u.clearance === true ? (
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="yellow"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="black"
+												class="w-6 h-6"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+												/>
+											</svg>
+										) : (
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke-width="1.5"
+												stroke="currentColor"
+												class="w-6 h-6"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
+												/>
+											</svg>
+										)}
+									</div>
+								</div>
+
 								<div className="col-5 w-full text-sm flex gap-3 flex-wrap">
 									{u.departmentNames.map((ud) => (
 										<div>{ud}</div>

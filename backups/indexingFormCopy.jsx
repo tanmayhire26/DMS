@@ -14,15 +14,12 @@ import { loadLogin } from "../../actions/loginAction";
 //---------------------------CLOUDINARY IMPORTS------------------------------------
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
-import axios from "axios";
 
 function IndexingForm(props) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const { selectedDoctype, selectedDepartment } = props;
 	const { handleSubmit, register } = useForm();
-	let newImgSrc = "";
 	let [imageName, setImageName] = useState("");
 	let reqDoctypefields = []; //array of doctypefield objects
 	let reqDoctypefieldIds = []; //array of doctypefield ids
@@ -30,25 +27,21 @@ function IndexingForm(props) {
 	let reqFields = []; //array of field name objects
 	useEffect(() => {
 		// dispatch(loadLogin());
-		//dispatch(getPreview(imageName));
 		dispatch(getAllDoctypefields());
 		dispatch(getAllFields());
 		dispatch(getAllDoctypes());
 	}, []);
 
 	//--------------------------CLOUDINARY-----------------------------------------------
-	let imagePath = "";
-	let imagePathTemp = useSelector((state) => state.documentReducer.path);
 	const cld = new Cloudinary({
 		cloud: {
 			cloudName: "dc4ioiozw",
 		},
 	});
-	if (imagePathTemp) imagePath = imagePathTemp;
-	let myImage = cld.image(imageName.slice(0, -4));
+	const myImage = cld.image(imageName.slice(0, -4));
 
 	console.log(imageName.slice(0, -4));
-	myImage.format(imageName.slice(-3)); // Deliver as JPEG. */
+	myImage.format("jpg"); // Deliver as JPEG. */
 	//---------------------------------------------------------------------------------------------
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	const doctypefields = useSelector(
@@ -80,12 +73,9 @@ function IndexingForm(props) {
 
 	const onSubmitHandler = (data) => {
 		const depcodeToDispatch = selectedDepartment.departmentCode;
-		let sensitive = data.sensitive;
+
 		let indexingInfo = data;
-		delete indexingInfo["profileImg2"];
-
-		delete indexingInfo["sensitive"];
-
+		delete indexingInfo["newPath"];
 		let newIndexingInfo = {};
 		let valuesArr = Object.values(indexingInfo);
 		const selectedDoctypeObject = doctypes.find(
@@ -115,61 +105,16 @@ function IndexingForm(props) {
 				pathToDispatch,
 				depcodeToDispatch,
 				name,
-				selectedDoctypeObject,
-				sensitive
+				selectedDoctypeObject
 			)
 		);
 		navigate("/indexer/indexerView");
 	};
-	// const onFileSubmitHandler = (data) => {
-	// newImgSrc = data.newPath[0].name;
-	// setImageName(newImgSrc);
-	// console.log("in file submit handler", newImgSrc);
-
-	// const img = data.profileImg[0];
-	// console.log(img);
-	//};
-
-	//--------------------------- Multer Trial -----------------------------------------
-	let [profileImg, setProfileImg] = useState();
-
-	const onFileChange = (e) => {
-		console.log(e.target.files[0]);
-		setProfileImg(e.target.files[0]);
-
-		const imgInp = document.querySelector("#imgInp");
-		const blah = document.querySelector("#blah");
-		const [file] = imgInp.files;
-		if (file) {
-			blah.src = URL.createObjectURL(file);
-		}
-	};
-
-	const onSubmit = (data, e) => {
-		e.preventDefault();
-		console.log("profileImg ssss", data.profileImg2["0"]);
-		let newImgSrc = data.profileImg2["0"].name;
+	const onFileSubmitHandler = (data) => {
+		const newImgSrc = data.newPath[0].name;
+		dispatch(getPreview(newImgSrc));
+		console.log("in file submit handler", newImgSrc);
 		setImageName(newImgSrc);
-		// const formData = new FormData();
-		// //console.log(formData, "is the data from the secod form");
-		// formData.append("profileImg", profileImg.files);
-
-		// const img = data.profileImg["0"];
-		// console.log(img.name);
-
-		axios
-			.post(
-				"http://localhost:5000/api/uploadImages",
-				{
-					profileImg: data.profileImg2["0"],
-				},
-				{
-					headers: { "Content-Type": "multipart/form-data" },
-				}
-			)
-			.then((res) => {
-				console.log(res);
-			});
 	};
 
 	return (
@@ -199,14 +144,12 @@ function IndexingForm(props) {
 							))}
 
 							{/* <input
-							//onChange={handleFileChange}
+							onChange={handleFileChange}
 							type="file"
 							name="image"
 							id="upload"
-							{...register("path")} */}
-							{/* /> */}
-							<label htmlFor="sens">Sensitive</label>
-							<input id="sens" type="checkbox" {...register("sensitive")} />
+							{...register("path")}
+						/> */}
 							<button
 								className="p-2 bg-orange-400 text-white rounded-xl"
 								type="submit"
@@ -216,41 +159,9 @@ function IndexingForm(props) {
 						</Form>
 					</div>
 					<div className="w-3/6 shadow">
-						<div className="container">
-							<div className="row">
-								<form
-									className="w-full form m-3"
-									onSubmit={handleSubmit(onSubmit)}
-									encType="multipart/form-data"
-								>
-									<div className="form-group">
-										<label htmlFor="imgInp" className="form-label">
-											Select document
-										</label>
-										<input
-											className="form-control"
-											type="file"
-											{...register("profileImg2")}
-											onChange={onFileChange}
-											id="imgInp"
-											name="profileImg2"
-										/>
-									</div>
-									<div className="form-group">
-										<button
-											className="p-1 rounded mt-3 bg-orange-400 text-white"
-											type="submit"
-										>
-											open Document
-										</button>
-									</div>
-									<img id="blah" src="" alt="your image" />
-								</form>
-							</div>
-						</div>
-						{/* <Form
+						<Form
 							className="w-full form m-3"
-							// onSubmit={handleSubmit(onFileSubmitHandler)}
+							onSubmit={handleSubmit(onFileSubmitHandler)}
 						>
 							<label htmlFor="upload" className="form-label">
 								Select document
@@ -268,13 +179,13 @@ function IndexingForm(props) {
 							>
 								Open document
 							</button>
-						</Form> */}
+						</Form>
 						{/* <img
 						src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667567709/${imageName}`}
 						alt={imageName}
 					/> */}
 
-						{/* <AdvancedImage cldImg={myImage} /> */}
+						<AdvancedImage cldImg={myImage} />
 					</div>
 				</div>
 			) : null}

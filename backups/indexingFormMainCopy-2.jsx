@@ -82,7 +82,7 @@ function IndexingForm(props) {
 		const depcodeToDispatch = selectedDepartment.departmentCode;
 		let sensitive = data.sensitive;
 		let indexingInfo = data;
-		delete indexingInfo["profileImg2"];
+		delete indexingInfo["newPath"];
 
 		delete indexingInfo["sensitive"];
 
@@ -121,14 +121,12 @@ function IndexingForm(props) {
 		);
 		navigate("/indexer/indexerView");
 	};
-	// const onFileSubmitHandler = (data) => {
-	// newImgSrc = data.newPath[0].name;
-	// setImageName(newImgSrc);
-	// console.log("in file submit handler", newImgSrc);
-
-	// const img = data.profileImg[0];
-	// console.log(img);
-	//};
+	const onFileSubmitHandler = (data) => {
+		newImgSrc = data.newPath[0].name;
+		setImageName(newImgSrc);
+		console.log("in file submit handler", newImgSrc);
+		dispatch(getPreview(newImgSrc));
+	};
 
 	//--------------------------- Multer Trial -----------------------------------------
 	let [profileImg, setProfileImg] = useState();
@@ -145,28 +143,16 @@ function IndexingForm(props) {
 		}
 	};
 
-	const onSubmit = (data, e) => {
+	const onSubmit = (e) => {
 		e.preventDefault();
-		console.log("profileImg ssss", data.profileImg2["0"]);
-		let newImgSrc = data.profileImg2["0"].name;
-		setImageName(newImgSrc);
-		// const formData = new FormData();
-		// //console.log(formData, "is the data from the secod form");
-		// formData.append("profileImg", profileImg.files);
-
-		// const img = data.profileImg["0"];
-		// console.log(img.name);
-
+		const formData = new FormData();
+		formData.append("profileImg", profileImg);
 		axios
-			.post(
-				"http://localhost:5000/api/uploadImages",
-				{
-					profileImg: data.profileImg2["0"],
+			.post("http://localhost:5000/api/uploadImages", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
 				},
-				{
-					headers: { "Content-Type": "multipart/form-data" },
-				}
-			)
+			})
 			.then((res) => {
 				console.log(res);
 			});
@@ -216,41 +202,9 @@ function IndexingForm(props) {
 						</Form>
 					</div>
 					<div className="w-3/6 shadow">
-						<div className="container">
-							<div className="row">
-								<form
-									className="w-full form m-3"
-									onSubmit={handleSubmit(onSubmit)}
-									encType="multipart/form-data"
-								>
-									<div className="form-group">
-										<label htmlFor="imgInp" className="form-label">
-											Select document
-										</label>
-										<input
-											className="form-control"
-											type="file"
-											{...register("profileImg2")}
-											onChange={onFileChange}
-											id="imgInp"
-											name="profileImg2"
-										/>
-									</div>
-									<div className="form-group">
-										<button
-											className="p-1 rounded mt-3 bg-orange-400 text-white"
-											type="submit"
-										>
-											open Document
-										</button>
-									</div>
-									<img id="blah" src="" alt="your image" />
-								</form>
-							</div>
-						</div>
-						{/* <Form
+						<Form
 							className="w-full form m-3"
-							// onSubmit={handleSubmit(onFileSubmitHandler)}
+							onSubmit={handleSubmit(onFileSubmitHandler)}
 						>
 							<label htmlFor="upload" className="form-label">
 								Select document
@@ -268,16 +222,32 @@ function IndexingForm(props) {
 							>
 								Open document
 							</button>
-						</Form> */}
+						</Form>
 						{/* <img
 						src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667567709/${imageName}`}
 						alt={imageName}
 					/> */}
 
-						{/* <AdvancedImage cldImg={myImage} /> */}
+						<AdvancedImage cldImg={myImage} />
 					</div>
 				</div>
 			) : null}
+
+			<div className="container">
+				<div className="row">
+					<form onSubmit={onSubmit} encType="multipart/form-data">
+						<div className="form-group">
+							<input type="file" onChange={onFileChange} id="imgInp" />
+						</div>
+						<div className="form-group">
+							<button className="btn btn-primary" type="submit">
+								open Document
+							</button>
+						</div>
+						<img id="blah" src="#" alt="your image" />
+					</form>
+				</div>
+			</div>
 		</>
 	);
 }
