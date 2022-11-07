@@ -29,7 +29,7 @@ import IndexerApp from "./components/indexer/indexerApp";
 import AdminProtectedRouter from "./components/adminProtectedRouter";
 import GeneralUserProtectedRouter from "./components/generalUser/generalUserProtectedRoute";
 import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
-import { EditDoc } from "./components/indexer/editDoc";
+import { documentLoader, EditDoc } from "./components/indexer/editDoc";
 import MulterTrial from "./components/indexer/multerTrial";
 import IndexingForm from "./components/indexer/indexingForm";
 
@@ -92,7 +92,8 @@ const router = createBrowserRouter([
 			{ path: "addDoc", element: <AddDoc /> },
 		],
 	},
-	{ path: "indexer/:id", element: <EditDoc /> },
+	{ path: "indexer/indexerView/:id", element: <EditDoc />, loader:documentLoader},
+	{ path: "indexer/:id", element: <EditDoc />, loader:documentLoader},
 ]);
 
 root.render(

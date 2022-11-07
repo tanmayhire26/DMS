@@ -50,7 +50,7 @@ function FilterList(props) {
 
 	return (
 		<>
-			<div className="my-5">
+			<div className="text-xs">
 				<ul>
 					<p className="text-purple-600">Department</p>
 					<li
@@ -74,7 +74,7 @@ function FilterList(props) {
 					))}
 				</ul>
 			</div>
-			<div className="my-5">
+			<div className="my-5 text-xs">
 				<ul>
 					<p className="text-purple-600">Document Type</p>
 					<li
@@ -98,14 +98,14 @@ function FilterList(props) {
 					))}
 				</ul>
 
-				<div className="mt-5 flex-row">
+				<div className="p-1 flex justify-center items-center gap-3 absolute bottom-[88%] left-[40%] shadow ">
 					<p className="font-bold">Search by fields</p>
 					{doctypefieldsReq.map((dtf) => (
 						<div className="flex">
 							<label
 								onClick={() => handleLabelClick(dtf)}
 								htmlFor={dtf.fieldObj.name.name}
-								className=" my-3 ml-1 w-2/6 rounded outline outline-2 outline-offset-2 outline-red-500"
+								className=" my-3 ml-1  rounded outline outline-2 outline-offset-2 outline-red-500"
 							>
 								{dtf.fieldObj.name.label}
 							</label>

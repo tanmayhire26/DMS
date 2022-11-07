@@ -81,12 +81,12 @@ function GeneralUser() {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [isImageClicked, setIsImageClicked] = useState(false);
 
+	//state variable to view full image n absolute position on clicking on pop over
+	const [view, setView] = useState(false);
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
 
 	const documents = useSelector((state) => state.documentReducer.documents);
-
-	
 
 	//--------------------------CLOUDINARY-----------------------------------------------
 	const cld = new Cloudinary({
@@ -97,7 +97,8 @@ function GeneralUser() {
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
 	console.log(imageSrc.slice(0, -4));
-	myImage.resize(thumbnail().width(1000).height(1000)).format("jpg"); // Deliver as JPEG. */
+	myImage.format(imageSrc.slice(-3)); // Deliver as JPEG. */
+	//myImage.resize(thumbnail().width(1000).height(1000))
 
 	//--------------------------------------------------------------------------------------
 
@@ -123,6 +124,12 @@ function GeneralUser() {
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+	//----------------------------------------------------
+	//---------Handle Image lcikc on click on the document pop over in absolute position-----------------
+
+	const handleImageView = () => {
+		view ? setView(false) : setView(true);
 	};
 
 	//let's handle department filter click
@@ -195,7 +202,7 @@ function GeneralUser() {
 				</Alert>
 			</Snackbar>
 			<div className="row">
-				<div className="col-3 border-r h-screen flex-row">
+				<div className="col-2 border-r h-screen flex-row">
 					<div className="mt-5  flex justify-center ">
 						<Logo />
 					</div>
@@ -243,71 +250,82 @@ function GeneralUser() {
 							</div>
 						</div>
 					</div>
-
-					<div className="mt-[10%]">
-						<Popover
-							id={id}
-							open={open}
-							anchorEl={anchorEl}
-							onClose={handleClose}
-							anchorOrigin={{
-								vertical: "center",
-								horizontal: "center",
-							}}
-							transformOrigin={{
-								vertical: "bottom",
-								horizontal: "top",
-							}}
-							PaperProps={{
-								style: { width: "60%", height: "auto" },
-							}}
-						>
-							<Typography sx={{ p: 2 }}>
-								{/* <img alt="Document Preview" src={`/documents/${imageSrc}`} /> */}
-								{clear === false ? (
-									<div className="  p-3 bg-black text-orange-500">
-										You are not allowed to view this document. Admin has been
-										notified!
-									</div>
-								) : (
+					<div>
+						<div onClick={handleImageView}>
+							{view ? (
+								<div className="absolute z-50">
 									<AdvancedImage cldImg={myImage} />
-								)}
-							</Typography>
-						</Popover>
-						{documents.map((d) => (
-							<div
-								className={
-									d.sensitive === false
-										? "text-xs border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center"
-										: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
-								}
-								key={d._id}
-							>
-								<div
-									onClick={(e) => handleClick(e, d)}
-									style={{ cursor: "pointer" }}
-									className="mr-2"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="orange"
-										class="w-5 h-5"
-									>
-										<path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-										<path
-											fill-rule="evenodd"
-											d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
-											clip-rule="evenodd"
-										/>
-									</svg>
 								</div>
-								<div className="col">{d.name}</div>
-								<div className="col">{d.dcn}</div>
-								<div className="col">{d.doctype}</div>
-								<div className="col">{d.department}</div>
+							) : null}
+						</div>
+						<div className={view === false ? "mt-[10%]" : "blur mt-[10%]"}>
+							<div onClick={handleImageView}>
+								<Popover
+									id={id}
+									open={open}
+									anchorEl={anchorEl}
+									onClose={handleClose}
+									anchorOrigin={{
+										vertical: "center",
+										horizontal: "center",
+									}}
+									// transformOrigin={{
+									// 	vertical: "bottom",
+									// 	horizontal: "top",
+									// }}
+									// PaperProps={{
+									// 	style: { position:"absolute",top:"10%" },
+									// }}
+								>
+									<Typography sx={{ p: 2 }}>
+										{/* <img alt="Document Preview" src={`/documents/${imageSrc}`} /> */}
+										{clear === false ? (
+											<Alert severity="info">
+												You don't have access to this document — Admin will be
+												notified!
+											</Alert>
+										) : (
+											<AdvancedImage cldImg={myImage} />
+										)}
+									</Typography>
+								</Popover>
 							</div>
-						))}
+							{documents.map((d) => (
+								<div
+									className={
+										d.sensitive === false
+											? "text-xs border-l-4 shadow border-orange-400 px-3 h-[50px]  my-4  flex justify-center items-center"
+											: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
+									}
+									key={d._id}
+								>
+									<div
+										onClick={(e) => handleClick(e, d)}
+										style={{ cursor: "pointer" }}
+										className="mr-2"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 24 24"
+											fill="orange"
+											class="w-5 h-5"
+										>
+											<path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+											<path
+												fill-rule="evenodd"
+												d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
+												clip-rule="evenodd"
+											/>
+										</svg>
+									</div>
+									<div className="col">{Object.values(d.indexingInfo)[0]}</div>
+									<div className="col">{d.name}</div>
+									<div className="col">{d.dcn}</div>
+									<div className="col">{d.doctype}</div>
+									<div className="col">{d.department}</div>
+								</div>
+							))}
+						</div>
 					</div>
 				</div>
 			</div>

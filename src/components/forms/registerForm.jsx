@@ -101,7 +101,7 @@ function RegisterForm(props) {
 				onSubmit={handleSubmit(onSubmitHandler)}
 				className="flex-row justify-center text-orange-600 font-bold shadow-lg p-3 backdrop-blur rounded"
 			>
-				<div className="flex justify-around">
+				<div className="flex justify-between">
 					<div className="">
 						<label htmlFor="fname" className="form-label">
 							First Name*

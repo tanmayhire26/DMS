@@ -52,6 +52,7 @@ function IndexerView() {
 	const navigate = useNavigate();
 	const [imageSrc, setImageSrc] = useState("");
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [view, setView] = useState(false);
 
 	const open = Boolean(anchorEl);
 	const id = open ? "simple-popover" : undefined;
@@ -79,7 +80,8 @@ function IndexerView() {
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
 	console.log(imageSrc.slice(0, -4));
-	myImage.resize(thumbnail().width(1000).height(1000)).format("jpg"); // Deliver as JPEG. */
+	myImage.format(imageSrc.slice(-3)); // Deliver as JPEG. */
+	//myImage.resize(thumbnail().width(1000).height(1000))
 
 	//--------------------------------------------------------------------------------------
 	const handleDelete = (d) => {
@@ -97,6 +99,13 @@ function IndexerView() {
 	};
 	const handleDocClick = (d) => {
 		console.log("handling edit of document", d);
+	};
+	//---------------------------------------------------------------
+	//--------------Handle Image Preview Click to get bigger image--------------------
+
+	const handleImageView = () => {
+		view === false ? setView(true) : setView(false);
+		console.log("im,age clicked, showing image full image");
 	};
 
 	//let's handle department filter click
@@ -177,7 +186,7 @@ function IndexerView() {
 			</Snackbar>
 
 			<div className="row">
-				<div className="col-3 h-screen border-r">
+				<div className="col-2 h-screen border-r">
 					<div className="w-full p-3 flex justify-center border-b">
 						<Logo />
 					</div>
@@ -189,38 +198,49 @@ function IndexerView() {
 							doctypes={doctypes}
 							doctypefieldsReq={doctypefieldsReq}
 							handleSearch={handleSearch}
+							selectedDepartment={selectedDepartment}
+							selectedDoctype={selectedDoctype}
 						/>
 					</div>
 				</div>
-				<div className="col">
-					<div className="mt-4 mx-4">
-						<Popover
-							id={id}
-							open={open}
-							anchorEl={anchorEl}
-							onClose={handleClose}
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							transformOrigin={{
-								vertical: "top",
-								horizontal: "center",
-							}}
-							PaperProps={{
-								style: { width: "60%", height: "auto" },
-							}}
-						>
-							<Typography sx={{ p: 2 }}>
-								{/* <img
+				<div className="col flex-row">
+					<div onClick={handleImageView}>
+						{view ? (
+							<div className="absolute z-50">
+								<AdvancedImage cldImg={myImage} />
+							</div>
+						) : null}
+					</div>
+					<div className={view === false ? "mt-4 mx-4" : "blur mt-4 mx-4"}>
+						<div onClick={handleImageView}>
+							<Popover
+								id={id}
+								open={open}
+								anchorEl={anchorEl}
+								onClose={handleClose}
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "left",
+								}}
+								// transformOrigin={{
+								// 	vertical: "top",
+								// 	horizontal: "center",
+								// }}
+								// PaperProps={{
+								// 	style: { width: "60%", height: "auto" },
+								// }}
+							>
+								<Typography sx={{ p: 2 }}>
+									{/* <img
 									className="w-full h-full backdrop-blur"
 									alt="Document Preview"
 									src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667557911/${imageSrc}`}
 								/> */}
 
-								<AdvancedImage cldImg={myImage} />
-							</Typography>
-						</Popover>
+									<AdvancedImage cldImg={myImage} />
+								</Typography>
+							</Popover>
+						</div>
 
 						{documents.map((d) => (
 							<div
@@ -231,6 +251,7 @@ function IndexerView() {
 										: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
 								}
 							>
+								<div className="col">{Object.values(d.indexingInfo)[0]}</div>
 								<div className="col">{d.name}</div>
 								<div className="col">{d.dcn}</div>
 								<div className="col-3">{d.date.toString()}</div>
