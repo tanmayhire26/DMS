@@ -18,11 +18,18 @@ export const documentReducer = (
 				documents: [...state.documents, action.payload.documentA],
 			};
 		case actions.DELETE_DOCUMENT:
-			console.log("delete department reducer : ", action.payload.documentD);
 			const documentsAftDel = state.documents.filter(
 				(d) => d._id !== action.payload.documentD._id
 			);
 			return { ...state, documents: documentsAftDel };
+
+		case actions.UPDATE_DOCUMENT:
+			let newArr = state.documents;
+			let index = newArr.findIndex(
+				(d) => d._id === action.payload.documentU._id
+			);
+			newArr[index] = action.payload.documentU;
+			return { ...state, documents: newArr };
 		default:
 			return state;
 	}

@@ -1,11 +1,15 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 
 const apiEndPoint = process.env.REACT_APP_API_URL + "logins";
 
 export const loginUser = (data) => (dispatch) => {
-	axios
-		.post(apiEndPoint, data)
+	toast
+		.promise(axios.post(apiEndPoint, data), {
+			pending: "Logging in...",
+			error: "Username or Password is Invalid",
+		})
 		.then((response) => {
 			sessionStorage.setItem("token", response.data);
 			dispatch({ type: actions.LOGIN_USER, payload: { token: response.data } });

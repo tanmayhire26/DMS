@@ -97,7 +97,9 @@ function GeneralUser() {
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
 	console.log(imageSrc.slice(0, -4));
-	myImage.format(imageSrc.slice(-3)); // Deliver as JPEG. */
+
+	myImage.format(imageSrc.slice(-3));
+	// Deliver as JPEG. */
 	//myImage.resize(thumbnail().width(1000).height(1000))
 
 	//--------------------------------------------------------------------------------------
@@ -253,7 +255,7 @@ function GeneralUser() {
 					<div>
 						<div onClick={handleImageView}>
 							{view ? (
-								<div className="absolute z-50">
+								<div className="fixed z-50">
 									<AdvancedImage cldImg={myImage} />
 								</div>
 							) : null}

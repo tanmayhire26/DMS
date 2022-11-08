@@ -206,7 +206,7 @@ function IndexerView() {
 				<div className="col flex-row">
 					<div onClick={handleImageView}>
 						{view ? (
-							<div className="absolute z-50">
+							<div className="fixed z-50">
 								<AdvancedImage cldImg={myImage} />
 							</div>
 						) : null}
@@ -251,7 +251,9 @@ function IndexerView() {
 										: "text-xs text-yellow-600 bg-black border-l-4 shadow border-yellow-400 px-3 h-[50px]   my-4  flex justify-center items-center"
 								}
 							>
-								<div className="col">{Object.values(d.indexingInfo)[0]}</div>
+								<div className="col">
+									{Object.values(d.indexingInfo)[0] + ""}
+								</div>
 								<div className="col">{d.name}</div>
 								<div className="col">{d.dcn}</div>
 								<div className="col-3">{d.date.toString()}</div>

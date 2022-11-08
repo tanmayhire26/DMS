@@ -1,19 +1,33 @@
 import { NavLink } from "react-router-dom";
 import LoginForm from "./forms/loginForm";
 
-
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { forwardRef, useState } from "react";
-
+import jwt_decode from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loadLogin } from "../actions/loginAction";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 function Login() {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(loadLogin());
+	}, []);
+	// let token = "";
+	// let decoded = {};
+
+	// token = useSelector((state) => state.loginReducer.token);
+	// decoded = jwt_decode(token);
+
 	const [open, setOpen] = useState(false);
 
 	const handleClick = () => {
-		setOpen(true);
+		//setOpen(true);
 	};
 
 	const handleClose = (event, reason) => {
@@ -31,7 +45,6 @@ function Login() {
 					Logged in successfully !
 				</Alert>
 			</Snackbar>
-			
 			<div
 				className="flex justify-center   h-full bg-cover bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]
 				from-yellow-100 via-yellow-200 to-yellow-300"
@@ -66,6 +79,7 @@ function Login() {
 						<img className="w-full h-3/6" src="loginImage.png" />
 						<div className="flex mx-5 mt-4">
 							<LoginForm handleClick={handleClick} />
+							<ToastContainer />
 						</div>
 					</div>
 				</div>

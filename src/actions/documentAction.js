@@ -95,6 +95,20 @@ export const deleteDocument = (data) => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//------------------------------------------------UPDATE DOCUMENT---------------------------------------------------
+
+export const updateDocument = (data, id) => (dispatch) => {
+	axios
+		.patch(apiEndPoint + "/" + id, { indexingInfo: data })
+		.then((response) =>
+			dispatch({
+				type: actions.UPDATE_DOCUMENT,
+				payload: { documentU: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+
 //---------------------------------------------GET_PREVIEW of image in add doc form----------------------------------
 
 export const getPreview = (data) => (dispatch) => {

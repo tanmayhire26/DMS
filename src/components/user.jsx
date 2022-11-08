@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { legacy_createStore } from "redux";
+import defaultImag from "../images/default.png";
 import { getAllDepartments } from "../actions/departmentAction";
 import {
 	changeClearance,
@@ -157,6 +158,9 @@ function User() {
 								{/* <div>
 									<img className="h-[50px] w-[50px] rounded-full" src={`/profile-images/${u.userName}.jpg`} />
 								</div> */}
+								<div>
+									<img className=" rounded-full" src={defaultImag} />
+								</div>
 								<div className="col-2 flex">
 									{u.userName}
 									<div onClick={(e) => handleClearance(e, u)}>

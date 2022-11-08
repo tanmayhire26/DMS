@@ -35,7 +35,7 @@ import IndexingForm from "./components/indexer/indexingForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
-	{ path: "demo", element: <MulterTrial /> },
+	
 	{
 		path: "/",
 		element: <Home />,
