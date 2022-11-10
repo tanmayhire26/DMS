@@ -35,8 +35,15 @@ export const sendResetLink = (data) => (dispatch) => {
 //----------------------------------Send email Verification Link-------------------------------------------
 
 export const sendVerifyLink = (email, otpG) => (dispatch) => {
-	axios
-		.post(apiEndPoint + "/sendOtp", { email: email, otpG: otpG })
+	toast
+		.promise(
+			axios.post(apiEndPoint + "/sendOtp", { email: email, otpG: otpG }),
+			{
+				success: "OTP sent",
+				pending: "sending...",
+				error: "could not send otp",
+			}
+		)
 		.then((response) =>
 			dispatch({
 				type: actions.SEND_VERIFICATION_LINK,

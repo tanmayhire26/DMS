@@ -119,12 +119,17 @@ export const changePassword = (password, userId) => (dispatch) => {
 
 //-----------------------------------------------Verify otp sent and path verify-true----------------------------------
 export const verifyEmail = (email) => (dispatch) => {
-	axios
-		.patch(apiEndPoint + "/verify", { email: email })
-		.then((response) =>
-			//
-			console.log(response.data)
+	toast
+		.promise(
+			axios.patch(apiEndPoint + "/verify/636cba1f5a9c8b1e5e538f09", {
+				email: email,
+			}),
+			{
+				success: "Email verified! Log in again",
+				error: "could not verify emailId",
+			}
 		)
+		.then((response) => console.log(response.data))
 		.catch((err) => console.log(err.message));
 };
 

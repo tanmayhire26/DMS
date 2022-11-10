@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { sendVerifyLink } from "../../actions/registerAction";
 import { verifyEmail } from "../../actions/userAction";
 
@@ -29,7 +30,7 @@ function VerifyEmail(props) {
 			dispatch(verifyEmail(email));
 			setVerified(true);
 			setTimeout(() => {
-				return navigate("/generalUser");
+				navigate("/login");
 			}, 1000);
 		} else {
 			setFlagError(true);
@@ -39,6 +40,7 @@ function VerifyEmail(props) {
 	//--------------------------------------------------------------------------------------------------------------------------
 	return (
 		<>
+			<ToastContainer />
 			<div className="flex w-full justify-center">
 				<div className="mt-4">
 					<h2>email verification of {email}</h2>
