@@ -3,7 +3,7 @@ import ListOfDepartments from "./listOfDepartments";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { registerUser } from "../../actions/registerAction";
 import { Alert } from "@mui/material";
@@ -30,6 +30,7 @@ const schema = yup.object().shape({
 function RegisterForm(props) {
 	let selectedDP = [];
 	const { userRole, userId } = props;
+	const [emailExists, setEmailExists] = useState(false);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(loadLogin());
@@ -43,7 +44,7 @@ function RegisterForm(props) {
 	}
 
 	const users = useSelector((state) => state.userReducer.users);
-	console.log("in Register Form Token", decoded._id);
+	console.log("in Register Form Token", decoded?._id);
 	const navigate = useNavigate();
 
 	const {
@@ -71,6 +72,13 @@ function RegisterForm(props) {
 		selectedDP = value;
 	};
 	const onSubmitHandler = (data) => {
+		let enteredEmail = data.email;
+		let checkEmail = users.find((u) => u.email === enteredEmail);
+		if (checkEmail && !data._id) {
+			setEmailExists(true);
+			return;
+		}
+
 		data["departments"] = selectedDP;
 		if (decoded.role === "Admin") {
 			data["role"] = "Indexer";
@@ -83,6 +91,7 @@ function RegisterForm(props) {
 				navigate("/admin/users");
 			}
 		} else {
+			data["role"] = "General User";
 			if (data._id) {
 				data["updatedBy"] = decoded._id;
 				dispatch(updateUser(data));
@@ -147,6 +156,11 @@ function RegisterForm(props) {
 						></input>
 						{errors.email ? (
 							<Alert severity="error">{errors.email?.message}</Alert>
+						) : null}
+						{emailExists ? (
+							<Alert severity="error">
+								this email already exists. Please enter another email id
+							</Alert>
 						) : null}
 					</div>
 					<div className="">

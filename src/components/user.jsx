@@ -14,6 +14,9 @@ import {
 import UserFilterList from "./common/userFilterList";
 import RegisterForm from "./forms/registerForm";
 import Logo from "./logo";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 function User() {
 	const dispatch = useDispatch();
@@ -95,7 +98,7 @@ function User() {
 	};
 
 	return (
-		<>
+		<><ToastContainer/>
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-row justify-center h-screen">
 					<div className="mt-3 flex justify-center pb-3">
@@ -105,6 +108,7 @@ function User() {
 						<UserFilterList
 							handleRoleClick={handleRoleClick}
 							onDepartmentsChange={handleDepartmentsFilter}
+							selectedRole={selectedRole}
 						/>
 					</div>
 				</div>

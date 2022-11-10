@@ -8,6 +8,8 @@ import {
 } from "../actions/departmentAction";
 import DepartmentForm from "./forms/departmentForm";
 import Logo from "./logo";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function Department() {
 	const dispatch = useDispatch();
@@ -52,6 +54,7 @@ function Department() {
 								handleDepSearch={handleDepSearch}
 							/>
 						</div>
+						<ToastContainer/>
 						<div className="mt-5">
 							{departments.map((d) => (
 								<div className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3">

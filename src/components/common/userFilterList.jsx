@@ -5,12 +5,13 @@ import { Form } from "react-router-dom";
 import { getAllDepartments } from "../../actions/departmentAction";
 
 function UserFilterList(props) {
-	const { handleRoleClick, onDepartmentsChange } = props;
+	const { handleRoleClick, onDepartmentsChange, selectedRole } = props;
+	
 	const dispatch = useDispatch();
 	const departments = useSelector(
 		(state) => state.departmentReducer.departments
 	);
-	
+
 	useEffect(() => {
 		dispatch(getAllDepartments());
 	}, []);
@@ -19,12 +20,16 @@ function UserFilterList(props) {
 	return (
 		<>
 			Select Role
-			<ul className="list-group flex">
+			<ul className="list-group flex shadow">
 				{rolesArr.map((r) => (
 					<li
 						style={{ cursor: "pointer" }}
 						onClick={() => handleRoleClick(r)}
-						className="list-group-item"
+						className={
+							selectedRole === r
+								? "shadow p-1 bg-orange-200"
+								: "list-group-item"
+						}
 					>
 						{r}
 					</li>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 
 const apiEndPoint = process.env.REACT_APP_API_URL + "users";
@@ -39,18 +40,25 @@ export const getFilteredUsers =
 //----------------------------------------------------UPDATE USER-----------------------------------------------------------
 export const updateUser = (data) => (dispatch, getState) => {
 	console.log("in updateUser before put action", data);
-	axios
-		.put(apiEndPoint + "/" + data._id, {
-			firstName: data.firstName,
-			lastName: data.lastName,
-			email: data.email,
-			phone: data.phone,
-			departments: data.departments,
-			userName: data.userName,
-			password: data.password,
-			role: data.role,
-			updatedBy: data.updatedBy,
-		})
+	toast
+		.promise(
+			axios.put(apiEndPoint + "/" + data._id, {
+				firstName: data.firstName,
+				lastName: data.lastName,
+				email: data.email,
+				phone: data.phone,
+				departments: data.departments,
+				userName: data.userName,
+				password: data.password,
+				role: data.role,
+				updatedBy: data.updatedBy,
+			}),
+			{
+				success: `${data.firstName} updated`,
+				error: "could not updated user",
+				pending: "updating user",
+			}
+		)
 		.then((response) =>
 			dispatch({ type: actions.UPDATE_USER, payload: { userU: response.data } })
 		)
@@ -60,11 +68,20 @@ export const updateUser = (data) => (dispatch, getState) => {
 //--------------------------------------------CHANGE CLEARANCE of USER-------------------------------------------------------
 
 export const changeClearance = (u) => (dispatch, getState) => {
-	axios
-		.patch(
-			apiEndPoint + "/clear/" + u._id,
-			{},
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
+	toast
+		.promise(
+			axios.patch(
+				apiEndPoint + "/clear/" + u._id,
+				{},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			),
+			{
+				success: u.clearance
+					? `Removed ${u.userName}'s clearance`
+					: `Clearance granted to ${u.userName}`,
+				error: "could not change clearance",
+				pending: "changing clearance...",
+			}
 		)
 		.then((response) =>
 			dispatch({
@@ -75,14 +92,63 @@ export const changeClearance = (u) => (dispatch, getState) => {
 		.catch((err) => console.log(err.message));
 };
 
+//-----------------------------------------------Change Password - patch on RESET Link mailed to user-----------------------------------
+
+export const changePassword = (password, userId) => (dispatch) => {
+	toast
+		.promise(
+			axios.patch(apiEndPoint + "/changePassword/" + userId, {
+				newPassword: password,
+				userId: userId,
+			}),
+			{
+				success: `Password Changed.
+				Log in with new password`,
+				pending: "changing password...",
+				error: "could not change password",
+			}
+		)
+		.then((response) =>
+			dispatch({
+				type: actions.CHANGE_PASSWORD,
+				payload: { userP: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+
+//-----------------------------------------------Verify otp sent and path verify-true----------------------------------
+export const verifyEmail = (email) => (dispatch) => {
+	axios
+		.patch(apiEndPoint + "/verify", { email: email })
+		.then((response) =>
+			//
+			console.log(response.data)
+		)
+		.catch((err) => console.log(err.message));
+};
+
 //------------------------------------------------Soft Delete User-------------------------------------------------------------
 
 export const deleteUser = (data) => (dispatch, getState) => {
-	axios
-		.patch(
-			apiEndPoint + "/" + data._id,
-			{},
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
+	toast
+		.promise(
+			axios.patch(
+				apiEndPoint + "/" + data._id,
+				{},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			),
+			{
+				success: data.isActive
+					? `${data.userName} is de-activated `
+					: `${data.userName} is now active`,
+				pending: data.isActive
+					? `de-activating ${data.userName} `
+					: `Activating ${data.userName}`,
+				error: data.isActive
+					? `could not de-activate ${data.userName} `
+					: `could not activate ${data.userName}`,
+			}
 		)
 		.then((response) =>
 			dispatch({ type: actions.DELETE_USER, payload: { userD: response.data } })

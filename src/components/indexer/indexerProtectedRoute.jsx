@@ -12,8 +12,10 @@ function IndexerProtectedRouter({ children }) {
 		else if (decoded.role === "Indexer" && decoded.isActive === false)
 			return (
 				<>
-					<img alt="Inactive user" src="/inactiveUser.jpg" />
-					<div>You are an inactive user. Contact Admin.</div>
+					<div className="h-screen flex justify-center items-center">
+						<img alt="Inactive user" src="/inactiveUser.jpg" />
+						<div>You are an inactive user. Contact Admin.</div>
+					</div>
 				</>
 			);
 		else return <Navigate to={"/login"} />;

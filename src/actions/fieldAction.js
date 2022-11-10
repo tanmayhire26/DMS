@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "fields";
 
@@ -34,12 +35,19 @@ export const getFilteredFields = (name) => (dispatch) => {
 //-----------------------------------------------ADD FIELD---------------------------------------------------
 
 export const addField = (data) => (dispatch, getState) => {
-	axios
-		.post(
-			apiEndPoint,
-			{ name: { name: data.name, label: data.label, input: data.input } },
+	toast
+		.promise(
+			axios.post(
+				apiEndPoint,
+				{ name: { name: data.name, label: data.label, input: data.input } },
+				{
+					headers: { "x-auth-token": getState().loginReducer.token },
+				}
+			),
 			{
-				headers: { "x-auth-token": getState().loginReducer.token },
+				success: `${data.name} added`,
+				error: `could not add ${data.name}`,
+				pending: `adding ${data.name}`,
 			}
 		)
 		.then((response) =>
@@ -51,10 +59,17 @@ export const addField = (data) => (dispatch, getState) => {
 //--------------------------------------DELETE FIELD-----------------------------------------
 
 export const deleteField = (data) => (dispatch, getState) => {
-	axios
-		.delete(apiEndPoint + "/" + data._id, {
-			headers: { "x-auth-token": getState().loginReducer.token },
-		})
+	toast
+		.promise(
+			axios.delete(apiEndPoint + "/" + data._id, {
+				headers: { "x-auth-token": getState().loginReducer.token },
+			}),
+			{
+				success: `${data.name.name} deleted`,
+				error: `Could not delete ${data.name.name}`,
+				pending: `deleting...`,
+			}
+		)
 		.then((response) =>
 			dispatch({
 				type: actions.DELETE_FIELD,
@@ -67,13 +82,20 @@ export const deleteField = (data) => (dispatch, getState) => {
 //-------------------------------------------UPDATE FIELD------------------------------------------------
 
 export const updateField = (data) => (dispatch, getState) => {
-	axios
-		.put(
-			apiEndPoint + "/" + data._id,
+	toast
+		.promise(
+			axios.put(
+				apiEndPoint + "/" + data._id,
+				{
+					name: { name: data.name, label: data.label, input: data.input },
+				},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			),
 			{
-				name: { name: data.name, label: data.label, input: data.input },
-			},
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
+				success: `Updated ${data.name}`,
+				pending: "updating",
+				error: `Could not update ${data.name}`,
+			}
 		)
 		.then((response) =>
 			dispatch({

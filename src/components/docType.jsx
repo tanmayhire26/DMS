@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteDoctype, getAllDoctypes } from "../actions/doctypeAction";
 import DoctypeForm from "./forms/doctypeForm";
 import Logo from "./logo";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function DocType() {
 	const dispatch = useDispatch();
@@ -24,6 +26,7 @@ function DocType() {
 
 	return (
 		<>
+			<ToastContainer />
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-row justify-center h-screen">
 					<div className="mt-3 flex justify-center pb-3">
@@ -32,7 +35,6 @@ function DocType() {
 					<div></div>
 				</div>
 				<div className="col divide-y">
-					
 					{/* form and table of DocType */}
 					<div className="h-screen mt-3">
 						<div className="p-4 w-5/6">

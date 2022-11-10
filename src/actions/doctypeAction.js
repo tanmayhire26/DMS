@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "docTypes";
 export const getAllDoctypes = () => (dispatch) => {
@@ -33,8 +34,12 @@ export const getFilteredDoctypes =
 
 //----------------------------------------------ADD DOC TYPE------------------------------------------------------------------------
 export const addDoctype = (data) => (dispatch) => {
-	axios
-		.post(apiEndPoint, data)
+	toast
+		.promise(axios.post(apiEndPoint, data), {
+			success: `${data.name} added`,
+			error: "could not add",
+			pending: `adding ${data.name} `,
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.ADD_DOCTYPE,
@@ -43,9 +48,15 @@ export const addDoctype = (data) => (dispatch) => {
 		)
 		.catch((err) => err.message);
 };
+
+//-----------------------------------------------deleteDoctype------------------------------------------------------------------
 export const deleteDoctype = (del) => (dispatch) => {
-	axios
-		.delete(apiEndPoint + "/" + del._id)
+	toast
+		.promise(axios.delete(apiEndPoint + "/" + del._id), {
+			success: `Deleted ${del.name}`,
+			pending: `Deleting ${del.name}`,
+			error: `could not delete ${del.name}`,
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.DELETE_DOCTYPE,
@@ -54,13 +65,22 @@ export const deleteDoctype = (del) => (dispatch) => {
 		)
 		.catch((err) => err.message);
 };
+
+//------------------------------------------------updateDoctype-----------------------------------------------------------------
 export const updateDoctype = (data) => (dispatch) => {
-	axios
-		.put(apiEndPoint + "/" + data._id, {
-			name: data.name,
-			department: data.department,
-			docTypeCode: data.docTypeCode,
-		})
+	toast
+		.promise(
+			axios.put(apiEndPoint + "/" + data._id, {
+				name: data.name,
+				department: data.department,
+				docTypeCode: data.docTypeCode,
+			}),
+			{
+				success: `Updated ${data.name}`,
+				error: `Could not update ${data.name}`,
+				pending: "pending...",
+			}
+		)
 		.then((response) =>
 			dispatch({
 				type: actions.UPDATE_DOCTYPE,

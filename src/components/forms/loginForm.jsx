@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "postcss";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Link, useNavigate } from "react-router-dom";
+import { Form, Link, NavLink, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { loginUser } from "../../actions/loginAction";
 import jwt_decode from "jwt-decode";
@@ -85,7 +85,9 @@ function LoginForm(props) {
 					<div className="font-bold">
 						<Link to="/register">Create Account</Link>
 					</div>
-					<div>Forgot Password ?</div>
+					<div>
+						<NavLink to="/forgotPassword">Forgot Password ?</NavLink>
+					</div>
 				</div>
 			</div>
 		</>

@@ -9,6 +9,7 @@ export const loginUser = (data) => (dispatch) => {
 		.promise(axios.post(apiEndPoint, data), {
 			pending: "Logging in...",
 			error: "Username or Password is Invalid",
+			success: "Logged in successfully",
 		})
 		.then((response) => {
 			sessionStorage.setItem("token", response.data);
@@ -25,3 +26,4 @@ export const logout = () => ({
 	type: actions.LOGOUT_USER,
 	payload: { token: sessionStorage.setItem("token", "") },
 });
+

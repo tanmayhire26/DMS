@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteField, getAllFields } from "../actions/fieldAction";
 import FieldForm from "./forms/fieldForm";
 import Logo from "./logo";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function Fields() {
 	const [fld, setFld] = useState({});
@@ -23,6 +25,7 @@ function Fields() {
 
 	return (
 		<>
+			<ToastContainer />
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-row justify-center h-screen">
 					<div className="mt-3 flex justify-center pb-3">

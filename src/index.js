@@ -32,16 +32,29 @@ import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
 import { documentLoader, EditDoc } from "./components/indexer/editDoc";
 import MulterTrial from "./components/indexer/multerTrial";
 import IndexingForm from "./components/indexer/indexingForm";
+import ForgotPassword from "./components/forgotPassword";
+import { ResetPassword, resetLoader } from "./components/resetPassword";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
-	
 	{
 		path: "/",
 		element: <Home />,
 		errorElement: <ErrorPage />,
 	},
 	{ path: "login", element: <Login />, errorElement: <ErrorPage /> },
+	{
+		path: "forgotPassword",
+		element: <ForgotPassword />,
+		errorElement: <ErrorPage />,
+	},
+	{
+		path: "resetPassword/:id",
+		element: <ResetPassword />,
+		errorElement: <ErrorPage />,
+		loader: resetLoader,
+	},
+
 	{ path: "register", element: <Register />, errorElement: <ErrorPage /> },
 
 	{
@@ -72,11 +85,13 @@ const router = createBrowserRouter([
 				<GeneralUser />
 			</GeneralUserProtectedRouter>
 		),
+		errorElement: <ErrorPage />,
 	},
 	{
 		path: "generalUser/profile/:id/:role",
 		element: <UserForm />,
 		loader: userLoader,
+		errorElement: <ErrorPage />,
 	},
 
 	{
@@ -86,14 +101,25 @@ const router = createBrowserRouter([
 				<IndexerApp />
 			</IndexerProtectedRouter>
 		),
+		errorElement: <ErrorPage />,
 		children: [
 			{ index: true, element: <IndexerView /> },
 			{ path: "indexerView", element: <IndexerView /> },
 			{ path: "addDoc", element: <AddDoc /> },
 		],
 	},
-	{ path: "indexer/indexerView/:id", element: <EditDoc />, loader:documentLoader},
-	{ path: "indexer/:id", element: <EditDoc />, loader:documentLoader},
+	{
+		path: "indexer/indexerView/:id",
+		element: <EditDoc />,
+		loader: documentLoader,
+		errorElement: <ErrorPage />,
+	},
+	{
+		path: "indexer/:id",
+		element: <EditDoc />,
+		loader: documentLoader,
+		errorElement: <ErrorPage />,
+	},
 ]);
 
 root.render(

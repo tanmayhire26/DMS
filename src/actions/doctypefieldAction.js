@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "docTypesFields";
 
@@ -42,15 +43,22 @@ export const getFilteredDoctypefields =
 //------------------------------------------------------------Add Doctypefield-------------------------------------------------------
 
 export const addDoctypefield = (data) => (dispatch, getState) => {
-	axios
-		.post(
-			apiEndPoint,
+	toast
+		.promise(
+			axios.post(
+				apiEndPoint,
+				{
+					docType: data.docType,
+					field: data.field,
+					isRequired: data.isRequired,
+				},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			),
 			{
-				docType: data.docType,
-				field: data.field,
-				isRequired: data.isRequired,
-			},
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
+				success: "doctype field added",
+				error: "could not add the doctypefield",
+				pending: "adding doctypefield",
+			}
 		)
 		.then((response) =>
 			dispatch({
@@ -63,16 +71,19 @@ export const addDoctypefield = (data) => (dispatch, getState) => {
 
 //........................................................update doctypefield--------------------------------------------------
 export const updateDoctypefield = (data) => (dispatch, getState) => {
-	axios
-		.put(
-			apiEndPoint + "/" + data._id,
-			{
-				docType: data.docType,
-				field: data.field,
-				isRequired: data.isRequired,
-				_id: data.isRequired,
-			},
-			{ headers: { "x-auth-token": getState().loginReducer.token } }
+	toast
+		.promise(
+			axios.put(
+				apiEndPoint + "/" + data._id,
+				{
+					docType: data.docType,
+					field: data.field,
+					isRequired: data.isRequired,
+					_id: data.isRequired,
+				},
+				{ headers: { "x-auth-token": getState().loginReducer.token } }
+			),
+			{ success: "updated", pending: "updating", error: "could not update" }
 		)
 		.then((response) =>
 			dispatch({
@@ -86,10 +97,13 @@ export const updateDoctypefield = (data) => (dispatch, getState) => {
 //---------------------------------------------------------------Delete DoctypeField-----------------------------------------------------
 
 export const deleteDoctypefield = (data) => (dispatch, getState) => {
-	axios
-		.delete(apiEndPoint + "/" + data._id, {
-			headers: { "x-auth-token": getState().loginReducer.token },
-		})
+	toast
+		.promise(
+			axios.delete(apiEndPoint + "/" + data._id, {
+				headers: { "x-auth-token": getState().loginReducer.token },
+			}),
+			{ success: "Deleted", pending: "deleting...", error: "Could not delete " }
+		)
 		.then((response) =>
 			dispatch({
 				type: actions.DELETE_DOCTYPEFIELD,

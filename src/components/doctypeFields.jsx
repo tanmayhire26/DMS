@@ -8,6 +8,8 @@ import {
 import { getAllFields } from "../actions/fieldAction";
 import DoctypefieldForm from "./forms/doctypefieldForm";
 import Logo from "./logo";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function DoctypeFields() {
 	const [dtf, setDtf] = useState({});
@@ -57,6 +59,7 @@ function DoctypeFields() {
 
 	return (
 		<>
+			<ToastContainer />
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-row justify-center h-screen">
 					<div className="mt-3 flex justify-center pb-3">

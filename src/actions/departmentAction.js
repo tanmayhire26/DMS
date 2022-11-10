@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "departments";
 export const getAllDepartments = () => (dispatch, getState) => {
@@ -28,11 +29,15 @@ export const getFilteredDepartments = (departmentFilter) => (dispatch) => {
 		)
 		.catch((err) => console.log(err.message));
 };
-//--------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------addDepartment-------------------------------------------------------------------------------------
 
 export const addDepartment = (data) => (dispatch) => {
-	axios
-		.post(apiEndPoint, data)
+	toast
+		.promise(axios.post(apiEndPoint, data), {
+			error: "Could not add department",
+			pending: "adding Department ...",
+			success: `${data.name} department added`,
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.ADD_DEPARTMENT,
@@ -42,12 +47,21 @@ export const addDepartment = (data) => (dispatch) => {
 		.catch((err) => err.message);
 };
 
+//---------------------------------updateDepartment-----------------------------------------------
+
 export const updateDepartment = (data) => (dispatch) => {
-	axios
-		.put(apiEndPoint + "/" + data._id, {
-			name: data.name,
-			departmentCode: data.departmentCode,
-		})
+	toast
+		.promise(
+			axios.put(apiEndPoint + "/" + data._id, {
+				name: data.name,
+				departmentCode: data.departmentCode,
+			}),
+			{
+				success: `${data.name} department updated`,
+				error: "could not update the department",
+				pending: "updating the department",
+			}
+		)
 		.then((response) => {
 			console.log("in resposne of update, resposne.data", response.data);
 			dispatch({
@@ -58,9 +72,15 @@ export const updateDepartment = (data) => (dispatch) => {
 		.catch((err) => err.message);
 };
 
+//--------------------------------------------deleteDepartment-------------------------------------------
+
 export const deleteDepartment = (del) => (dispatch) => {
-	axios
-		.delete(apiEndPoint + "/" + del._id)
+	toast
+		.promise(axios.delete(apiEndPoint + "/" + del._id), {
+			success: `Deleted ${del.name} department`,
+			error: "could not deletet he department",
+			pending: "deleting...",
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.DELETE_DEPARTMENT,

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import * as actions from "./actionTypes";
 const apiEndPoint = process.env.REACT_APP_API_URL + "documents";
 
@@ -52,19 +53,26 @@ export const addDocument =
 		sensitive
 	) =>
 	(dispatch, getState) => {
-		axios
-			.post(
-				apiEndPoint,
+		toast
+			.promise(
+				axios.post(
+					apiEndPoint,
+					{
+						name: name,
+						path: pathToDispatch,
+						indexingInfo: indexingInfo,
+						depcode: depcodeToDispatch,
+						doctype: doctypeObject.name,
+						department: doctypeObject.department,
+						sensitive: sensitive,
+					},
+					{ headers: { "x-auth-token": getState().loginReducer.token } }
+				),
 				{
-					name: name,
-					path: pathToDispatch,
-					indexingInfo: indexingInfo,
-					depcode: depcodeToDispatch,
-					doctype: doctypeObject.name,
-					department: doctypeObject.department,
-					sensitive: sensitive,
-				},
-				{ headers: { "x-auth-token": getState().loginReducer.token } }
+					success: `${name} Document added!`,
+					error: `could not add ${name}`,
+					pending: "adding...",
+				}
 			)
 			.then((response) =>
 				dispatch({
@@ -81,8 +89,12 @@ export const deleteDocument = (data) => (dispatch, getState) => {
 	// {
 	// 		headers: { "x-auth-token": getState().loginReducer.token },
 	// 	}
-	axios
-		.delete(apiEndPoint + "/" + data._id)
+	toast
+		.promise(axios.delete(apiEndPoint + "/" + data._id), {
+			success: `Deleted ${data.name}`,
+			pending: "deleting...",
+			error: `could not delete ${data.name}`,
+		})
 		.then((response) => {
 			{
 				console.log("in response of del deoc action", response.data);
@@ -98,8 +110,12 @@ export const deleteDocument = (data) => (dispatch, getState) => {
 //------------------------------------------------UPDATE DOCUMENT---------------------------------------------------
 
 export const updateDocument = (data, id) => (dispatch) => {
-	axios
-		.patch(apiEndPoint + "/" + id, { indexingInfo: data })
+	toast
+		.promise(axios.patch(apiEndPoint + "/" + id, { indexingInfo: data }), {
+			success: "Document Updated",
+			pending: "updating document...",
+			error: "could not update document",
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.UPDATE_DOCUMENT,
