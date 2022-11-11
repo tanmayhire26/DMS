@@ -135,3 +135,17 @@ export const getPreview = (data) => (dispatch) => {
 		)
 		.catch((err) => console.log(err.message));
 };
+
+//-----------------------------------------GET Documents Filtered By custom TAGS--------------------------------------
+
+export const getDocumentsByTag = (filterTag) => (dispatch) => {
+	axios
+		.post(apiEndPoint + "/filteredByTags", { filterTag: filterTag })
+		.then((response) =>
+			dispatch({
+				type: actions.GET_DOCUMENTS_BY_TAG,
+				payload: { documentsFT: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};

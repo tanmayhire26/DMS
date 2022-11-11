@@ -34,6 +34,11 @@ import MulterTrial from "./components/indexer/multerTrial";
 import IndexingForm from "./components/indexer/indexingForm";
 import ForgotPassword from "./components/forgotPassword";
 import { ResetPassword, resetLoader } from "./components/resetPassword";
+import {
+	CustomiseDocument,
+	guDocLoader,
+} from "./components/generalUser/customiseDocument";
+import GuApp from "./components/generalUser/guApp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -82,11 +87,20 @@ const router = createBrowserRouter([
 		path: "generalUser",
 		element: (
 			<GeneralUserProtectedRouter>
-				<GeneralUser />
+				<GuApp />
 			</GeneralUserProtectedRouter>
 		),
 		errorElement: <ErrorPage />,
+		children: [
+			{ index: true, element: <GeneralUser /> },
+			// {
+			// 	path: "generalUser",
+			// 	element: <GeneralUser />,
+			// },
+			{ path: ":id", element: <CustomiseDocument />, loader: guDocLoader },
+		],
 	},
+
 	{
 		path: "generalUser/profile/:id/:role",
 		element: <UserForm />,

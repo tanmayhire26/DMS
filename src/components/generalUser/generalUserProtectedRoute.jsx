@@ -37,7 +37,7 @@ function GeneralUserProtectedRouter({ children }) {
 			);
 		} else return <Navigate to={"/login"} />;
 	} else {
-		return;
+		return <Navigate to="/" />;
 	}
 }
 

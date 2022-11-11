@@ -44,7 +44,20 @@ export const GET_PREVIEW = "GET_PREVIEW";
 export const GET_USER_DOCUMENTS = "GET_USER_DOCUMENTS";
 export const UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
 export const DELETE_DOCUMENT = "DELETE_DOCUMENT";
+export const GET_DOCUMENTS_BY_TAG = "GET_DOCUMENTS_BY_TAG"; //filter by selected custom tag of the user
 
 export const GET_NOTIFICATIONS = "GET_NOTIFICATIONS";
 export const SEND_NOTIFICATION = "SEND_NOTIFICATION";
 export const CLEAR_NOTIFICATION = "CLEAR_NOTIFICATION";
+
+export const ADD_COMMENT = "ADD_COMMENT";
+export const GET_COMMENT_BY_DOC = "GET_COMMENT_BY_DOC";
+
+export const GET_ALL_TAGS = "GET_ALL_TAGS";
+export const ADD_TAG = "ADD_TAG";
+export const GET_TAGS_BY_USER = "GET_TAGS_BY_USER";
+export const GET_TAGS_BY_DOC = "GET_TAGS_BY_DOC";
+export const DELETE_TAG = "DELETE_TAG";
+
+export const GET_ALL_TAG_NAMES = "GET_ALL_TAG_NAMES";
+export const ADD_TAG_NAME = "ADD_TAG_NAME";

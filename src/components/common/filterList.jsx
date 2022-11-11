@@ -55,7 +55,7 @@ function FilterList(props) {
 					<p className="text-purple-600">Department</p>
 					<li
 						onClick={() => handleDepClick("All")}
-						className="mt-3 w-3/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-purple-500"
+						className="cursor-pointer mt-3 w-3/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-purple-500"
 					>
 						All
 					</li>
@@ -64,8 +64,8 @@ function FilterList(props) {
 							onClick={() => handleDepClick(d)}
 							className={
 								d === selectedDepartment
-									? "bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
-									: "hover:bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
+									? "cursor-pointer bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
+									: "cursor-pointer hover:bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
 							}
 							// className="hover:bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
 						>
@@ -79,7 +79,7 @@ function FilterList(props) {
 					<p className="text-purple-600">Document Type</p>
 					<li
 						onClick={() => handleDTClick("All")}
-						className="hover:bg-purple-300 active:bg-purple-500 active:text-white mt-3 w-3/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-purple-500"
+						className="cursor-pointer hover:bg-purple-300 active:bg-purple-500 active:text-white mt-3 w-3/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-purple-500"
 					>
 						All
 					</li>
@@ -88,8 +88,8 @@ function FilterList(props) {
 							onClick={() => handleDTClick(d)}
 							className={
 								d === selectedDoctype
-									? "bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
-									: "hover:bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
+									? "cursor-pointer bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
+									: "cursor-pointer hover:bg-purple-300 mt-3 w-4/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
 							}
 							// className="hover:bg-purple-300 active:bg-purple-500 active:text-white mt-3 w-5/6 rounded-full flex justify-center outline outline-2 outline-offset-2 outline-orange-500"
 						>
@@ -105,7 +105,7 @@ function FilterList(props) {
 							<label
 								onClick={() => handleLabelClick(dtf)}
 								htmlFor={dtf.fieldObj.name.name}
-								className=" my-3 ml-1  rounded outline outline-2 outline-offset-2 outline-red-500"
+								className=" cursor-pointer my-3 ml-1  rounded outline outline-2 outline-offset-2 outline-red-500"
 							>
 								{dtf.fieldObj.name.label}
 							</label>

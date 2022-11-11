@@ -50,6 +50,9 @@ function VerifyEmail(props) {
 								console.log(otpG);
 								dispatch(sendVerifyLink(email, otpG));
 								setView(true);
+								setTimeout(() => {
+									setView(false);
+								}, 30000);
 							}}
 							className="rounded-full bg-orange-400 text-white font-bold w-3/6"
 						>

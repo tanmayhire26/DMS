@@ -30,6 +30,9 @@ export const documentReducer = (
 			);
 			newArr[index] = action.payload.documentU;
 			return { ...state, documents: newArr };
+
+		case actions.GET_DOCUMENTS_BY_TAG:
+			return { ...state, documents: action.payload.documentsFT };
 		default:
 			return state;
 	}

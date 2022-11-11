@@ -8,6 +8,9 @@ import { fieldReducer } from "./fieldReducer";
 import { doctypefieldReducer } from "./doctypefieldReducer";
 import { documentReducer } from "./documentReducer";
 import { notifyReducer } from "./notifyReducer";
+import { commentReducer } from "./customiseDocuments/commentReducer";
+import { tagReducer } from "./customiseDocuments/tagReducer";
+import { tagNameReducer } from "./customiseDocuments/tagNameReducer";
 export default combineReducers({
 	departmentReducer,
 	doctypeReducer,
@@ -18,4 +21,7 @@ export default combineReducers({
 	doctypefieldReducer,
 	documentReducer,
 	notifyReducer,
+	commentReducer,
+	tagReducer,
+	tagNameReducer,
 });
