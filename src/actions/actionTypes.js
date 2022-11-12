@@ -61,3 +61,7 @@ export const DELETE_TAG = "DELETE_TAG";
 
 export const GET_ALL_TAG_NAMES = "GET_ALL_TAG_NAMES";
 export const ADD_TAG_NAME = "ADD_TAG_NAME";
+
+export const GET_ALL_INDEXERS = "GET_ALL_INDEXERS";
+export const ADD_INDEXER = "ADD_INDEXER";
+export const UPDATE_INDEXER = "UPDATE_INDEXER";

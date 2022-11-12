@@ -31,6 +31,7 @@ import {
 } from "../../actions/customiseDocuments/tagAction";
 import ViewTags from "./views/viewTags";
 import CustomTagsSearch from "../common/customSearch";
+import { Popup } from "semantic-ui-react";
 
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -210,11 +211,6 @@ function GeneralUser() {
 
 	//---------------------------------------handleImageClick for edit Profile---------------------------------------------------
 
-	const handleImageClick = () => {
-		isImageClicked === false
-			? setIsImageClicked(true)
-			: setIsImageClicked(false);
-	};
 
 	//-----------------------------------Handle View Comments----------------------------------------------------------------------
 	const [viewComments, setViewComments] = useState(false);
@@ -264,20 +260,19 @@ function GeneralUser() {
 
 					<div className="bg-slate-200 flex absolute right-[3%] p-2 rounded-full mt-2">
 						<div className="flex">
-							{isImageClicked === true ? (
-								<div className="text-xs bg-slate-100 shadow mr-3 mt-1 flex justify-center items-center">
-									Click to edit profile
-								</div>
-							) : null}
-							<Link to={`profile/${decoded?._id}/General User`}>
-								<img
-									onMouseEnter={handleImageClick}
-									onMouseLeave={handleImageClick}
-									className="h-[50px] w-[50px] rounded-full"
-									alt="Profile Photo"
-									src={`/profile-images/${profileImageSrc}`}
-								/>
-							</Link>
+							<Popup
+								className="p-1 text-xs bg-black text-white"
+								content="Edit Profile"
+								trigger={
+									<Link to={`profile/${decoded?._id}/General User`}>
+										<img
+											className="h-[50px] w-[50px] rounded-full"
+											alt="Profile Photo"
+											src={`/profile-images/${profileImageSrc}`}
+										/>
+									</Link>
+								}
+							/>
 						</div>
 						<div className="flex-row ml-2">
 							<div className="text-xs text-orange-600 font-bold">{`Hi ${profileImageName}`}</div>
@@ -293,16 +288,14 @@ function GeneralUser() {
 						</div>
 					</div>
 					<div>
-						<div className="oveflow-y-scroll" onClick={handleImageView}>
+						<div className="" onClick={handleImageView}>
 							{view ? (
 								<div className="fixed z-50">
 									<AdvancedImage cldImg={myImage} />
 								</div>
 							) : null}
 						</div>
-						<div
-							className={view === false ? "mt-[10%]" : "blur mt-[10%] h-screen"}
-						>
+						<div className={view === false ? "mt-[10%] " : "blur mt-[10%]"}>
 							<div onClick={handleImageView}>
 								<Popover
 									id={id}

@@ -211,7 +211,7 @@ function IndexerView() {
 							</div>
 						) : null}
 					</div>
-					<div className={view === false ? "mt-4 mx-4" : "blur mt-4 mx-4"}>
+					<div className={view === false ? "mt-4 mx-4 overflow-y-scroll h-screen" : "blur mt-4 mx-4 overflow-y-scroll h-screen"}>
 						<div onClick={handleImageView}>
 							<Popover
 								id={id}

@@ -7,12 +7,15 @@ import jwt_decode from "jwt-decode";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import * as React from "react";
+import { Popup } from "semantic-ui-react";
+import IndexerProfile from "./indexerProfile";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function IndexerNavbar() {
+	const [viewP, setViewP] = React.useState(false);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(loadLogin());
@@ -74,12 +77,22 @@ function IndexerNavbar() {
 									</NavLink>
 								</li>
 							</ul>
-							<div className=" flex text-xs absolute right-[5%]">
-								<img
-									alt="profile photo"
-									className="h-[50px] w-[50px] rounded-full"
-									src={`/profile-images/${profileImageSrc}`}
+							<div className=" flex text-xs bg-slate-200 p-2 rounded-full fixed mb-3  right-[5%]">
+								<Popup
+									className="bg-black p-1 text-xs text-white"
+									content="Edit Profile"
+									trigger={
+										<img
+											onClick={() => {
+												viewP ? setViewP(false) : setViewP(true);
+											}}
+											alt="profile photo"
+											className="h-[50px] w-[50px] rounded-full"
+											src={`/profile-images/${profileImageSrc}`}
+										/>
+									}
 								/>
+
 								<div className="flex-row ml-2">
 									<div className="text-orange-600 font-bold">{`Hi! ${profileImageName}`}</div>
 									<div className="text-purple-400">{`${decoded.role}`}</div>
@@ -93,14 +106,17 @@ function IndexerNavbar() {
 											}, 1500);
 										}}
 										style={{ cursor: "pointer" }}
-										className={
-											"text-red-500 font-bold"
-										}
+										className={"text-red-500 font-bold"}
 									>
 										LOG OUT
 									</div>
 								</div>
 							</div>
+							{viewP ? (
+								<div className="p-2 rounded w-2/6 absolute z-10 bg-slate-200 right-[4%] mt-[35%]">
+									<IndexerProfile userId={decoded?._id} />
+								</div>
+							) : null}
 						</div>
 					</nav>
 				</div>

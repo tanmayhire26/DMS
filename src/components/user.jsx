@@ -17,7 +17,6 @@ import Logo from "./logo";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-
 function User() {
 	const dispatch = useDispatch();
 
@@ -26,6 +25,8 @@ function User() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [departmentsFilter, setDepartmentsFilter] = useState([]);
 
+	//--profile image-----
+	const [profileImage, setProfileImage] = useState("default.png");
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const open = Boolean(anchorEl);
@@ -98,7 +99,8 @@ function User() {
 	};
 
 	return (
-		<><ToastContainer/>
+		<>
+			<ToastContainer />
 			<div className="row flex divide-x">
 				<div className="col-2 divide-y flex-row justify-center h-screen">
 					<div className="mt-3 flex justify-center pb-3">
@@ -153,18 +155,20 @@ function User() {
 								className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
 								<div
-									className={`${
+									className={`text-4xl ${
 										u.isActive ? "text-green-500" : "text-red-500"
 									} font-bold mx-2`}
 								>
-									O
+									.
 								</div>
+								<img
+									className="rounded-full h-[50px] w-[50px]"
+									src={require(`../../../../BackEnd/Document-management/indexerImages/${profileImage}`)}
+								/>
 								{/* <div>
 									<img className="h-[50px] w-[50px] rounded-full" src={`/profile-images/${u.userName}.jpg`} />
 								</div> */}
-								<div>
-									<img className=" rounded-full" src={defaultImag} />
-								</div>
+
 								<div className="col-2 flex">
 									{u.userName}
 									<div onClick={(e) => handleClearance(e, u)}>

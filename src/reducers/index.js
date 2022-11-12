@@ -11,6 +11,7 @@ import { notifyReducer } from "./notifyReducer";
 import { commentReducer } from "./customiseDocuments/commentReducer";
 import { tagReducer } from "./customiseDocuments/tagReducer";
 import { tagNameReducer } from "./customiseDocuments/tagNameReducer";
+import { indexerReducer } from "./indexerReducer";
 export default combineReducers({
 	departmentReducer,
 	doctypeReducer,
@@ -24,4 +25,5 @@ export default combineReducers({
 	commentReducer,
 	tagReducer,
 	tagNameReducer,
+	indexerReducer,
 });
