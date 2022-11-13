@@ -50,7 +50,8 @@ export const addDocument =
 		depcodeToDispatch,
 		name,
 		doctypeObject,
-		sensitive
+		sensitive,
+		documentImage
 	) =>
 	(dispatch, getState) => {
 		toast
@@ -65,8 +66,11 @@ export const addDocument =
 						doctype: doctypeObject.name,
 						department: doctypeObject.department,
 						sensitive: sensitive,
+						documentImage,
 					},
-					{ headers: { "x-auth-token": getState().loginReducer.token } }
+					{
+						headers: { "Content-Type": "multipart/form-data" },
+					}
 				),
 				{
 					success: `${name} Document added!`,

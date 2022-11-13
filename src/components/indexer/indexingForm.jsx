@@ -7,7 +7,11 @@ import { Form, useNavigate } from "react-router-dom";
 import { Image } from "semantic-ui-react";
 import { getAllDoctypes } from "../../actions/doctypeAction";
 import { getAllDoctypefields } from "../../actions/doctypefieldAction";
-import { addDocument, getPreview } from "../../actions/documentAction";
+import {
+	addDocument,
+	getAllDocuments,
+	getPreview,
+} from "../../actions/documentAction";
 import { getAllFields } from "../../actions/fieldAction";
 import { loadLogin } from "../../actions/loginAction";
 
@@ -15,6 +19,7 @@ import { loadLogin } from "../../actions/loginAction";
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import axios from "axios";
+import { patchDocumentImage } from "../../actions/indxerAction";
 
 function IndexingForm(props) {
 	const dispatch = useDispatch();
@@ -47,20 +52,17 @@ function IndexingForm(props) {
 	if (imagePathTemp) imagePath = imagePathTemp;
 	let myImage = cld.image(imageName.slice(0, -4));
 
-	console.log(imageName.slice(0, -4));
-	myImage.format(imageName.slice(-3)); // Deliver as JPEG. */
+	myImage.format(imageName.slice(-3));
 	//---------------------------------------------------------------------------------------------
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	const doctypefields = useSelector(
 		(state) => state.doctypefieldReducer.doctypefields
 	);
 	const fields = useSelector((state) => state.fieldReducer.fields);
-	//console.log("slecterd doctype :", selectedDoctype);
 
 	reqDoctypefields = doctypefields.filter(
 		(dtf) => dtf.docType === selectedDoctype
 	);
-	//console.log("Required doctypefields are : ", reqDoctypefields);
 
 	for (let i = 0; i < reqDoctypefields.length; i++) {
 		reqFieldsIds.push(reqDoctypefields[i].field);
@@ -77,13 +79,17 @@ function IndexingForm(props) {
 	for (let m = 0; m < reqFields.length; m++) {
 		reqFields[m]["isRequired"] = reqDoctypefields[m].isRequired;
 	}
+	const [documentImageToPatch, setDocumentImageToPatch] = useState({});
+	const documents = useSelector((state) => state.documentReducer.documents);
 
 	const onSubmitHandler = (data) => {
 		const depcodeToDispatch = selectedDepartment.departmentCode;
 		let sensitive = data.sensitive;
+		let documentImage = data.documentImage["0"];
+		setImageName(documentImage.name);
 		let indexingInfo = data;
-		delete indexingInfo["profileImg2"];
 
+		delete indexingInfo["documentImage"];
 		delete indexingInfo["sensitive"];
 
 		let newIndexingInfo = {};
@@ -96,19 +102,13 @@ function IndexingForm(props) {
 			newIndexingInfo[`${reqDoctypefieldIds[i]}`] = valuesArr[i];
 		}
 
-		const pathToDispatch = "D://../public/" + imageName;
-		console.log(imageName);
+		const pathToDispatch = "D://../public/" + documentImage.name;
+
 		const name =
-			imageName.slice(0, imageName.length - 4) +
+			documentImage.name.slice(0, imageName.length - 4) +
 			"_" +
-			doctypes.find((dt) => dt._id === selectedDoctype).name;
-		console.log(
-			"indexing info: ",
-			newIndexingInfo,
-			pathToDispatch,
-			depcodeToDispatch,
-			name
-		);
+			doctypes.find((dt) => dt._id === selectedDoctype).docTypeCode;
+
 		dispatch(
 			addDocument(
 				newIndexingInfo,
@@ -116,25 +116,34 @@ function IndexingForm(props) {
 				depcodeToDispatch,
 				name,
 				selectedDoctypeObject,
-				sensitive
+				sensitive,
+				documentImage
 			)
 		);
+
+		//set to view the option to send the image to db as buffer
+		setDocumentImageToPatch(documentImage);
+		setViewSTD(true);
+		
+	};
+
+	//--------------After submitting - indexer will get option to send the file to db as buffer----
+	const [viewSTD, setViewSTD] = useState(false);
+
+	const handleClick = () => {
+		console.log("storing...");
+		dispatch(getAllDocuments());
+
+		const docToPatch = documents[documents.length - 1];
+		dispatch(patchDocumentImage(docToPatch._id, documentImageToPatch));
 		navigate("/indexer/indexerView");
 	};
-	// const onFileSubmitHandler = (data) => {
-	// newImgSrc = data.newPath[0].name;
-	// setImageName(newImgSrc);
-	// console.log("in file submit handler", newImgSrc);
-
-	// const img = data.profileImg[0];
-	// console.log(img);
-	//};
-
 	//--------------------------- Multer Trial -----------------------------------------
+
+	//---------------Preview file on selecting the file in indexing form--------------
 	let [profileImg, setProfileImg] = useState();
 
 	const onFileChange = (e) => {
-		console.log(e.target.files[0]);
 		setProfileImg(e.target.files[0]);
 
 		const imgInp = document.querySelector("#imgInp");
@@ -145,41 +154,45 @@ function IndexingForm(props) {
 		}
 	};
 
-	const onSubmit = (data, e) => {
-		e.preventDefault();
-		console.log("profileImg ssss", data.profileImg2["0"]);
-		let newImgSrc = data.profileImg2["0"].name;
-		setImageName(newImgSrc);
-		// const formData = new FormData();
-		// //console.log(formData, "is the data from the secod form");
-		// formData.append("profileImg", profileImg.files);
-
-		// const img = data.profileImg["0"];
-		// console.log(img.name);
-
-		axios
-			.post(
-				"http://localhost:5000/api/uploadImages",
-				{
-					profileImg: data.profileImg2["0"],
-				},
-				{
-					headers: { "Content-Type": "multipart/form-data" },
-				}
-			)
-			.then((res) => {
-				console.log(res);
-			});
-	};
+	//_____________________________________________________________________________________________________________________________
 
 	return (
 		<>
+			{viewSTD ? (
+				<div className="z-50 py-4 flex justify-center items-center shadow bg-slate-200 w-2/6 fixed left-[50%] top-[60%]">
+					<svg
+						onClick={() => {
+							setViewSTD(false);
+							navigate("/indexer/indexerView");
+						}}
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						strokeWidth={1.5}
+						stroke="currentColor"
+						className="w-6 h-6"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M6 18L18 6M6 6l12 12"
+						/>
+					</svg>
+
+					<button
+						className="p-1 rounded-full bg-orange-400 text-white"
+						onClick={handleClick}
+					>
+						Store in Database
+					</button>
+				</div>
+			) : null}
 			{reqFields.length !== 0 ? (
 				<div className="w-full flex gap-4">
 					<div className="w-3/6 shadow">
 						<Form
 							onSubmit={handleSubmit(onSubmitHandler)}
-							className=" p-3 w-full flex flex-wrap gap-5"
+							className="form p-3 w-full flex flex-wrap gap-5"
 							encType="multipart/form-data"
 						>
 							{reqFields.map((rf) => (
@@ -198,17 +211,23 @@ function IndexingForm(props) {
 								</div>
 							))}
 
-							{/* <input
-							//onChange={handleFileChange}
-							type="file"
-							name="image"
-							id="upload"
-							{...register("path")} */}
-							{/* /> */}
 							<label htmlFor="sens">Sensitive</label>
 							<input id="sens" type="checkbox" {...register("sensitive")} />
+							<div className="form-group">
+								<label htmlFor="imgInp" className="form-label">
+									Select document
+								</label>
+								<input
+									className="form-control"
+									type="file"
+									{...register("documentImage")}
+									onChange={onFileChange}
+									id="imgInp"
+									name="documentImage"
+								/>
+							</div>
 							<button
-								className="p-2 bg-orange-400 text-white rounded-xl"
+								className="p-1 w-full bg-orange-400 text-white rounded-full"
 								type="submit"
 							>
 								Submit Document
@@ -216,65 +235,7 @@ function IndexingForm(props) {
 						</Form>
 					</div>
 					<div className="w-3/6 shadow">
-						<div className="container">
-							<div className="row">
-								<form
-									className="w-full form m-3"
-									onSubmit={handleSubmit(onSubmit)}
-									encType="multipart/form-data"
-								>
-									<div className="form-group">
-										<label htmlFor="imgInp" className="form-label">
-											Select document
-										</label>
-										<input
-											className="form-control"
-											type="file"
-											{...register("profileImg2")}
-											onChange={onFileChange}
-											id="imgInp"
-											name="profileImg2"
-										/>
-									</div>
-									<div className="form-group">
-										<button
-											className="p-1 rounded mt-3 bg-orange-400 text-white"
-											type="submit"
-										>
-											open Document
-										</button>
-									</div>
-									<img id="blah" src="" alt="your image" />
-								</form>
-							</div>
-						</div>
-						{/* <Form
-							className="w-full form m-3"
-							// onSubmit={handleSubmit(onFileSubmitHandler)}
-						>
-							<label htmlFor="upload" className="form-label">
-								Select document
-							</label>
-							<input
-								type={"file"}
-								id="upload"
-								name="image"
-								className="form-control"
-								{...register("newPath")}
-							/>
-							<button
-								type="submit"
-								className=" p-1 rounded mt-3 bg-orange-400 text-white"
-							>
-								Open document
-							</button>
-						</Form> */}
-						{/* <img
-						src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667567709/${imageName}`}
-						alt={imageName}
-					/> */}
-
-						{/* <AdvancedImage cldImg={myImage} /> */}
+						<img id="blah" src="" alt="Document image" />
 					</div>
 				</div>
 			) : null}

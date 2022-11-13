@@ -52,14 +52,17 @@ export function EditDoc() {
 	useEffect(() => {
 		dispatch(loadLogin());
 		dispatch(getAllFields());
-		dispatch(getAllDocuments());
+
 		dispatch(getAllDoctypefields());
 	}, []);
 	useEffect(() => {
+		dispatch(getAllDocuments());
 		if (!documentId) return;
 
 		for (let i = 0; i < fieldsArr.length; i++) {
-			setValue(`${fieldsArr[i]?.name}`, valuesArr[i]);
+			setTimeout(() => {
+				setValue(`${fieldsArr[i].name}`, valuesArr[i]);
+			}, 200);
 		}
 	}, [documentId]);
 

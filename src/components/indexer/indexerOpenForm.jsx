@@ -54,7 +54,7 @@ function IndexerOpenForm(props) {
 		);
 		userDepartments.push(tempUserDepartment);
 	}
-	console.log(userDepartments);
+
 
 	return (
 		<><h6>Open Form</h6>

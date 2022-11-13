@@ -71,6 +71,9 @@ function IndexerView() {
 	// }, []);
 	let documents = useSelector((state) => state.documentReducer.documents);
 
+	//----------Get image buffer from db and covnert to image base 64-----------
+	let [imageFromDb, setImageFromDb] = useState();
+
 	//--------------------------CLOUDINARY-----------------------------------------------
 	const cld = new Cloudinary({
 		cloud: {
@@ -79,11 +82,26 @@ function IndexerView() {
 	});
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
-	console.log(imageSrc.slice(0, -4));
 	myImage.format(imageSrc.slice(-3)); // Deliver as JPEG. */
 	//myImage.resize(thumbnail().width(1000).height(1000))
 
 	//--------------------------------------------------------------------------------------
+	let [imageName, setImageName] = useState();
+	if (imageFromDb) {
+		function _arrayBufferToBase64(buffer) {
+			var binary = "";
+			var bytes = new Uint8Array(buffer);
+			var len = bytes.byteLength;
+			for (var i = 0; i < len; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			}
+			return window.btoa(binary);
+		}
+		const data = _arrayBufferToBase64(imageFromDb.data?.data);
+		setTimeout(() => {
+			setImageName(`data:${imageFromDb?.mimetype};base64,` + data);
+		}, 100);
+	}
 	const handleDelete = (d) => {
 		dispatch(deleteDocument(d));
 		handleClickA();
@@ -93,6 +111,7 @@ function IndexerView() {
 		console.log(d.path.slice(14));
 		setAnchorEl(event.currentTarget);
 		setImageSrc(d.path.slice(14));
+		setImageFromDb(d.documentImage);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -162,7 +181,7 @@ function IndexerView() {
 		);
 	};
 
-	//-------------------------------------on Delete alrt box----------------------------------------------------
+	//-------------------------------------on Delete alert box----------------------------------------------------
 	const [openA, setOpenA] = useState(false);
 
 	const handleClickA = () => {
@@ -207,11 +226,21 @@ function IndexerView() {
 					<div onClick={handleImageView}>
 						{view ? (
 							<div className="fixed z-50">
-								<AdvancedImage cldImg={myImage} />
+								{imageFromDb?.data ? (
+									<img src={imageName} />
+								) : (
+									<AdvancedImage cldImg={myImage} />
+								)}
 							</div>
 						) : null}
 					</div>
-					<div className={view === false ? "mt-4 mx-4 overflow-y-scroll h-screen" : "blur mt-4 mx-4 overflow-y-scroll h-screen"}>
+					<div
+						className={
+							view === false
+								? "mt-4 mx-4 overflow-y-scroll h-screen"
+								: "blur mt-4 mx-4 overflow-y-scroll h-screen"
+						}
+					>
 						<div onClick={handleImageView}>
 							<Popover
 								id={id}
@@ -237,7 +266,11 @@ function IndexerView() {
 									src={`https://res.cloudinary.com/dc4ioiozw/image/upload/v1667557911/${imageSrc}`}
 								/> */}
 
-									<AdvancedImage cldImg={myImage} />
+									{imageFromDb?.data ? (
+										<img src={imageName} />
+									) : (
+										<AdvancedImage cldImg={myImage} />
+									)}
 								</Typography>
 							</Popover>
 						</div>

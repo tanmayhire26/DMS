@@ -9,6 +9,7 @@ export const indexerReducer = (state = { indexers: [] }, action) => {
 				...state,
 				indexers: [...state.indexers, action.payload.indexerA],
 			};
+
 		default:
 			return state;
 	}

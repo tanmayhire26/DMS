@@ -33,6 +33,14 @@ export const documentReducer = (
 
 		case actions.GET_DOCUMENTS_BY_TAG:
 			return { ...state, documents: action.payload.documentsFT };
+
+		case actions.PATCH_DOCUMENT_IMAGE:
+			let pDArr = state.documents;
+			const indexP = pDArr.findIndex(
+				(d) => d._id === action.payload.documentImageP._id
+			);
+			pDArr[indexP] = action.payload.documentImageP;
+			return { ...state, documents: pDArr };
 		default:
 			return state;
 	}
