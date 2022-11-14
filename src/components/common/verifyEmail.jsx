@@ -1,4 +1,4 @@
-import { Alert } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,9 +13,12 @@ function VerifyEmail(props) {
 	const [view, setView] = useState(false);
 	const [flagError, setFlagError] = useState(false);
 	const [verified, setVerified] = useState(false);
-	console.log(view);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	//-----Circular progress for 30s timeout-----
+	const [progress, setProgress] = useState(0);
 
 	//Generate Otp---------------------
 
@@ -37,6 +40,20 @@ function VerifyEmail(props) {
 		}
 	};
 
+	//----Handle Progress---------
+	const handleProgress = () => {
+		console.log("handling progress");
+		const timer = setInterval(() => {
+			setProgress((prevProgress) =>
+				prevProgress >= 100 ? 0 : prevProgress + 0.33
+			);
+		}, 100);
+
+		return () => {
+			clearInterval(timer);
+		};
+	};
+
 	//--------------------------------------------------------------------------------------------------------------------------
 	return (
 		<>
@@ -50,18 +67,27 @@ function VerifyEmail(props) {
 								console.log(otpG);
 								dispatch(sendVerifyLink(email, otpG));
 								setView(true);
+								handleProgress();
 								setTimeout(() => {
 									setView(false);
 								}, 30000);
+								setProgress(0);
 							}}
 							className="rounded-full bg-orange-400 text-white font-bold w-3/6"
 						>
 							Send otp
 						</button>
 					) : (
-						<Alert className="w-2/6" severity="info">
-							OTP sent
-						</Alert>
+						<div>
+							<Alert className="w-2/6" severity="info">
+								OTP sent
+							</Alert>
+							<CircularProgress
+								className="absolute left-[50%] top-[40%]"
+								variant="determinate"
+								value={progress}
+							/>
+						</div>
 					)}
 				</div>
 			</div>

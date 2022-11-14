@@ -108,13 +108,30 @@ function GeneralUser() {
 	});
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
-	console.log(imageSrc.slice(0, -4));
-
+	
 	myImage.format(imageSrc.slice(-3));
 	// Deliver as JPEG. */
 	//myImage.resize(thumbnail().width(1000).height(1000))
 
+	//---------------------------------Image from buffer to base64-----------------------------------------------------
 	//--------------------------------------------------------------------------------------
+	let [imageFromDb, setImageFromDb] = useState(); //get documentImage containing buffer data from db
+	let [imageName, setImageName] = useState();
+	if (imageFromDb) {
+		function _arrayBufferToBase64(buffer) {
+			var binary = "";
+			var bytes = new Uint8Array(buffer);
+			var len = bytes.byteLength;
+			for (var i = 0; i < len; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			}
+			return window.btoa(binary);
+		}
+		const data = _arrayBufferToBase64(imageFromDb.data?.data);
+		setTimeout(() => {
+			setImageName(`data:${imageFromDb?.mimetype};base64,` + data);
+		}, 100);
+	}
 
 	//----------Append Tags Array to documents-------------
 	const tags = useSelector((state) => state.tagReducer.tags);
@@ -134,6 +151,7 @@ function GeneralUser() {
 	};
 
 	const handleClick = (event, d) => {
+		setImageFromDb(d.documentImage);
 		if (d.sensitive === true && decoded?.clearance === false) {
 			setClear(false);
 			setAnchorEl(event.currentTarget);
@@ -210,7 +228,6 @@ function GeneralUser() {
 	};
 
 	//---------------------------------------handleImageClick for edit Profile---------------------------------------------------
-
 
 	//-----------------------------------Handle View Comments----------------------------------------------------------------------
 	const [viewComments, setViewComments] = useState(false);
@@ -290,9 +307,13 @@ function GeneralUser() {
 					<div>
 						<div className="" onClick={handleImageView}>
 							{view ? (
-								<div className="fixed z-50">
-									<AdvancedImage cldImg={myImage} />
-								</div>
+								clear === false ? null : imageFromDb?.data ? (
+									<img className="absolute z-10" src={imageName} />
+								) : (
+									<div className="absolute z-10">
+										<AdvancedImage cldImg={myImage} />
+									</div>
+								)
 							) : null}
 						</div>
 						<div className={view === false ? "mt-[10%] " : "blur mt-[10%]"}>
@@ -321,6 +342,8 @@ function GeneralUser() {
 												You don't have access to this document — Admin will be
 												notified!
 											</Alert>
+										) : imageFromDb?.data ? (
+											<img src={imageName} />
 										) : (
 											<AdvancedImage cldImg={myImage} />
 										)}

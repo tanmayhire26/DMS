@@ -15,7 +15,6 @@ function IndexerProfile(props) {
 	}, []);
 	const indexers = useSelector((state) => state.indexerReducer.indexers);
 
-
 	if (indexers[1]) {
 		function _arrayBufferToBase64(buffer) {
 			var binary = "";
@@ -44,8 +43,11 @@ function IndexerProfile(props) {
 
 	//------image from Buffer------
 
+	//---------Array buffer to pdf--------------
+
 	return (
 		<>
+			<div className=""></div>
 			<div>
 				<div className="flex justify-center items-center my-3">
 					<img

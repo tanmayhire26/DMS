@@ -39,6 +39,9 @@ import {
 	guDocLoader,
 } from "./components/generalUser/customiseDocument";
 import GuApp from "./components/generalUser/guApp";
+import AdminStatistics from "./components/Charts/adminStatistics";
+import { UsersStats } from "./components/Charts/usersStats";
+import { DocumentsStats } from "./components/Charts/documentsStats";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const router = createBrowserRouter([
@@ -81,6 +84,14 @@ const router = createBrowserRouter([
 			{ path: "fields", element: <Fields /> },
 			{ path: "users/userForm", element: <UserForm /> },
 			{ path: "users/:id/:role", element: <UserForm />, loader: userLoader },
+			{
+				path: "statistics",
+				element: <AdminStatistics />,
+				children: [
+					{ path: "users", element: <UsersStats /> },
+					{ path: "documents", element: <DocumentsStats /> },
+				],
+			},
 		],
 	},
 	{

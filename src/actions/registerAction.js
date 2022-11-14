@@ -21,8 +21,12 @@ export const registerUser = (data) => (dispatch) => {
 
 //----------------------------------------------SEND_RESET_PASSWORD_LINK_TO _MAIL---------------------------------------------------
 export const sendResetLink = (data) => (dispatch) => {
-	axios
-		.post(apiEndPoint + "/forgot", { email: data })
+	toast
+		.promise(axios.post(apiEndPoint + "/forgot", { email: data }), {
+			sucess: "Reset Password Link mailed",
+			pending: "sending...",
+			error: "could not mail reset password link",
+		})
 		.then((response) =>
 			dispatch({
 				type: actions.SEND_RESET_MAIL,
