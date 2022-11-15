@@ -4,9 +4,8 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form } from "semantic-ui-react";
 import { addIndexer, getAllIndexers } from "../../actions/indxerAction";
-
+import { Document } from "react-pdf";
 function IndexerProfile(props) {
-	const { userId } = props;
 	const { handleSubmit, register, setValue } = useForm();
 	const dispatch = useDispatch();
 	const [imageName, setImageName] = useState();
@@ -43,7 +42,19 @@ function IndexerProfile(props) {
 
 	//------image from Buffer------
 
-	//---------Array buffer to pdf--------------
+	//---------Binary to Array buffer to pdf--------------
+
+	const pdfUser = indexers[2];
+	const pdfdata = pdfUser?.profileImage.data;
+	let len = pdfdata?.length;
+	let bytes = new Uint8Array(len);
+	for (let i = 0; i < len; i++) {
+		bytes[i] = pdfdata?.charCodeAt(i);
+	}
+
+	const renderPdf = bytes.buffer;
+
+	console.log(pdfdata);
 
 	return (
 		<>
@@ -81,6 +92,7 @@ function IndexerProfile(props) {
 					</Button>
 				</Form>
 			</div>
+			<Document file={renderPdf} scale={1.3} pages={Infinity} />
 		</>
 	);
 }

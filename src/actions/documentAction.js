@@ -120,12 +120,13 @@ export const updateDocument = (data, id) => (dispatch) => {
 			pending: "updating document...",
 			error: "could not update document",
 		})
-		.then((response) =>
+		.then((response) => {
+			console.log(response.data);
 			dispatch({
 				type: actions.UPDATE_DOCUMENT,
 				payload: { documentU: response.data },
-			})
-		)
+			});
+		})
 		.catch((err) => console.log(err.message));
 };
 

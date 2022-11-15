@@ -133,6 +133,35 @@ export const verifyEmail = (email) => (dispatch) => {
 		.catch((err) => console.log(err.message));
 };
 
+//---------------------------------------------Change Profile Image-----------------------------------------------------------
+export const changeProfileImage = (profileImage, userId) => (dispatch) => {
+	toast
+		.promise(
+			axios.patch(
+				apiEndPoint + "/profileImage/" + userId,
+				{
+					userId: userId,
+					profileImage: profileImage,
+				},
+				{
+					headers: { "Content-Type": "multipart/form-data" },
+				}
+			),
+			{
+				success: "Profile Image changed",
+				pending: "changing...",
+				error: "could not set profile Image",
+			}
+		)
+		.then((response) =>
+			dispatch({
+				type: actions.CHANGE_PROFILE_IMAGE,
+				payload: { userPI: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};
+
 //------------------------------------------------Soft Delete User-------------------------------------------------------------
 
 export const deleteUser = (data) => (dispatch, getState) => {

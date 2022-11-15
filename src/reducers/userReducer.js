@@ -24,6 +24,14 @@ export const userReducer = (state = { users: [] }, action) => {
 			userClearArr[indexClear] = action.payload.userC;
 			return { ...state, users: userClearArr };
 
+		case actions.CHANGE_PROFILE_IMAGE:
+			const userPIArr = state.users;
+			const indexUPI = userPIArr.findIndex(
+				(u) => u._id === action.payload.userPI._id
+			);
+			userPIArr[indexUPI] = action.payload.userPI;
+			return { ...state, users: userPIArr };
+
 		case actions.DELETE_USER:
 			const userArr = [...state.users];
 			const indexDel = userArr.findIndex(

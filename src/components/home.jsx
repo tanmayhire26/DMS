@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import IndexerProfile from "./indexer/indexerProfile";
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -18,7 +19,6 @@ function Home() {
 
 	useEffect(() => {
 		dispatch(loadLogin());
-		
 	}, []);
 	let dash = "/";
 	let decoded = "";
@@ -78,7 +78,7 @@ function Home() {
 						<NavLink
 							style={{ textDecoration: "none" }}
 							className={"focus:text-orange-300 text-gray-600"}
-							to=""
+							to="/"
 						>
 							ABOUT US
 						</NavLink>
@@ -115,7 +115,7 @@ function Home() {
 					)}
 				</div>
 			</div>
-			{/* <img className="w-5/6 z-1" src="homeImage.png" /> */}
+			<IndexerProfile />
 		</div>
 	);
 }

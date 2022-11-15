@@ -32,6 +32,9 @@ import {
 import ViewTags from "./views/viewTags";
 import CustomTagsSearch from "../common/customSearch";
 import { Popup } from "semantic-ui-react";
+import EditProfileImage from "../common/editProfileImage";
+import ImageCreator from "../common/imageCreator";
+import { getAllUsers } from "../../actions/userAction";
 
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -59,6 +62,7 @@ function GeneralUser() {
 		dispatch(getAllDoctypes());
 		dispatch(getAllDoctypefields());
 		dispatch(getAllFields());
+		dispatch(getAllUsers());
 		//dispatch(getAllDocuments());
 		dispatch(getAllTags());
 		dispatch(getUserDocuments(userDepartments, ""));
@@ -108,7 +112,6 @@ function GeneralUser() {
 	});
 	const myImage = cld.image(imageSrc.slice(0, -4));
 
-	
 	myImage.format(imageSrc.slice(-3));
 	// Deliver as JPEG. */
 	//myImage.resize(thumbnail().width(1000).height(1000))
@@ -235,6 +238,9 @@ function GeneralUser() {
 		setDocumentV(d);
 		viewComments ? setViewComments(false) : setViewComments(true);
 	};
+	const [viewEditPhoto, setViewEditPhoto] = useState(false);
+	const users = useSelector((state) => state.userReducer.users);
+	const user = users.find((u) => u._id === decoded?._id);
 
 	return (
 		<>
@@ -279,20 +285,39 @@ function GeneralUser() {
 						<div className="flex">
 							<Popup
 								className="p-1 text-xs bg-black text-white"
-								content="Edit Profile"
+								content="Edit Photo"
 								trigger={
-									<Link to={`profile/${decoded?._id}/General User`}>
-										<img
-											className="h-[50px] w-[50px] rounded-full"
-											alt="Profile Photo"
-											src={`/profile-images/${profileImageSrc}`}
-										/>
-									</Link>
+									<div
+										onClick={() =>
+											viewEditPhoto
+												? setViewEditPhoto(false)
+												: setViewEditPhoto(true)
+										}
+									>
+										<ImageCreator imageFromDb={user?.profileImage} />
+									</div>
 								}
 							/>
 						</div>
+
 						<div className="flex-row ml-2">
-							<div className="text-xs text-orange-600 font-bold">{`Hi ${profileImageName}`}</div>
+							<div className="text-xs  font-bold">
+								<Popup
+									className="p-1 text-xs bg-black text-white"
+									content="Edit Profile"
+									trigger={
+										<div>
+											<Link
+												className="text-orange-600"
+												style={{ textDecoration: "none" }}
+												to={`profile/${decoded?._id}/General User`}
+											>
+												{`Hi ${profileImageName}`}
+											</Link>
+										</div>
+									}
+								/>
+							</div>
 							<div className="text-xs text-purple-600">{`${decoded.role}`}</div>
 
 							<div
@@ -304,6 +329,32 @@ function GeneralUser() {
 							</div>
 						</div>
 					</div>
+					{viewEditPhoto ? (
+						<div className="p-2 bg-slate-200 w-2/6 fixed top-[15%] right-[5%]">
+							<div className="w-[20px]">
+								<svg
+									onClick={() => setViewEditPhoto(false)}
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-6 h-6"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M6 18L18 6M6 6l12 12"
+									/>
+								</svg>
+							</div>
+							<EditProfileImage
+								imageFromDb={user?.profileImage}
+								userId={decoded?._id}
+								decoded={decoded}
+							/>
+						</div>
+					) : null}
 					<div>
 						<div className="" onClick={handleImageView}>
 							{view ? (

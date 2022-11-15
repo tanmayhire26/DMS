@@ -58,7 +58,7 @@ function Login() {
 							<NavLink
 								style={{ textDecoration: "none" }}
 								className={"focus:text-orange-300 text-gray-600"}
-								to=""
+								to="/"
 							>
 								ABOUT US
 							</NavLink>

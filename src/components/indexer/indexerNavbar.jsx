@@ -9,6 +9,10 @@ import MuiAlert from "@mui/material/Alert";
 import * as React from "react";
 import { Popup } from "semantic-ui-react";
 import IndexerProfile from "./indexerProfile";
+import EditProfileImage from "../common/editProfileImage";
+import ImageCreator from "../common/imageCreator";
+
+import { getAllUsers } from "../../actions/userAction";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -16,13 +20,15 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function IndexerNavbar() {
 	const [viewP, setViewP] = React.useState(false);
+
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(loadLogin());
+		dispatch(getAllUsers());
 	}, []);
 	const navigate = useNavigate();
 	const [open, setOpen] = React.useState(false);
-
+	const users = useSelector((state) => state.userReducer.users);
 	const handleClick = () => {
 		setOpen(true);
 	};
@@ -37,6 +43,8 @@ function IndexerNavbar() {
 	const decoded = jwt_decode(token);
 	const profileImageName = decoded.userName;
 	const profileImageSrc = profileImageName + ".jpg";
+
+	const user = users.find((u) => u._id === decoded?._id);
 
 	return (
 		<>
@@ -82,14 +90,13 @@ function IndexerNavbar() {
 									className="bg-black p-1 text-xs text-white"
 									content="Edit Profile"
 									trigger={
-										<img
+										<div
 											onClick={() => {
 												viewP ? setViewP(false) : setViewP(true);
 											}}
-											alt="profile photo"
-											className="h-[50px] w-[50px] rounded-full"
-											src={`/profile-images/${profileImageSrc}`}
-										/>
+										>
+											<ImageCreator imageFromDb={user?.profileImage} />
+										</div>
 									}
 								/>
 
@@ -114,7 +121,29 @@ function IndexerNavbar() {
 							</div>
 							{viewP ? (
 								<div className="p-2 rounded w-2/6 absolute z-10 bg-slate-200 right-[4%] mt-[35%]">
-									<IndexerProfile userId={decoded?._id} />
+									{/* <IndexerProfile userId={decoded?._id} /> */}
+									<div className="w-[20px]">
+										<svg
+											onClick={() => setViewP(false)}
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-6 h-6"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+									</div>
+									<EditProfileImage
+										imageFromDb={user?.profileImage}
+										userId={decoded?._id}
+										decoded={decoded}
+									/>
 								</div>
 							) : null}
 						</div>

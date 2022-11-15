@@ -32,6 +32,7 @@ export function EditDoc() {
 	const indexingInfo = document?.indexingInfo;
 	let fieldsArr = [];
 	let valuesArr = [];
+
 	if (indexingInfo) {
 		const keysArr = Object.keys(indexingInfo);
 		for (let i = 0; i < keysArr.length; i++) {
@@ -60,9 +61,7 @@ export function EditDoc() {
 		if (!documentId) return;
 
 		for (let i = 0; i < fieldsArr.length; i++) {
-			setTimeout(() => {
-				setValue(`${fieldsArr[i].name}`, valuesArr[i]);
-			}, 200);
+			setValue(`${fieldsArr[i]?.name}`, valuesArr[i]);
 		}
 	}, [documentId]);
 

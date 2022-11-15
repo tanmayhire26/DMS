@@ -24,6 +24,8 @@
     "react-chartjs-2": "^4.3.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.37.0",
+    "react-pdf": "^6.0.3",
+    "react-pdf-scroll": "^1.0.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
