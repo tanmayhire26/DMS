@@ -154,3 +154,26 @@ export const getDocumentsByTag = (filterTag) => (dispatch) => {
 		)
 		.catch((err) => console.log(err.message));
 };
+
+//------------------------------------------Edit Document Image------------------------------------------------
+
+export const editDocumentImage = (documentImage, documentId) => (dispatch) => {
+	axios
+		.patch(
+			apiEndPoint + "/documentImage/" + documentId,
+			{
+				documentImage,
+				documentId: documentId,
+			},
+			{
+				headers: { "Content-Type": "multipart/form-data" },
+			}
+		)
+		.then((response) =>
+			dispatch({
+				type: actions.EDIT_DOCUMENT_IMAGE,
+				payload: { documentEIC: response.data },
+			})
+		)
+		.catch((err) => console.log(err.message));
+};

@@ -41,6 +41,14 @@ export const documentReducer = (
 			);
 			pDArr[indexP] = action.payload.documentImageP;
 			return { ...state, documents: pDArr };
+
+		case actions.EDIT_DOCUMENT_IMAGE:
+			let eDIArr = state.documents;
+			const indexEI = eDIArr.findIndex(
+				(d) => d._id === action.payload.documentEIC._id
+			);
+			eDIArr[indexEI] = action.payload.documentEIC;
+			return { ...state, documents: eDIArr };
 		default:
 			return state;
 	}

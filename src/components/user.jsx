@@ -1,9 +1,8 @@
 import { Popover, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useSearchParams } from "react-router-dom";
-import { legacy_createStore } from "redux";
-import defaultImag from "../images/default.png";
+import { Link } from "react-router-dom";
+
 import { getAllDepartments } from "../actions/departmentAction";
 import {
 	changeClearance,
@@ -16,6 +15,7 @@ import RegisterForm from "./forms/registerForm";
 import Logo from "./logo";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import ImageCreator from "./common/imageCreator";
 
 function User() {
 	const dispatch = useDispatch();
@@ -154,21 +154,25 @@ function User() {
 								key={u._id}
 								className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3"
 							>
-								<div
-									className={`text-4xl ${
-										u.isActive ? "text-green-500" : "text-red-500"
-									} font-bold mx-2`}
-								>
-									.
+								<div className="col-2 flex">
+									<div
+										className={`text-4xl ${
+											u.isActive ? "text-green-500" : "text-red-500"
+										} font-bold mx-2`}
+									>
+										.
+									</div>
+									{u.profileImage ? (
+										<div className="">
+											<ImageCreator imageFromDb={u.profileImage} />
+										</div>
+									) : (
+										<img
+											className="rounded-full h-[50px] w-[50px]"
+											src={require(`../../../../BackEnd/Document-management/indexerImages/${profileImage}`)}
+										/>
+									)}
 								</div>
-								<img
-									className="rounded-full h-[50px] w-[50px]"
-									src={require(`../../../../BackEnd/Document-management/indexerImages/${profileImage}`)}
-								/>
-								{/* <div>
-									<img className="h-[50px] w-[50px] rounded-full" src={`/profile-images/${u.userName}.jpg`} />
-								</div> */}
-
 								<div className="col-2 flex">
 									{u.userName}
 									<div onClick={(e) => handleClearance(e, u)}>

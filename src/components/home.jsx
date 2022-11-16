@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { loadLogin, logout } from "../actions/loginAction";
 import jwt_decode from "jwt-decode";
-
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import IndexerProfile from "./indexer/indexerProfile";
+
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -115,7 +112,6 @@ function Home() {
 					)}
 				</div>
 			</div>
-			<IndexerProfile />
 		</div>
 	);
 }

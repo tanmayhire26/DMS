@@ -9,6 +9,7 @@ import { loadLogin } from "../../actions/loginAction";
 import { AdvancedImage } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { useState } from "react";
+import EditDocumentImage from "../common/editDocumentImage";
 
 export function documentLoader({ params }) {
 	const documentId = params.id;
@@ -121,6 +122,9 @@ export function EditDoc() {
 			</div>
 			<div className="m-[5%]  w-full shadow">
 				<AdvancedImage cldImg={myImage} />
+				<div className="mt-3 w-3/6">
+					<EditDocumentImage documentId={documentId} />
+				</div>
 			</div>
 		</div>
 	);

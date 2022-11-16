@@ -44,6 +44,7 @@ export const GET_ALL_DOCUMENTS = "GET_ALL_DOCUMENTS";
 export const GET_PREVIEW = "GET_PREVIEW";
 export const GET_USER_DOCUMENTS = "GET_USER_DOCUMENTS";
 export const UPDATE_DOCUMENT = "UPDATE_DOCUMENT";
+export const EDIT_DOCUMENT_IMAGE = "EDIT_DOCUMENT_IMAGE"; //in edit document of indexer for cloudinary (not buffer)
 export const DELETE_DOCUMENT = "DELETE_DOCUMENT";
 export const GET_DOCUMENTS_BY_TAG = "GET_DOCUMENTS_BY_TAG"; //filter by selected custom tag of the user
 
