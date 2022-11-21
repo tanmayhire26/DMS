@@ -35,7 +35,7 @@ function Navbar() {
 		dispatch(getAllUsers());
 	}, []);
 	useEffect(() => {
-		dispatch(getAllNotifications());
+		// dispatch(getAllNotifications());
 	}, [notifications]);
 
 	const handleLogout = () => {

@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-router-dom";
 import * as yup from "yup";
-import { addField, getFilteredFields, updateField } from "../../actions/fieldAction";
+import {
+	addField,
+	getAllFields,
+	getFilteredFields,
+	updateField,
+} from "../../actions/fieldAction";
 
 const schema = yup.object().shape({
 	name: yup.string().required(),
@@ -13,10 +18,12 @@ const schema = yup.object().shape({
 	input: yup.string().required(),
 });
 function FieldForm(props) {
-	const { selectedField } = props;
+	const { selectedField, update, setUpdate } = props;
 	const fields = useSelector((state) => state.fieldReducer.fields);
 	const fieldId = selectedField._id;
 	const dispatch = useDispatch();
+
+	const fieldTypes = ["text", "date", "radio", "time", "email", "month", "url"];
 
 	//----------State variables for search queries----------------
 	const [nameSearch, setNameSearch] = useState("");
@@ -37,6 +44,9 @@ function FieldForm(props) {
 		} else {
 			dispatch(addField(data));
 		}
+		dispatch(getAllFields());
+		setUpdate(false);
+		reset();
 	};
 
 	useEffect(() => {
@@ -51,7 +61,7 @@ function FieldForm(props) {
 	const handleNameSearch = (e) => {
 		let nameValue = e.target.value;
 		setNameSearch(nameValue);
-		 dispatch(getFilteredFields(nameValue));
+		dispatch(getFilteredFields(nameValue));
 	};
 
 	const handleLabelSearch = (e) => {
@@ -60,11 +70,9 @@ function FieldForm(props) {
 		//dispatch(getFilteredFields(nameSearch, labelValue));
 	};
 
-	
-
 	return (
 		<>
-			<h6>Add or Search Field</h6>
+			<h6>{update ? "Update Field" : "Add or Search Field"}</h6>
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
 				className="shadow-lg p-3 backdrop-blur rounded flex flex-wrap gap-3"
@@ -93,7 +101,6 @@ function FieldForm(props) {
 						id="flabel"
 						className="form-control outline outline-2 outline-orange-400"
 						type="text"
-						
 						{...register("label")}
 					/>
 					{errors.label ? (
@@ -104,19 +111,39 @@ function FieldForm(props) {
 					<label className="form-label" htmlFor="finput">
 						Field Input Type*
 					</label>
-					<input
+					{/* <input
 						id="finput"
 						className="form-control outline outline-2 outline-orange-400"
 						type="text"
-						
 						{...register("input")}
-					/>
+					/> */}
+					<select
+						{...register("input")}
+						className="form-select outline outline-2 outline-orange-400"
+					>
+						<option value=""> </option>
+						{fieldTypes.map((f) => (
+							<option key={f} value={f}>
+								{f}
+							</option>
+						))}
+					</select>
 					{errors.input ? (
 						<Alert severity="error">{errors.input?.message}</Alert>
 					) : null}
 				</div>
-				<button className="w-[25%] rounded-full bg-orange-300 mt-4">
-					Add Field
+				<button
+					type="submit"
+					className="w-[15%] rounded-full bg-orange-300 mt-4"
+				>
+					{update ? "Update" : "Add"}
+				</button>
+				<button
+					onClick={() => dispatch(getAllFields())}
+					type="reset"
+					className="w-[15%] rounded-full bg-orange-300 mt-4"
+				>
+					Reset
 				</button>
 			</Form>
 		</>

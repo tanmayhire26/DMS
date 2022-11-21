@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 	userName: yup.string().required(),
 	password: yup.string().required().min(8),
 	//role: yup.string(),
-	// departments: yup.array().required(), //objct id here
+	//departments: yup.array(), //objct id here
 	// lastLoggedIn: yup.date(),
 	// isActive: yup.boolean(),
 	// updatedBy: yup.string(),
@@ -65,11 +65,13 @@ function RegisterForm(props) {
 		setValue("phone", user?.phone);
 		setValue("userName", user?.userName);
 		setValue("password", user?.password);
+		// setValue("departments",)
 		setValue("_id", user?._id);
 	}, [userId]);
 
 	const handleChange = (value) => {
 		selectedDP = value;
+		console.log("Array of user departments", selectedDP);
 	};
 	const onSubmitHandler = (data) => {
 		let enteredEmail = data.email;
@@ -80,6 +82,7 @@ function RegisterForm(props) {
 		}
 
 		data["departments"] = selectedDP;
+
 		if (decoded.role === "Admin") {
 			data["role"] = "Indexer";
 			if (data._id) {
@@ -101,6 +104,7 @@ function RegisterForm(props) {
 				navigate("/login");
 			}
 		}
+		reset();
 		navigate("/admin");
 		navigate("/admin/users");
 	};
@@ -186,7 +190,10 @@ function RegisterForm(props) {
 					</label>
 
 					<div className="w-full bg-white text-black font-none">
-						<ListOfDepartments onHandleChange={handleChange} />
+						<ListOfDepartments
+							onHandleChange={handleChange}
+							register={register}
+						/>
 					</div>
 				</div>
 				<div className="flex justify-around">

@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 
 function Department() {
 	const dispatch = useDispatch();
+	const [update, setUpdate] = useState(false);
 	useEffect(() => {
 		dispatch(getAllDepartments());
 		//dispatch(getFilteredDepartments());
@@ -24,6 +25,7 @@ function Department() {
 	const [dept, setDept] = useState({});
 
 	const handleClick = (d) => {
+		setUpdate(true);
 		setDept(d);
 	};
 
@@ -50,11 +52,13 @@ function Department() {
 					<div className="flex-row p-4 h-screen">
 						<div className="w-4/6">
 							<DepartmentForm
+								update={update}
+								setUpdate={setUpdate}
 								selectedDepartment={dept}
 								handleDepSearch={handleDepSearch}
 							/>
 						</div>
-						<ToastContainer/>
+						<ToastContainer />
 						<div className="mt-5">
 							{departments.map((d) => (
 								<div className="flex w-full shadow border-l-4 border-orange-300 p-3 bg-white mb-3">

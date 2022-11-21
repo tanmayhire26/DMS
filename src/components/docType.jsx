@@ -10,6 +10,7 @@ function DocType() {
 	const dispatch = useDispatch();
 	const doctypes = useSelector((state) => state.doctypeReducer.doctypes);
 	const [doc, setDoc] = useState("");
+	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllDoctypes());
@@ -20,6 +21,7 @@ function DocType() {
 	};
 
 	const handleClick = (d) => {
+		setUpdate(true);
 		setDoc(d);
 		console.log("data clicked to update : ", d);
 	};
@@ -38,7 +40,11 @@ function DocType() {
 					{/* form and table of DocType */}
 					<div className="h-screen mt-3">
 						<div className="p-4 w-5/6">
-							<DoctypeForm selectedDoctype={doc} />
+							<DoctypeForm
+								update={update}
+								setUpdate={setUpdate}
+								selectedDoctype={doc}
+							/>
 						</div>
 						<div className="mt-5 mr-[4%]">
 							{doctypes.map((d) => (

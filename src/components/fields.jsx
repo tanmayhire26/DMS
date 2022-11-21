@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 
 function Fields() {
 	const [fld, setFld] = useState({});
-
+	const [update, setUpdate] = useState(false);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getAllFields());
@@ -21,6 +21,7 @@ function Fields() {
 	};
 	const handleFieldClick = (f) => {
 		setFld(f);
+		setUpdate(true);
 	};
 
 	return (
@@ -35,7 +36,11 @@ function Fields() {
 				</div>
 				<div className="col">
 					<div className="mx-4 my-5">
-						<FieldForm selectedField={fld} />
+						<FieldForm
+							selectedField={fld}
+							update={update}
+							setUpdate={setUpdate}
+						/>
 					</div>
 					<div className="mx-4">
 						{fields.map((f) => (

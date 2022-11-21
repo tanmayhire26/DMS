@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 });
 
 function DoctypefieldForm(props) {
-	const { selectedDTF } = props;
+	const { selectedDTF, update, setUpdate } = props;
 	const dtfid = selectedDTF._id;
 	const doctypefields = useSelector(
 		(state) => state.doctypefieldReducer.doctypefields
@@ -84,6 +84,10 @@ function DoctypefieldForm(props) {
 			console.log("added dtf");
 			dispatch(addDoctypefield(data));
 		}
+
+		setUpdate(false);
+		// dispatch(getAllDoctypefields());
+		reset();
 	};
 
 	//For getting doctypes with the selected department in the next select field in form
@@ -119,7 +123,11 @@ function DoctypefieldForm(props) {
 
 	return (
 		<>
-			<h6>Add or Search Document type Fields</h6>
+			<h6>
+				{update
+					? "Update Document Type Field"
+					: "Add or Search Document type Fields"}
+			</h6>
 			<Form
 				onSubmit={handleSubmit(onSubmitHandler)}
 				className="shadow p-3 backdrop-blur rounded flex flex-wrap justify-between"
@@ -202,7 +210,16 @@ function DoctypefieldForm(props) {
 					type="submit"
 					className="self-center w-full mx-[30%]  p-1 rounded-full bg-orange-300 mt-3"
 				>
-					Add Doc Type Field
+					{update ? "Update" : "Add"}
+				</button>
+				<button
+					onClick={() => {
+						dispatch(getAllDoctypefields());
+					}}
+					type="reset"
+					className="self-center w-full mx-[30%]  p-1 rounded-full bg-orange-300 mt-3"
+				>
+					Reset
 				</button>
 			</Form>
 		</>

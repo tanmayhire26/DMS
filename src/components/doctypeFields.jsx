@@ -14,6 +14,9 @@ import { ToastContainer } from "react-toastify";
 function DoctypeFields() {
 	const [dtf, setDtf] = useState({});
 
+	//view update button in update mode(set on by clicking on edit)
+	const [update, setUpdate] = useState(false);
+
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getAllDoctypefields());
@@ -32,6 +35,7 @@ function DoctypeFields() {
 	};
 	const handleDTFClick = (d) => {
 		setDtf(d);
+		setUpdate(true);
 	};
 
 	const getDoctypeName = (dtid) => {
@@ -69,7 +73,11 @@ function DoctypeFields() {
 				</div>
 				<div className="col">
 					<div className="m-5">
-						<DoctypefieldForm selectedDTF={dtf} />
+						<DoctypefieldForm
+							selectedDTF={dtf}
+							update={update}
+							setUpdate={setUpdate}
+						/>
 					</div>
 					<div className="mx-4">
 						{doctypefields.map((d) => (

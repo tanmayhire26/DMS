@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllDepartments } from "../../actions/departmentAction";
 
 function ListOfDepartments(props) {
-	const { onHandleChange } = props;
+	const { onHandleChange, register } = props;
 	// const [selectedDepartments, setSelectedDepartments] = useState([]);
 
 	const departments = useSelector(
@@ -18,6 +18,7 @@ function ListOfDepartments(props) {
 
 	return (
 		<Autocomplete
+			{...register("departments")}
 			onChange={(e, value) => onHandleChange(value)}
 			options={departments}
 			multiple
