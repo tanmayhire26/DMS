@@ -10,6 +10,7 @@ import DepartmentForm from "./forms/departmentForm";
 import Logo from "./logo";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { Pagination } from "@mui/material";
 
 function Department() {
 	const dispatch = useDispatch();
@@ -92,6 +93,7 @@ function Department() {
 								</div>
 							))}
 						</div>
+						<Pagination />
 					</div>
 				</div>
 			</div>

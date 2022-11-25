@@ -5,11 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
-import {
-	createBrowserRouter,
-	RouterProvider,
-	useRouteLoaderData,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import Department from "./components/department";
 import User from "./components/user";
@@ -30,8 +26,6 @@ import AdminProtectedRouter from "./components/adminProtectedRouter";
 import GeneralUserProtectedRouter from "./components/generalUser/generalUserProtectedRoute";
 import IndexerProtectedRouter from "./components/indexer/indexerProtectedRoute";
 import { documentLoader, EditDoc } from "./components/indexer/editDoc";
-import MulterTrial from "./components/indexer/multerTrial";
-import IndexingForm from "./components/indexer/indexingForm";
 import ForgotPassword from "./components/forgotPassword";
 import { ResetPassword, resetLoader } from "./components/resetPassword";
 import {
